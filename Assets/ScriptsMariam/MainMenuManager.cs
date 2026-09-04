@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -86,6 +87,23 @@ namespace Iterations.UI
                 if (panel == null) continue;
                 panel.SetActive(panel == panelToShow);
             }
+        }
+
+        public void StartAsHost()
+        {
+            if (NetworkManager.Singleton.StartHost())
+            {
+                NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerScene", LoadSceneMode.Single);
+            }
+            else
+            {
+                Debug.LogError("Failed to start the host");
+            }
+        }
+
+        public void StartAsClient()
+        {
+            NetworkManager.Singleton.StartClient();
         }
     }
 }
