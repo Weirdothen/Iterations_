@@ -3871,7 +3871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69505f6af85943c468439bf1f022c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransitioner
-  fadeCanvasGroup: {fileID: 606064062}
+  fadeCanvasGroup: {fileID: 0}
   fadeDuration: 0.5
 --- !u!4 &856096794
 Transform:
