@@ -1,2 +1,14 @@
 fileFormatVersion: 2
 guid: b5a1f49d4bde6624595270010306b455
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - player: {instanceID: 0}
+  - ghostPrefabe: {instanceID: 0}
+  - onLoseTriggered: {fileID: 11400000, guid: 86799c8f6b8ba9442a8a4c1dec8aedb0, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

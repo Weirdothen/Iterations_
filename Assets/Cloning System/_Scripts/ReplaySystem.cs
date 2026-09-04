@@ -81,20 +81,7 @@ namespace Clone {
         public bool FinishRun(bool save = true)
         {
             if (_currentRun == null) return false;
-            //if (!save) {
-            //    _currentRun = null;
-            //    return false;
-            //}
-
-            //_runs[RecordingType.Last] = _currentRun;
             _currentRun = null;
-
-            //if (!GetRun(RecordingType.Best, out var best) || _runs[RecordingType.Last].Duration <= best.Duration) {
-            //    _runs[RecordingType.Best] = _runs[RecordingType.Last];
-            //    return true;
-            //}
-
-            //return false;
 
             return true;
         }

@@ -695,6 +695,7 @@ MonoBehaviour:
   cloneSpawningTime: 5
   captureEveryNFrames: 2
   maxRecordTime: 500
+  onLoseTriggered: {fileID: 11400000, guid: 86799c8f6b8ba9442a8a4c1dec8aedb0, type: 2}
 --- !u!4 &203790663
 Transform:
   m_ObjectHideFlags: 0
