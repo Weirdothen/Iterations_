@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Iterations.UI
 {
@@ -9,6 +10,7 @@ namespace Iterations.UI
         [SerializeField] private GameObject soloPanel;
         [SerializeField] private GameObject multiplayerPanel;
         [SerializeField] private GameObject settingsPanel;
+        [SerializeField] private GameObject controlsPanel;
 
         private GameObject[] _allPanels;
 
@@ -20,7 +22,8 @@ namespace Iterations.UI
                 creditsPanel,
                 soloPanel,
                 multiplayerPanel,
-                settingsPanel
+                settingsPanel,
+                controlsPanel
             };
 
             ShowPanel(mainPanel);
@@ -46,6 +49,11 @@ namespace Iterations.UI
             ShowPanel(settingsPanel);
         }
 
+        public void OnControlsPressed()
+        {
+            ShowPanel(controlsPanel);
+        }
+
         public void OnBackPressed()
         {
             ShowPanel(mainPanel);
@@ -62,7 +70,13 @@ namespace Iterations.UI
 
         public void LoadSceneByName(string sceneName)
         {
-            SceneTransitioner.Instance.LoadScene(sceneName);
+            if (string.IsNullOrEmpty(sceneName))
+            {
+                Debug.LogWarning("No scene name set on this button yet.");
+                return;
+            }
+
+            SceneManager.LoadScene(sceneName);
         }
 
         private void ShowPanel(GameObject panelToShow)

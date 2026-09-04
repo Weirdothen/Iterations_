@@ -1,5 +1,6 @@
 using UnityEngine;
 using Iterations.Events;
+using Iterations.Core;
 
 namespace Iterations.Player
 {
@@ -36,6 +37,7 @@ namespace Iterations.Player
             if (other.CompareTag(cloneTag))
             {
                 onLoseTriggered?.RaiseEvent();
+                Destroy(gameObject);
                 return;
             }
 
@@ -49,8 +51,21 @@ namespace Iterations.Player
 
             if (other.CompareTag(finishTag))
             {
-                onWinTriggered?.RaiseEvent();
+                TryFinishLevel();
             }
+        }
+
+        private void TryFinishLevel()
+        {
+            int required = LevelConfig.Instance != null ? LevelConfig.Instance.TotalPickups : 0;
+
+            if (_pickupsCollected < required)
+            {
+                Debug.Log($"Need all pickups first: {_pickupsCollected}/{required}");
+                return;
+            }
+
+            onWinTriggered?.RaiseEvent();
         }
     }
 }

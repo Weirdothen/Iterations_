@@ -1,13 +1,13 @@
 using UnityEngine;
 using TMPro;
 using Iterations.Events;
+using Iterations.Core;
 
 namespace Iterations.UI
 {
     public class PickupCounterUI : MonoBehaviour
     {
         [SerializeField] private TMP_Text counterText;
-        [SerializeField] private int totalPickups = 10;
         [SerializeField] private IntEventChannelSO onPickupCollected;
 
         private void OnEnable()
@@ -31,8 +31,10 @@ namespace Iterations.UI
 
         private void UpdateText(int currentCount)
         {
-            if (counterText != null)
-                counterText.text = $"{currentCount}/{totalPickups}";
+            if (counterText == null) return;
+
+            int total = LevelConfig.Instance != null ? LevelConfig.Instance.TotalPickups : 0;
+            counterText.text = $"{currentCount}/{total}";
         }
     }
 }

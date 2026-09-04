@@ -19,8 +19,6 @@ namespace Iterations.Core
         public static GameManager Instance { get; private set; }
 
         [Header("Events - Raised by this manager")]
-        [SerializeField] private VoidEventChannelSO onLevelWon;
-        [SerializeField] private VoidEventChannelSO onLevelLost;
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
 
         [Header("Events - Listened to by this manager")]
@@ -30,12 +28,14 @@ namespace Iterations.Core
         [SerializeField] private VoidEventChannelSO onLoseTriggered;
 
         [Header("Level Flow")]
-        [Tooltip("Scene to load when this level is won. Leave empty if this is the last level.")]
         private string nextLevelSceneName;
         [SerializeField] private float loseRestartDelay = 3f;
+        [SerializeField] private float fadeDuration = 0.5f;
 
-       
+        [Header("Fade")]
+        [SerializeField] private CanvasGroup fadeCanvasGroup;
 
+        [SerializeField] private string mainMenuSceneName = "MainMenuScene";
 
         public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
@@ -49,6 +49,12 @@ namespace Iterations.Core
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            if (fadeCanvasGroup != null)
+            {
+                fadeCanvasGroup.alpha = 0f;
+                fadeCanvasGroup.blocksRaycasts = false;
+            }
         }
 
         private void OnEnable()
@@ -73,13 +79,12 @@ namespace Iterations.Core
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            CurrentState = scene.name == "MainMenuScene" ? GameState.MainMenu : GameState.Playing;
+            CurrentState = scene.name == mainMenuSceneName ? GameState.MainMenu : GameState.Playing;
             Time.timeScale = 1f;
         }
 
         private void HandlePauseRequested()
         {
-            
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.Paused;
@@ -106,8 +111,7 @@ namespace Iterations.Core
                 return;
             }
 
-            onLevelWon?.RaiseEvent();
-            SceneManager.LoadScene(nextLevelSceneName);
+            StartCoroutine(FadeToScene(nextLevelSceneName));
         }
 
         private void HandleLoseTriggered()
@@ -115,7 +119,6 @@ namespace Iterations.Core
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.Lost;
-            onLevelLost?.RaiseEvent();
             StartCoroutine(RestartAfterDelay());
         }
 
@@ -123,6 +126,34 @@ namespace Iterations.Core
         {
             yield return new WaitForSeconds(loseRestartDelay);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        private IEnumerator FadeToScene(string sceneName)
+        {
+            yield return StartCoroutine(Fade(1f));
+            SceneManager.LoadScene(sceneName);
+            yield return StartCoroutine(Fade(0f));
+        }
+
+        private IEnumerator Fade(float targetAlpha)
+        {
+            if (fadeCanvasGroup == null)
+                yield break;
+
+            float startAlpha = fadeCanvasGroup.alpha;
+            float t = 0f;
+
+            fadeCanvasGroup.blocksRaycasts = true;
+
+            while (t < fadeDuration)
+            {
+                t += Time.deltaTime;
+                fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t / fadeDuration);
+                yield return null;
+            }
+
+            fadeCanvasGroup.alpha = targetAlpha;
+            fadeCanvasGroup.blocksRaycasts = targetAlpha > 0.99f;
         }
 
         public void SetNextLevel(string sceneName)
@@ -137,8 +168,7 @@ namespace Iterations.Core
 
         public void ReturnToMainMenu()
         {
-            SceneManager.LoadScene("MainMenuScene");
+            SceneManager.LoadScene(mainMenuSceneName);
         }
     }
-
 }

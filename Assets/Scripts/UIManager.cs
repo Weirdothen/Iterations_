@@ -11,15 +11,11 @@ namespace Iterations.UI
         [Header("Panels")]
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private GameObject winPanel;
-        [SerializeField] private GameObject losePanel;
         [SerializeField] private GameObject creditsPanel;
+        [SerializeField] private GameObject controlsPanel;
 
         [Header("Events - Listened to by this manager")]
-        [SerializeField] private VoidEventChannelSO onLevelWon;
-        [SerializeField] private VoidEventChannelSO onLevelLost;
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
-
-        [Header("Events - Raised by this manager")]
         [SerializeField] private VoidEventChannelSO onPauseRequested;
         [SerializeField] private VoidEventChannelSO onResumeRequested;
 
@@ -37,8 +33,6 @@ namespace Iterations.UI
 
         private void OnEnable()
         {
-            if (onLevelWon != null) onLevelWon.OnEventRaised += HandleLevelWon;
-            if (onLevelLost != null) onLevelLost.OnEventRaised += HandleLevelLost;
             if (onAllLevelsComplete != null) onAllLevelsComplete.OnEventRaised += HandleAllLevelsComplete;
             if (onPauseRequested != null) onPauseRequested.OnEventRaised += HandlePauseRequested;
             if (onResumeRequested != null) onResumeRequested.OnEventRaised += HandleResumeRequested;
@@ -48,8 +42,6 @@ namespace Iterations.UI
 
         private void OnDisable()
         {
-            if (onLevelWon != null) onLevelWon.OnEventRaised -= HandleLevelWon;
-            if (onLevelLost != null) onLevelLost.OnEventRaised -= HandleLevelLost;
             if (onAllLevelsComplete != null) onAllLevelsComplete.OnEventRaised -= HandleAllLevelsComplete;
             if (onPauseRequested != null) onPauseRequested.OnEventRaised -= HandlePauseRequested;
             if (onResumeRequested != null) onResumeRequested.OnEventRaised -= HandleResumeRequested;
@@ -61,7 +53,6 @@ namespace Iterations.UI
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Debug.Log("ESC pressed");
                 if (pausePanel != null && pausePanel.activeSelf)
                     onResumeRequested?.RaiseEvent();
                 else
@@ -74,23 +65,8 @@ namespace Iterations.UI
             onResumeRequested?.RaiseEvent();
         }
 
-        private void HandleLevelWon()
-        {
-            Debug.Log("You Won");
-            if (winPanel != null)
-                winPanel.SetActive(true);
-        }
-
-        private void HandleLevelLost()
-        {
-            Debug.Log("You Lose");
-            if (losePanel != null)
-                losePanel.SetActive(true);
-        }
-
         private void HandleAllLevelsComplete()
         {
-            Debug.Log("You Won - No More Levels");
             if (winPanel != null)
                 winPanel.SetActive(true);
         }
@@ -107,7 +83,6 @@ namespace Iterations.UI
                 pausePanel.SetActive(false);
         }
 
-
         public void ShowCreditsPanel()
         {
             if (creditsPanel != null)
@@ -120,13 +95,24 @@ namespace Iterations.UI
                 creditsPanel.SetActive(false);
         }
 
+        public void ShowControlsPanel()
+        {
+            if (controlsPanel != null)
+                controlsPanel.SetActive(true);
+        }
+
+        public void HideControlsPanel()
+        {
+            if (controlsPanel != null)
+                controlsPanel.SetActive(false);
+        }
+
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (pausePanel != null) pausePanel.SetActive(false);
             if (winPanel != null) winPanel.SetActive(false);
-            if (losePanel != null) losePanel.SetActive(false);
             if (creditsPanel != null) creditsPanel.SetActive(false);
+            if (controlsPanel != null) controlsPanel.SetActive(false);
         }
     }
-
 }
