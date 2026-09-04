@@ -660,6 +660,56 @@ Transform:
   - {fileID: 1448826779}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &203790661
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 203790663}
+  - component: {fileID: 203790662}
+  m_Layer: 0
+  m_Name: CloningSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &203790662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203790661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a1f49d4bde6624595270010306b455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CloningSystem
+  player: {fileID: 1372790873}
+  ghostPrefabe: {fileID: 5304459651671198311, guid: cf58bf933a92e604194c5bc9877479b7, type: 3}
+  firstCloneTime: 5
+  cloneSpawningTime: 5
+  captureEveryNFrames: 2
+  maxRecordTime: 500
+--- !u!4 &203790663
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203790661}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.75059, y: 0.51072, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &276663763
 GameObject:
   m_ObjectHideFlags: 0
@@ -2471,6 +2521,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+--- !u!4 &1372790873 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1544650614272011795, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+  m_PrefabInstance: {fileID: 1372790872}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1373062623
 GameObject:
   m_ObjectHideFlags: 0
@@ -3332,3 +3387,4 @@ SceneRoots:
   - {fileID: 789687981}
   - {fileID: 1593276825}
   - {fileID: 5007978860968242098}
+  - {fileID: 203790663}
