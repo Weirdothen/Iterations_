@@ -37,7 +37,9 @@ namespace Iterations.Player
             if (other.CompareTag(cloneTag))
             {
                 onLoseTriggered?.RaiseEvent();
-                Destroy(gameObject);
+                Debug.Log(other, this.gameObject);
+                Debug.Break();
+                //Destroy(gameObject);
                 return;
             }
 

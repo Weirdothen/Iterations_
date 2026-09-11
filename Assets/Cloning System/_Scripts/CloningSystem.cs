@@ -19,7 +19,7 @@ public class CloningSystem : MonoBehaviour
 
     private void Awake()
     {
-        _system = new ReplaySystem(this);
+        _system = new ReplaySystem(this, true);
     }
 
     private void OnEnable()
