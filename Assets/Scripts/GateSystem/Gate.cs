@@ -42,13 +42,13 @@ namespace Iterations.Mechanics
             if (onGateShouldClose != null) onGateShouldClose.OnEventRaised -= Close;
         }
 
-        private void Open()
+        public void Open()
         {
             _collider.enabled = false;
             StartSlide(_openPosition, fadeOut: true);
         }
 
-        private void Close()
+        public void Close()
         {
             StartSlide(_closedPosition, fadeOut: false);
         }
@@ -83,4 +83,5 @@ namespace Iterations.Mechanics
                 _collider.enabled = true;
         }
     }
-}
+    
+    }
