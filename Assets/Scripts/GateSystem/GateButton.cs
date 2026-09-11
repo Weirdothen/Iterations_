@@ -1,5 +1,5 @@
+using Unity.VisualScripting;
 using UnityEngine;
-using Iterations.Events;
 
 namespace Iterations.Mechanics
 {
@@ -7,8 +7,7 @@ namespace Iterations.Mechanics
     public class GateButton : MonoBehaviour
     {
         [SerializeField] private LayerMask activatorLayers;
-        [SerializeField] private VoidEventChannelSO onGateShouldOpen;
-        [SerializeField] private VoidEventChannelSO onGateShouldClose;
+        [SerializeField] private Gate[] targetGates;
 
         private int _occupantCount;
 
@@ -19,7 +18,7 @@ namespace Iterations.Mechanics
             _occupantCount++;
 
             if (_occupantCount == 1)
-                onGateShouldOpen?.RaiseEvent();
+                SetGates(open: true);
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -29,7 +28,17 @@ namespace Iterations.Mechanics
             _occupantCount = Mathf.Max(0, _occupantCount - 1);
 
             if (_occupantCount == 0)
-                onGateShouldClose?.RaiseEvent();
+                SetGates(open: false);
+        }
+
+        private void SetGates(bool open)
+        {
+            foreach (var gate in targetGates)
+            {
+                if (gate == null) continue;
+                if (open) gate.Open();
+                else gate.Close();
+            }
         }
 
         private bool IsValid(Collider2D other)
