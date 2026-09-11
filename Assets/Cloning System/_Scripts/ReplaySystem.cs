@@ -7,9 +7,10 @@ namespace Clone {
     public class ReplaySystem {
         private readonly WaitForFixedUpdate _wait = new WaitForFixedUpdate();
 
-        public ReplaySystem(MonoBehaviour System) {
+        public ReplaySystem(MonoBehaviour System, bool usePhysics) {
             _replaySmoothedTimes = new List<float>();
             _ghostObjs = new List<GameObject>();
+            _ghostRbs = new List<Rigidbody2D> ();
             System.StartCoroutine(FixedUpdate());
             System.StartCoroutine(Update());
         }
@@ -42,6 +43,7 @@ namespace Clone {
         private int _snapshotEveryNFrames;
         private int _frameCount;
         private float _maxRecordingTimeLimit;
+        private bool usePhysics;
 
         /// <summary>
         /// Begin recording a run
@@ -108,6 +110,7 @@ namespace Clone {
 
         private Recording _currentReplay;
         private List<GameObject> _ghostObjs;
+        private List<Rigidbody2D> _ghostRbs;
         private bool _destroyOnComplete;
         private List<float> _replaySmoothedTimes;
 
@@ -128,7 +131,23 @@ namespace Clone {
 
             _destroyOnComplete = destroyOnCompletion;
 
-            if (_currentReplay != null) _ghostObjs.Add(ghostObj);
+            if (_currentReplay != null)
+            {
+                if (usePhysics)
+                {
+                    // need to be changed if you want to make a 3d physics
+                    if (ghostObj.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
+                    {
+                        _ghostRbs.Add(rb);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("there is no rigidbody to use the physics");
+                    }
+                }
+                _ghostObjs.Add(ghostObj);
+             
+            }
             else if (_destroyOnComplete) Object.Destroy(ghostObj);
         }
 
@@ -138,7 +157,15 @@ namespace Clone {
             {
                 // Evaluate the point at the current time
                 var pose = _currentReplay.EvaluatePoint(_replaySmoothedTimes[i]);
-                _ghostObjs[i].transform.SetPositionAndRotation(pose.position, pose.rotation);
+                if (usePhysics)
+                {
+                    _ghostRbs[i].position =  pose.position;
+                    _ghostRbs[i].SetRotation(pose.rotation);
+                }
+                else
+                {
+                    _ghostObjs[i].transform.SetPositionAndRotation(pose.position, pose.rotation);
+                }
 
                 // Destroy the replay when done
                 if (_replaySmoothedTimes[i] > _currentReplay.Duration)
