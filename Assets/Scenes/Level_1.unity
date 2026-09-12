@@ -984,8 +984,8 @@ Camera:
   m_GameObject: {fileID: 872193186}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1002,10 +1002,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12398922
+    x: 0.125
     y: 0
-    width: 0.75112313
-    height: 0.99999994
+    width: 0.75000006
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -1267,8 +1267,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CloningSystem
   player: {fileID: 1372790873}
   ghostPrefabe: {fileID: 5304459651671198311, guid: cf58bf933a92e604194c5bc9877479b7, type: 3}
-  firstCloneTime: 5
-  cloneSpawningTime: 5
+  firstCloneTime: 10
+  cloneSpawningTime: 10
   captureEveryNFrames: 2
   maxRecordTime: 500
   onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
@@ -1304,7 +1304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1319026944
 RectTransform:
   m_ObjectHideFlags: 0

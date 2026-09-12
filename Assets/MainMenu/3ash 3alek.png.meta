@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 46e72465a545e4941acf8369501b5744
+guid: 33f29b92aea67fa47abce2f26210ee7d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6722264024765363516
-    second: elevator_0
+      213: 6219555365206211383
+    second: 3ash 3alek_0
+  - first:
+      213: -1002453614342992232
+    second: 3ash 3alek_1
+  - first:
+      213: 3774890492610670772
+    second: 3ash 3alek_2
+  - first:
+      213: -1976294807360559276
+    second: 3ash 3alek_3
+  - first:
+      213: -5333437195152596872
+    second: 3ash 3alek_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +63,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,12 +138,100 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: elevator_0
+      name: 3ash 3alek_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 19
-        width: 54
+        x: 6
+        y: 40
+        width: 11
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73bbdfbe6ac405650800000000000000
+      internalID: 6219555365206211383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3ash 3alek_1
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 34
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89e874dbfb19612f0800000000000000
+      internalID: -1002453614342992232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3ash 3alek_2
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 34
+        width: 53
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b0fe0e17ea136430800000000000000
+      internalID: 3774890492610670772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3ash 3alek_3
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 35
+        width: 32
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45723d3f75ac294e0800000000000000
+      internalID: -1976294807360559276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3ash 3alek_4
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 38
+        width: 22
         height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -141,8 +241,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4ca097d4c78b5b2a0800000000000000
-      internalID: -6722264024765363516
+      spriteID: 870e217f023dbf5b0800000000000000
+      internalID: -5333437195152596872
       vertices: []
       indices: 
       edges: []
@@ -161,7 +261,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      elevator_0: -6722264024765363516
+      3ash 3alek_0: 6219555365206211383
+      3ash 3alek_1: -1002453614342992232
+      3ash 3alek_2: 3774890492610670772
+      3ash 3alek_3: -1976294807360559276
+      3ash 3alek_4: -5333437195152596872
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
