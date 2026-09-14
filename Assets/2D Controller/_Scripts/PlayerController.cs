@@ -3,13 +3,6 @@ using UnityEngine;
 
 namespace TarodevController
 {
-    /// <summary>
-    /// Hey!
-    /// Tarodev here. I built this controller as there was a severe lack of quality & free 2D controllers out there.
-    /// I have a premium version on Patreon, which has every feature you'd expect from a polished controller. Link: https://www.patreon.com/tarodev
-    /// You can play and compete for best times here: https://tarodev.itch.io/extended-ultimate-2d-controller
-    /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/tarodev
-    /// </summary>
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerController : MonoBehaviour, IPlayerController
     {
@@ -19,6 +12,7 @@ namespace TarodevController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+        private Vector2 _platformVelocity;
 
         #region Interface
 
@@ -87,9 +81,18 @@ namespace TarodevController
             Physics2D.queriesStartInColliders = false;
 
             // Ground and Ceiling
-            bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
-            bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            RaycastHit2D groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            RaycastHit2D ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
 
+            // Read platform velocity if we are standing on one
+            if (groundHit && groundHit.collider.TryGetComponent(out MovingPlatform platform))
+            {
+                _platformVelocity = platform.Velocity;
+            }
+            else
+            {
+                _platformVelocity = Vector2.zero;
+            }
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
 
@@ -185,7 +188,7 @@ namespace TarodevController
 
         #endregion
 
-        private void ApplyMovement() => _rb.linearVelocity = _frameVelocity;
+        private void ApplyMovement() => _rb.linearVelocity = _frameVelocity + _platformVelocity;
 
 #if UNITY_EDITOR
         private void OnValidate()
