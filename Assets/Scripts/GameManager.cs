@@ -111,6 +111,9 @@ namespace Iterations.Core
                 return;
             }
 
+            PlayerPrefs.SetInt(nextLevelSceneName, 1);
+            PlayerPrefs.Save();
+
             StartCoroutine(FadeToScene(nextLevelSceneName));
         }
 
@@ -169,6 +172,11 @@ namespace Iterations.Core
         public void ReturnToMainMenu()
         {
             SceneManager.LoadScene(mainMenuSceneName);
+        }
+
+        public void LoadLevelFromMenu(string sceneName)
+        {
+            StartCoroutine(FadeToScene(sceneName));
         }
     }
 }
