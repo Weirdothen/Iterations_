@@ -20,6 +20,7 @@ namespace Iterations.Core
 
         [Header("Events - Raised by this manager")]
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
+        [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
 
         [Header("Events - Listened to by this manager")]
         [SerializeField] private VoidEventChannelSO onPauseRequested;
@@ -29,11 +30,23 @@ namespace Iterations.Core
 
         [Header("Level Flow")]
         private string nextLevelSceneName;
-        [SerializeField] private float loseRestartDelay = 3f;
+        [SerializeField] private float loseRestartDelay = 4f;
 
         [SerializeField] private string mainMenuSceneName = "MainMenuScene";
 
+        [Header("Retries")]
+        private const string RetriesKeyPrefix = "Retries_";
+
         public GameState CurrentState { get; private set; } = GameState.MainMenu;
+
+        public int CurrentLevelRetries { get; private set; }
+        public int BestRetriesForCurrentLevel { get; private set; }
+
+        private Coroutine _restartRoutine;
+        private bool _levelAdvancePending;
+
+       
+        private bool _isSameLevelReload;
 
         private void Awake()
         {
@@ -71,6 +84,23 @@ namespace Iterations.Core
         {
             CurrentState = scene.name == mainMenuSceneName ? GameState.MainMenu : GameState.Playing;
             Time.timeScale = 1f;
+
+            _restartRoutine = null;
+            _levelAdvancePending = false;
+
+            if (_isSameLevelReload)
+            {
+               
+            }
+            else
+            {
+                
+                CurrentLevelRetries = 0;
+            }
+
+            _isSameLevelReload = false; 
+
+            BestRetriesForCurrentLevel = GetSavedBestRetries(scene.name);
         }
 
         private void HandlePauseRequested()
@@ -95,6 +125,19 @@ namespace Iterations.Core
 
             CurrentState = GameState.Won;
 
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
+
+            _levelAdvancePending = true;
+            onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
+        }
+
+       
+        public void AdvanceAfterWin()
+        {
+            if (!_levelAdvancePending) return;
+            _levelAdvancePending = false;
+
             if (string.IsNullOrEmpty(nextLevelSceneName))
             {
                 onAllLevelsComplete?.RaiseEvent();
@@ -104,6 +147,7 @@ namespace Iterations.Core
             PlayerPrefs.SetInt(nextLevelSceneName, 1);
             PlayerPrefs.Save();
 
+           
             SceneTransitioner.LoadScene(nextLevelSceneName);
         }
 
@@ -112,13 +156,34 @@ namespace Iterations.Core
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.Lost;
-            StartCoroutine(RestartAfterDelay());
+
+            if (_restartRoutine != null) return;
+
+            _restartRoutine = StartCoroutine(RestartAfterDelay());
         }
 
         private IEnumerator RestartAfterDelay()
         {
             yield return new WaitForSeconds(loseRestartDelay);
-            SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
+            RestartLevel();
+        }
+
+        private int GetSavedBestRetries(string sceneName)
+        {
+            string key = RetriesKeyPrefix + sceneName;
+            return PlayerPrefs.HasKey(key) ? PlayerPrefs.GetInt(key) : -1;
+        }
+
+        private void SaveRetriesIfBest(string sceneName, int retries)
+        {
+            string key = RetriesKeyPrefix + sceneName;
+
+            if (!PlayerPrefs.HasKey(key) || retries < PlayerPrefs.GetInt(key))
+            {
+                PlayerPrefs.SetInt(key, retries);
+                PlayerPrefs.Save();
+                BestRetriesForCurrentLevel = retries;
+            }
         }
 
         public void SetNextLevel(string sceneName)
@@ -126,16 +191,21 @@ namespace Iterations.Core
             nextLevelSceneName = sceneName;
         }
 
+       
         public void RestartLevel()
         {
+            CurrentLevelRetries++;
+            _isSameLevelReload = true;
             SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+      
         public void ReturnToMainMenu()
         {
             SceneTransitioner.LoadScene(mainMenuSceneName);
         }
 
+        
         public void LoadLevelFromMenu(string sceneName)
         {
             SceneTransitioner.LoadScene(sceneName);

@@ -1,4 +1,6 @@
+using Iterations.Core;
 using Iterations.Events;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,10 +13,16 @@ namespace Iterations.UI
         [Header("Panels")]
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private GameObject winPanel;
+        [SerializeField] private GameObject allLevelsWinPanel;
         [SerializeField] private GameObject creditsPanel;
         [SerializeField] private GameObject controlsPanel;
 
+        [Header("Win Panel - Retries Display")]
+        [SerializeField] private TMP_Text retriesText;
+        [SerializeField] private string retriesLabelFormat = "Retries: {0}";
+
         [Header("Events - Listened to by this manager")]
+        [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
         [SerializeField] private VoidEventChannelSO onPauseRequested;
         [SerializeField] private VoidEventChannelSO onResumeRequested;
@@ -33,6 +41,7 @@ namespace Iterations.UI
 
         private void OnEnable()
         {
+            if (onLevelWonWithRetries != null) onLevelWonWithRetries.OnEventRaised += HandleLevelWonWithRetries;
             if (onAllLevelsComplete != null) onAllLevelsComplete.OnEventRaised += HandleAllLevelsComplete;
             if (onPauseRequested != null) onPauseRequested.OnEventRaised += HandlePauseRequested;
             if (onResumeRequested != null) onResumeRequested.OnEventRaised += HandleResumeRequested;
@@ -42,6 +51,7 @@ namespace Iterations.UI
 
         private void OnDisable()
         {
+            if (onLevelWonWithRetries != null) onLevelWonWithRetries.OnEventRaised -= HandleLevelWonWithRetries;
             if (onAllLevelsComplete != null) onAllLevelsComplete.OnEventRaised -= HandleAllLevelsComplete;
             if (onPauseRequested != null) onPauseRequested.OnEventRaised -= HandlePauseRequested;
             if (onResumeRequested != null) onResumeRequested.OnEventRaised -= HandleResumeRequested;
@@ -51,13 +61,17 @@ namespace Iterations.UI
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (pausePanel != null && pausePanel.activeSelf)
-                    onResumeRequested?.RaiseEvent();
-                else
-                    onPauseRequested?.RaiseEvent();
-            }
+            if (!Input.GetKeyDown(KeyCode.Escape)) return;
+
+            if (GameManager.Instance == null) return;
+
+            var state = GameManager.Instance.CurrentState;
+            if (state != GameState.Playing && state != GameState.Paused) return;
+
+            if (pausePanel != null && pausePanel.activeSelf)
+                onResumeRequested?.RaiseEvent();
+            else
+                onPauseRequested?.RaiseEvent();
         }
 
         public void OnContinuePressed()
@@ -65,10 +79,20 @@ namespace Iterations.UI
             onResumeRequested?.RaiseEvent();
         }
 
-        private void HandleAllLevelsComplete()
+       
+        private void HandleLevelWonWithRetries(int retries)
         {
+            if (retriesText != null)
+                retriesText.text = string.Format(retriesLabelFormat, retries);
+
             if (winPanel != null)
                 winPanel.SetActive(true);
+        }
+
+        private void HandleAllLevelsComplete()
+        {
+            if (allLevelsWinPanel != null)
+                allLevelsWinPanel.SetActive(true);
         }
 
         private void HandlePauseRequested()
@@ -111,6 +135,7 @@ namespace Iterations.UI
         {
             if (pausePanel != null) pausePanel.SetActive(false);
             if (winPanel != null) winPanel.SetActive(false);
+            if (allLevelsWinPanel != null) allLevelsWinPanel.SetActive(false);
             if (creditsPanel != null) creditsPanel.SetActive(false);
             if (controlsPanel != null) controlsPanel.SetActive(false);
         }
