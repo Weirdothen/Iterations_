@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cfd725a7d326ab142bcc464765766974
+guid: e9d13575b268b4044b2e15b58aee543c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4052674258644282860
-    second: 2ndPlayerRun1_0
+      213: 1287543260416613253
+    second: 2ndPlayerJump3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,30 +122,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 2ndPlayerRun1_0
+      name: 2ndPlayerJump3_0
       rect:
         serializedVersion: 2
-        x: 10
+        x: 16
         y: 3
-        width: 40
-        height: 53
+        width: 35
+        height: 45
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4125327db3202c7c0800000000000000
-      internalID: -4052674258644282860
+      spriteID: 58b941e06c54ed110800000000000000
+      internalID: 1287543260416613253
       vertices: []
       indices: 
       edges: []
@@ -174,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      2ndPlayerRun1_0: -4052674258644282860
+      2ndPlayerJump3_0: 1287543260416613253
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
