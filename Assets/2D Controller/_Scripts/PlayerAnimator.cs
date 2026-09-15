@@ -1,3 +1,4 @@
+using Iterations.Events;
 using UnityEngine;
 
 namespace TarodevController
@@ -14,6 +15,7 @@ namespace TarodevController
 
         [Header("Settings")] [SerializeField, Range(1f, 3f)]
         private float _maxIdleSpeed = 2;
+        [SerializeField] private float landImpact = 20;
 
         [SerializeField] private float _maxTilt = 5;
         [SerializeField] private float _tiltSpeed = 20;
@@ -25,6 +27,11 @@ namespace TarodevController
 
         [Header("Audio Clips")] [SerializeField]
         private AudioClip[] _footsteps;
+
+        [Header("events Channels")]
+
+        [SerializeField] private BoolEventChannelSO GroundedChanged;
+        [SerializeField] private VoidEventChannelSO Jumped;
 
         private AudioSource _source;
         private IPlayerController _player;
@@ -39,16 +46,16 @@ namespace TarodevController
 
         private void OnEnable()
         {
-            _player.Jumped += OnJumped;
-            _player.GroundedChanged += OnGroundedChanged;
+            Jumped.OnEventRaised += OnJumped;
+            GroundedChanged.OnEventRaised += OnGroundedChanged;
 
             _moveParticles.Play();
         }
 
         private void OnDisable()
         {
-            _player.Jumped -= OnJumped;
-            _player.GroundedChanged -= OnGroundedChanged;
+            Jumped.OnEventRaised -= OnJumped;
+            GroundedChanged.OnEventRaised -= OnGroundedChanged;
 
             _moveParticles.Stop();
         }
@@ -98,7 +105,7 @@ namespace TarodevController
             }
         }
 
-        private void OnGroundedChanged(bool grounded, float impact)
+        private void OnGroundedChanged(bool grounded)
         {
             _grounded = grounded;
             
@@ -111,7 +118,7 @@ namespace TarodevController
                 _source.PlayOneShot(_footsteps[Random.Range(0, _footsteps.Length)]);
                 _moveParticles.Play();
 
-                _landParticles.transform.localScale = Vector3.one * Mathf.InverseLerp(0, 40, impact);
+                _landParticles.transform.localScale = Vector3.one * Mathf.InverseLerp(0, 40, landImpact);
                 _landParticles.Play();
             }
             else

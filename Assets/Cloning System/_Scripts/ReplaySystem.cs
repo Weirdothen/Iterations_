@@ -1,35 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-
-namespace Clone {
-    public class ReplaySystem {
+namespace Clone
+{
+    public class ReplaySystem
+    {
         private readonly WaitForFixedUpdate _wait = new WaitForFixedUpdate();
+        private readonly MonoBehaviour _owner;
+        private static readonly int GroundedParam = Animator.StringToHash("Grounded");
+        private static readonly int JumpParam = Animator.StringToHash("Jump");
+        private static readonly int WalkKey = Animator.StringToHash("Walk");
 
-        public ReplaySystem(MonoBehaviour System, bool usePhysics) {
+        private bool _wasJumpTriggeredThisFrame;
+        private bool _wasGroundedTriggeredThisFrame;
+
+        public ReplaySystem(MonoBehaviour system, bool usePhysics)
+        {
+            _owner = system;
+            this.usePhysics = usePhysics;
             _replaySmoothedTimes = new List<float>();
+            _previousReplayTimes = new List<float>();
             _ghostObjs = new List<GameObject>();
-            _ghostRbs = new List<Rigidbody2D> ();
-            System.StartCoroutine(FixedUpdate());
-            System.StartCoroutine(Update());
+            _ghostRbs = new List<Rigidbody2D>();
+            _ghostAnimators = new List<Animator>();
+
+            system.StartCoroutine(FixedUpdate());
+            system.StartCoroutine(Update());
         }
 
-        private IEnumerator FixedUpdate() {
-            while (true) {
+        // Methods to receive trigger signals from the player
+        public void NotifyPlayerJump() => _wasJumpTriggeredThisFrame = true;
+        public void NotifyPlayerGrounded() => _wasGroundedTriggeredThisFrame = true;
+
+        private IEnumerator FixedUpdate()
+        {
+            while (true)
+            {
                 yield return _wait;
                 AddSnapshot();
                 _elapsedRecordingTime += Time.smoothDeltaTime;
+
+                // Reset triggers after they have been recorded for the frame
+                _wasJumpTriggeredThisFrame = false;
+                _wasGroundedTriggeredThisFrame = false;
             }
         }
 
-        private IEnumerator Update() {
-            while (true) {
+        private IEnumerator Update()
+        {
+            while (true)
+            {
                 yield return null;
-                for(int i =0; i < _replaySmoothedTimes.Count; i++)
+                for (int i = 0; i < _replaySmoothedTimes.Count; i++)
                 {
+                    _previousReplayTimes[i] = _replaySmoothedTimes[i];
                     _replaySmoothedTimes[i] += Time.smoothDeltaTime;
-
                 }
                 UpdateReplays();
             }
@@ -37,7 +64,6 @@ namespace Clone {
 
         #region Recording
 
-        //private readonly Dictionary<RecordingType, Recording> _runs = new Dictionary<RecordingType, Recording>();
         private Recording _currentRun;
         private float _elapsedRecordingTime;
         private int _snapshotEveryNFrames;
@@ -45,64 +71,35 @@ namespace Clone {
         private float _maxRecordingTimeLimit;
         private bool usePhysics;
 
-        /// <summary>
-        /// Begin recording a run
-        /// </summary>
-        /// <param name="target">The transform you wish to record</param>
-        /// <param name="snapshotEveryNFrames">The accuracy of the recording. Smaller number == higher file size</param>
-        /// <param name="maxRecordingTimeLimit">Stop recording beyond this time</param>
         public void StartRun(Transform target, int snapshotEveryNFrames = 2, float maxRecordingTimeLimit = 60)
         {
             if (_currentRun != null) Debug.LogError("Cant create another record??");
             _currentRun = new Recording(target);
 
-
             _elapsedRecordingTime = 0;
-
             _snapshotEveryNFrames = Mathf.Max(1, snapshotEveryNFrames);
             _frameCount = 0;
-
             _maxRecordingTimeLimit = maxRecordingTimeLimit;
         }
 
-        private void AddSnapshot() {
+        private void AddSnapshot()
+        {
             if (_currentRun == null) return;
 
-            // Capture frame, taking into account the frame skip
-            if (_frameCount++ % _snapshotEveryNFrames == 0) _currentRun.AddSnapshot(_elapsedRecordingTime);
+            if (_frameCount++ % _snapshotEveryNFrames == 0)
+            {
+                _currentRun.AddSnapshot(_elapsedRecordingTime, _wasJumpTriggeredThisFrame, _wasGroundedTriggeredThisFrame);
+            }
 
-            // End a run over the limit
             if (_currentRun.Duration >= _maxRecordingTimeLimit) FinishRun();
         }
 
-        /// <summary>
-        /// Complete the current recording
-        /// </summary>
-        /// <param name="save">If we want to save this run. Use false for restarts</param>
-        /// <returns>Whether this run was the fastest so far</returns>
         public bool FinishRun(bool save = true)
         {
             if (_currentRun == null) return false;
             _currentRun = null;
-
             return true;
         }
-
-        /// <summary>
-        /// Set the saved run. This can be pulled from leaderboards or friends, etc
-        /// </summary>
-        /// <param name="run">The run you'd like to set for playback</param>
-      //  public void SetSavedRun(Recording run) => _runs[RecordingType.Saved] = run;
-
-        /// <summary>
-        /// Retrieve a run
-        /// </summary>
-        /// <param name="type">The type of run you'd like to retrieve</param>
-        /// <param name="run">The resulting run</param>
-        /// <returns></returns>
-        //public bool GetRun(RecordingType type, out Recording run) {
-        //    return _runs.TryGetValue(type, out run);
-        //}
 
         #endregion
 
@@ -111,80 +108,96 @@ namespace Clone {
         private Recording _currentReplay;
         private List<GameObject> _ghostObjs;
         private List<Rigidbody2D> _ghostRbs;
-        private bool _destroyOnComplete;
+        private List<Animator> _ghostAnimators;
         private List<float> _replaySmoothedTimes;
+        private List<float> _previousReplayTimes;
+        private bool _destroyOnComplete;
 
-        /// <summary>
-        /// Begin playing a recording
-        /// </summary>
-        /// <param name="ghostObj">The visual representation of the ghost. Must be pre-instantiated (this allows customization)</param>
-        /// <param name="destroyOnCompletion">Whether or not to automatically destroy the ghost object when the run completes</param>
-        public void PlayRecording( GameObject ghostObj, bool destroyOnCompletion = true) {
-            //if (_ghostObjs[_ghostObjs.Count -1] != null) Object.Destroy(_ghostObj);
-
-            if (_currentRun == null) {
+        public void PlayRecording(GameObject ghostObj, bool destroyOnCompletion = true)
+        {
+            if (_currentRun == null)
+            {
                 Object.Destroy(ghostObj);
                 return;
             }
+
             _currentReplay = _currentRun;
             _replaySmoothedTimes.Add(0f);
-
+            _previousReplayTimes.Add(0f);
             _destroyOnComplete = destroyOnCompletion;
 
             if (_currentReplay != null)
             {
                 if (usePhysics)
                 {
-                    // need to be changed if you want to make a 3d physics
                     if (ghostObj.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
                     {
                         _ghostRbs.Add(rb);
                     }
-                    else
-                    {
-                        Debug.LogWarning("there is no rigidbody to use the physics");
-                    }
                 }
-                _ghostObjs.Add(ghostObj);
-             
-            }
-            else if (_destroyOnComplete) Object.Destroy(ghostObj);
-        }
-
-        private void UpdateReplays() {
-            if (_currentReplay == null) return;
-            for (int i = 0; i < _replaySmoothedTimes.Count; i++)
-            {
-                // Evaluate the point at the current time
-                var pose = _currentReplay.EvaluatePoint(_replaySmoothedTimes[i]);
-                if (usePhysics)
+                Animator anim = ghostObj.GetComponentInChildren<Animator>();
+                if (anim !=null)
                 {
-                    _ghostRbs[i].position =  pose.position;
-                    _ghostRbs[i].SetRotation(pose.rotation);
+                    _ghostAnimators.Add(anim);
                 }
                 else
+                {
+                    _ghostAnimators.Add(null);
+                }
+
+                _ghostObjs.Add(ghostObj);
+            }
+            else if (_destroyOnComplete)
+            {
+                Object.Destroy(ghostObj);
+            }
+        }
+
+        private void UpdateReplays()
+        {
+            if (_currentReplay == null) return;
+
+            for (int i = 0; i < _replaySmoothedTimes.Count; i++)
+            {
+                var pose = _currentReplay.EvaluatePoint(_replaySmoothedTimes[i]);
+
+                if (usePhysics && _ghostRbs.Count > i && _ghostRbs[i] != null)
+                {
+                    _ghostRbs[i].position = pose.position;
+                    _ghostRbs[i].SetRotation(pose.rotation);
+                }
+                else if (_ghostObjs.Count > i && _ghostObjs[i] != null)
                 {
                     _ghostObjs[i].transform.SetPositionAndRotation(pose.position, pose.rotation);
                 }
 
-                // Destroy the replay when done
+                if (_ghostAnimators.Count > i && _ghostAnimators[i] != null)
+                {
+                    _ghostAnimators[i].SetFloat(WalkKey, _currentReplay.EvaluateAnimation(_replaySmoothedTimes[i]));
+
+                    // Fire Jump Trigger if timestamp crossed
+                    if (_currentReplay.HasJumpedInTimeRange(_previousReplayTimes[i], _replaySmoothedTimes[i]))
+                    {
+                        _ghostAnimators[i].SetTrigger(JumpParam);
+                    }
+
+                    // Fire Grounded Trigger if timestamp crossed
+                    if (_currentReplay.HasGroundedInTimeRange(_previousReplayTimes[i], _replaySmoothedTimes[i]))
+                    {
+                        _ghostAnimators[i].SetTrigger(GroundedParam);
+                    }
+                }
+
                 if (_replaySmoothedTimes[i] > _currentReplay.Duration)
                 {
-                    _currentReplay = null;
-                    if (_destroyOnComplete) Object.Destroy(_ghostObjs[i]);
+                    if (_destroyOnComplete && _ghostObjs[i] != null)
+                    {
+                        Object.Destroy(_ghostObjs[i]);
+                    }
                 }
             }
         }
 
-        /// <summary>
-        /// Stop the replay. Should be called when the player finishes the run before the ghost
-        /// </summary>
-        //public void StopReplay(int index) {
-        //    if (_ghostObjs[index] != null) Object.Destroy(_ghostObjs[index]);
-        //    _currentReplay = null;
-        //}
-
         #endregion
     }
-
 }

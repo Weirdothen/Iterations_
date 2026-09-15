@@ -5,8 +5,10 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - player: {instanceID: 0}
-  - ghostPrefabe: {instanceID: 0}
+  - ghostPrefabe: {fileID: 5304459651671198311, guid: cf58bf933a92e604194c5bc9877479b7, type: 3}
   - onLoseTriggered: {fileID: 11400000, guid: 86799c8f6b8ba9442a8a4c1dec8aedb0, type: 2}
+  - onJumpTriggered: {fileID: 11400000, guid: 6b5ba3b9b833d93468b57679172c8966, type: 2}
+  - GroundedChanged: {fileID: 11400000, guid: cf9e022a76c4d814dafaefe19e77eb57, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

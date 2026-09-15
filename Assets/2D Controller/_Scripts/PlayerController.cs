@@ -1,3 +1,4 @@
+using Iterations.Events;
 using System;
 using UnityEngine;
 
@@ -17,8 +18,11 @@ namespace TarodevController
         #region Interface
 
         public Vector2 FrameInput => _frameInput.Move;
-        public event Action<bool, float> GroundedChanged;
-        public event Action Jumped;
+
+        [Header("events Channels")]
+
+        [SerializeField] private BoolEventChannelSO GroundedChanged;
+        [SerializeField] private VoidEventChannelSO Jumped;
 
         #endregion
 
@@ -103,14 +107,14 @@ namespace TarodevController
                 _coyoteUsable = true;
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
-                GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
+                GroundedChanged?.RaiseEvent(true );
             }
             // Left the Ground
             else if (_grounded && !groundHit)
             {
                 _grounded = false;
                 _frameLeftGrounded = _time;
-                GroundedChanged?.Invoke(false, 0);
+                GroundedChanged?.RaiseEvent(false);
             }
 
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
@@ -148,7 +152,7 @@ namespace TarodevController
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;
-            Jumped?.Invoke();
+            Jumped?.RaiseEvent();
         }
 
         #endregion
@@ -207,9 +211,6 @@ namespace TarodevController
 
     public interface IPlayerController
     {
-        public event Action<bool, float> GroundedChanged;
-
-        public event Action Jumped;
         public Vector2 FrameInput { get; }
     }
 }
