@@ -40,8 +40,6 @@ public class SceneTransitioner : MonoBehaviour
         SceneManager.sceneLoaded -= HandleSceneLoaded;
     }
 
-    // Safety net: fades in even if a scene was loaded without going through
-    // LoadScene() below (e.g. a stray SceneManager.LoadScene call elsewhere).
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (isTransitioning) return;
@@ -62,6 +60,8 @@ public class SceneTransitioner : MonoBehaviour
             SceneManager.LoadScene(sceneName);
             return;
         }
+
+        Time.timeScale = 1f;
 
         Instance.StartCoroutine(Instance.LoadSceneRoutine(sceneName));
     }
@@ -95,7 +95,7 @@ public class SceneTransitioner : MonoBehaviour
 
         while (t < fadeDuration)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime; 
             fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t / fadeDuration);
             yield return null;
         }

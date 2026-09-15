@@ -138,13 +138,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Iterations.Core.GameManager
   onAllLevelsComplete: {fileID: 11400000, guid: e69c6fb9b8757044d84b69ff7173a57a, type: 2}
+  onLevelWonWithRetries: {fileID: 11400000, guid: 43087032a8bb4ee40a8b83e094693ee2, type: 2}
   onPauseRequested: {fileID: 11400000, guid: 4f2074c9825759144a5421173fd2b67f, type: 2}
   onResumeRequested: {fileID: 11400000, guid: 9bd4a0ffe7070da47a45ad4c703a9a34, type: 2}
   onWinTriggered: {fileID: 11400000, guid: b5de4e6e903c4f44e9709d73d03b082f, type: 2}
   onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
-  loseRestartDelay: 1
-  fadeDuration: 0.5
-  fadeCanvasGroup: {fileID: 592098571451073542}
+  loseRestartDelay: 4
   mainMenuSceneName: MainMenuScene
 --- !u!82 &9221293495038184595
 AudioSource:
