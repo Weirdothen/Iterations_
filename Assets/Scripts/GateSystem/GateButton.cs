@@ -1,5 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Iterations.Mechanics
 {
@@ -8,8 +8,21 @@ namespace Iterations.Mechanics
     {
         [SerializeField] private LayerMask activatorLayers;
         [SerializeField] private Gate[] targetGates;
+        [SerializeField] private Transform buttonVisual;
+        [SerializeField] private SpriteRenderer buttonSpriteRenderer;
+
+        [SerializeField] private float pressedScaleY = 0.3f;
+        [SerializeField] private float animationDuration = 0.2f;
+        [SerializeField] private ParticleSystem pressParticles;
 
         private int _occupantCount;
+        private Vector3 _originalScale;
+
+        private void Start()
+        {
+            if (buttonVisual != null)
+                _originalScale = buttonVisual.localScale;
+        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -18,7 +31,10 @@ namespace Iterations.Mechanics
             _occupantCount++;
 
             if (_occupantCount == 1)
+            {
                 SetGates(open: true);
+                AnimatePress();
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -28,7 +44,10 @@ namespace Iterations.Mechanics
             _occupantCount = Mathf.Max(0, _occupantCount - 1);
 
             if (_occupantCount == 0)
+            {
                 SetGates(open: false);
+                AnimateRelease();
+            }
         }
 
         private void SetGates(bool open)
@@ -45,5 +64,34 @@ namespace Iterations.Mechanics
         {
             return (activatorLayers.value & (1 << other.gameObject.layer)) != 0;
         }
+
+        #region Game Feel Animations
+
+        private void AnimatePress()
+        {
+            if (buttonVisual != null)
+            {
+                buttonVisual.DOKill();
+                buttonVisual.DOScaleY(_originalScale.y * pressedScaleY, animationDuration)
+                            .SetEase(Ease.OutBack);
+            }
+
+            if (pressParticles != null)
+            {
+                pressParticles.Play();
+            }
+        }
+
+        private void AnimateRelease()
+        {
+            if (buttonVisual != null)
+            {
+                buttonVisual.DOKill();
+                buttonVisual.DOScaleY(_originalScale.y, animationDuration * 2f)
+                            .SetEase(Ease.OutElastic);
+            }
+        }
+
+        #endregion
     }
 }
