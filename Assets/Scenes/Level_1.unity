@@ -7344,6 +7344,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6373905031625520540, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -840
+      objectReference: {fileID: 0}
+    - target: {fileID: 6373905031625520540, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 443
+      objectReference: {fileID: 0}
+    - target: {fileID: 7366162199137199600, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4360329592751815120, guid: 07db76b9cf0050149a4d8c16169af133, type: 3}
+    - target: {fileID: 7366162199137199600, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_Color.b
+      value: 0.98679245
+      objectReference: {fileID: 0}
+    - target: {fileID: 7366162199137199600, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_Color.g
+      value: 0.98679245
+      objectReference: {fileID: 0}
+    - target: {fileID: 7366162199137199600, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8864773906561783728, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_Name
       value: HUDCanvas
