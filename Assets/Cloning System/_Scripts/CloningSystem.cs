@@ -6,16 +6,17 @@ public class CloningSystem : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private GameObject ghostPrefabe;
-    [SerializeField] private int firstCloneTime= 5;
+    [SerializeField] private int firstCloneTime = 5;
     [SerializeField] private int cloneSpawningTime = 5;
     [SerializeField, Range(1, 10)] private int captureEveryNFrames = 2;
     [SerializeField] private int maxRecordTime = 500;
 
     [Header("events Channels")]
     [SerializeField] private VoidEventChannelSO onLoseTriggered;
+    [SerializeField] private VoidEventChannelSO onJumpTriggered;
+    [SerializeField] private BoolEventChannelSO GroundedChanged;
 
     private ReplaySystem _system;
-
 
     private void Awake()
     {
@@ -23,8 +24,16 @@ public class CloningSystem : MonoBehaviour
     }
 
     private void OnEnable()
-    { 
+    {
         if (onLoseTriggered != null) onLoseTriggered.OnEventRaised += HandleOnLoseTriggered;
+        if (onJumpTriggered != null) onJumpTriggered.OnEventRaised += RecordPlayerJump;
+        if (GroundedChanged != null) GroundedChanged.OnEventRaised += RecordPlayerGrounded;
+        
+    }
+
+    private void OnDisable()
+    {
+        if (onLoseTriggered != null) onLoseTriggered.OnEventRaised -= HandleOnLoseTriggered;
     }
 
     private void HandleOnLoseTriggered()
@@ -32,12 +41,27 @@ public class CloningSystem : MonoBehaviour
         _system.FinishRun();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _system.StartRun(player, captureEveryNFrames, maxRecordTime);
         InvokeRepeating("SpawnClone", firstCloneTime, cloneSpawningTime);
     }
+
+    // Call this from your PlayerController script exactly when anim.SetTrigger("Jump") is called
+    public void RecordPlayerJump()
+    {
+        _system?.NotifyPlayerJump();
+    }
+
+    // Call this from your PlayerController script exactly when anim.SetTrigger("Grounded") is called
+    public void RecordPlayerGrounded(bool value)
+    {
+        if (value)
+        {
+            _system?.NotifyPlayerGrounded();
+        }
+    }
+
     void SpawnClone()
     {
         GameObject obj = Instantiate(ghostPrefabe);
