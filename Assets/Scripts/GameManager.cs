@@ -30,10 +30,6 @@ namespace Iterations.Core
         [Header("Level Flow")]
         private string nextLevelSceneName;
         [SerializeField] private float loseRestartDelay = 3f;
-        [SerializeField] private float fadeDuration = 0.5f;
-
-        [Header("Fade")]
-        [SerializeField] private CanvasGroup fadeCanvasGroup;
 
         [SerializeField] private string mainMenuSceneName = "MainMenuScene";
 
@@ -49,12 +45,6 @@ namespace Iterations.Core
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            if (fadeCanvasGroup != null)
-            {
-                fadeCanvasGroup.alpha = 0f;
-                fadeCanvasGroup.blocksRaycasts = false;
-            }
         }
 
         private void OnEnable()
@@ -114,7 +104,7 @@ namespace Iterations.Core
             PlayerPrefs.SetInt(nextLevelSceneName, 1);
             PlayerPrefs.Save();
 
-            StartCoroutine(FadeToScene(nextLevelSceneName));
+            SceneTransitioner.LoadScene(nextLevelSceneName);
         }
 
         private void HandleLoseTriggered()
@@ -128,35 +118,7 @@ namespace Iterations.Core
         private IEnumerator RestartAfterDelay()
         {
             yield return new WaitForSeconds(loseRestartDelay);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
-        private IEnumerator FadeToScene(string sceneName)
-        {
-            yield return StartCoroutine(Fade(1f));
-            SceneManager.LoadScene(sceneName);
-            yield return StartCoroutine(Fade(0f));
-        }
-
-        private IEnumerator Fade(float targetAlpha)
-        {
-            if (fadeCanvasGroup == null)
-                yield break;
-
-            float startAlpha = fadeCanvasGroup.alpha;
-            float t = 0f;
-
-            fadeCanvasGroup.blocksRaycasts = true;
-
-            while (t < fadeDuration)
-            {
-                t += Time.deltaTime;
-                fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t / fadeDuration);
-                yield return null;
-            }
-
-            fadeCanvasGroup.alpha = targetAlpha;
-            fadeCanvasGroup.blocksRaycasts = targetAlpha > 0.99f;
+            SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         public void SetNextLevel(string sceneName)
@@ -166,17 +128,17 @@ namespace Iterations.Core
 
         public void RestartLevel()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         public void ReturnToMainMenu()
         {
-            SceneManager.LoadScene(mainMenuSceneName);
+            SceneTransitioner.LoadScene(mainMenuSceneName);
         }
 
         public void LoadLevelFromMenu(string sceneName)
         {
-            StartCoroutine(FadeToScene(sceneName));
+            SceneTransitioner.LoadScene(sceneName);
         }
     }
 }
