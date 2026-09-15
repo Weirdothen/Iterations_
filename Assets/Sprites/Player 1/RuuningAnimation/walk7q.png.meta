@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8de5229d76d89d94da1f8a6386516169
+guid: 74a7696e0a623e4499ff3f12941a5c3b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6058375162176562810
-    second: jump4_0
+      213: -6371464233639825889
+    second: walk7q_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 35
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -122,30 +122,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: jump4_0
+      name: walk7q_0
       rect:
         serializedVersion: 2
-        x: 14
-        y: 3
-        width: 39
-        height: 47
+        x: 12
+        y: 4
+        width: 34
+        height: 54
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a7665918c1ca31450800000000000000
-      internalID: 6058375162176562810
+      spriteID: f1eaac679030497a0800000000000000
+      internalID: -6371464233639825889
       vertices: []
       indices: 
       edges: []
@@ -174,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      jump4_0: 6058375162176562810
+      walk7q_0: -6371464233639825889
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
