@@ -334,7 +334,7 @@ PrefabInstance:
       objectReference: {fileID: 728987735}
     - target: {fileID: 8977742572687838060, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2842,7 +2842,6 @@ MonoBehaviour:
   pointsLostPerSecond: 10
   totalLevels: 12
   currentScoreText: {fileID: 1724319534}
-  currentTimer: {fileID: 0}
 --- !u!4 &1951617209
 Transform:
   m_ObjectHideFlags: 0
