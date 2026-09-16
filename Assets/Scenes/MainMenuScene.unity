@@ -905,6 +905,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 510709398}
   m_CullTransparentMesh: 1
+--- !u!114 &567175651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848468949452003030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "\u062E\u0631\u0648\u062C"
+  fontStack: {fileID: 11400000, guid: c3858c8cfcc5cc84d9fc67465e51ff34, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 68
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 1
+  verticalAlignment: 0
+  overEdge: 0
+  underEdge: 0
+  leadingDistribution: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items: []
+  modRegisterConfigs:
+    items: []
+  highlighter:
+    rid: 3120738717071573133
+  references:
+    version: 2
+    RefIds:
+    - rid: 3120738717071573133
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
 --- !u!224 &624728036 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4522849980644175531, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
@@ -3298,6 +3347,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2699605403961291166, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -6
+      objectReference: {fileID: 0}
     - target: {fileID: 3469148717374000417, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3382,10 +3435,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4672622176295326790, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4672622176295326790, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353797123007558451, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -7
+      objectReference: {fileID: 0}
     - target: {fileID: 5603736957244166068, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 904522338}
+    - target: {fileID: 5807352454585712640, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5807352454585712640, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 5832136445119944065, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3394,33 +3467,344 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 904522338}
+    - target: {fileID: 6616174042665508378, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616174042665508378, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7342719763129648106, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -8
+      objectReference: {fileID: 0}
     - target: {fileID: 8010685847440475299, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 904522338}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8776511298002903743, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+    - {fileID: 5956868094251297973, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+    - {fileID: 7189945389363582141, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+    - {fileID: 6504530751623500651, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+    - {fileID: 8357379958791910827, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+    - {fileID: 6878563258312050988, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8881761684733779877, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
       addedObject: {fileID: 271334353}
+    - targetCorrespondingSourceObject: {fileID: 4105779111563443820, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7848468949452003040}
     - targetCorrespondingSourceObject: {fileID: 4248729175179377734, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
       addedObject: {fileID: 888279423}
+    - targetCorrespondingSourceObject: {fileID: 2242574365094607393, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7848468949452003039}
     - targetCorrespondingSourceObject: {fileID: 1992467451456676542, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
       addedObject: {fileID: 124833117}
+    - targetCorrespondingSourceObject: {fileID: 1334376152665651565, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7848468949452003038}
     - targetCorrespondingSourceObject: {fileID: 5612455612843440786, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
       addedObject: {fileID: 935404431}
+    - targetCorrespondingSourceObject: {fileID: 434928177954556995, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7848468949452003037}
     - targetCorrespondingSourceObject: {fileID: 1165691367698728590, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1787946384}
+    - targetCorrespondingSourceObject: {fileID: 4837153213244089199, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7848468949452003036}
     - targetCorrespondingSourceObject: {fileID: 2761550601509717841, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1591735707}
+    - targetCorrespondingSourceObject: {fileID: 6530424018046586620, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 567175651}
   m_SourcePrefab: {fileID: 100100000, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+--- !u!1 &7848468949452003030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6530424018046586620, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7848468949452003031 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4837153213244089199, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7848468949452003032 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 434928177954556995, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7848468949452003033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1334376152665651565, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7848468949452003034 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2242574365094607393, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7848468949452003035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4105779111563443820, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7848468949452003036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848468949452003031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "\u0627\u0644\u062A\u062D\u0643\u0645"
+  fontStack: {fileID: 11400000, guid: c3858c8cfcc5cc84d9fc67465e51ff34, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 59.9
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 1
+  verticalAlignment: 0
+  overEdge: 0
+  underEdge: 0
+  leadingDistribution: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items: []
+  modRegisterConfigs:
+    items: []
+  highlighter:
+    rid: 3120738717071573132
+  references:
+    version: 2
+    RefIds:
+    - rid: 3120738717071573132
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
+--- !u!114 &7848468949452003037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848468949452003032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "\u0643\u0631\u064A\u062F\u064A\u062A\u0633"
+  fontStack: {fileID: 11400000, guid: c3858c8cfcc5cc84d9fc67465e51ff34, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 53.3
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 1
+  verticalAlignment: 0
+  overEdge: 0
+  underEdge: 0
+  leadingDistribution: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items: []
+  modRegisterConfigs:
+    items: []
+  highlighter:
+    rid: 3120738717071573131
+  references:
+    version: 2
+    RefIds:
+    - rid: 3120738717071573131
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
+--- !u!114 &7848468949452003038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848468949452003033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "\u0627\u0644\u0627\u0639\u062F\u0627\u062F\u0627\u062A"
+  fontStack: {fileID: 11400000, guid: c3858c8cfcc5cc84d9fc67465e51ff34, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 54.7
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 1
+  verticalAlignment: 0
+  overEdge: 0
+  underEdge: 0
+  leadingDistribution: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items: []
+  modRegisterConfigs:
+    items: []
+  highlighter:
+    rid: 3120738717071573130
+  references:
+    version: 2
+    RefIds:
+    - rid: 3120738717071573130
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
+--- !u!114 &7848468949452003039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848468949452003034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "\u0645\u0627\u0644\u062A\u064A \u0628\u0644\u0627\u064A\u0631"
+  fontStack: {fileID: 11400000, guid: c3858c8cfcc5cc84d9fc67465e51ff34, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 51.3
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 1
+  verticalAlignment: 0
+  overEdge: 0
+  underEdge: 0
+  leadingDistribution: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items: []
+  modRegisterConfigs:
+    items: []
+  highlighter:
+    rid: 3120738717071573129
+  references:
+    version: 2
+    RefIds:
+    - rid: 3120738717071573129
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
+--- !u!114 &7848468949452003040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848468949452003035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "\u0627\u0644\u0639\u0628"
+  fontStack: {fileID: 11400000, guid: c3858c8cfcc5cc84d9fc67465e51ff34, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 67.84
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 1
+  verticalAlignment: 0
+  overEdge: 0
+  underEdge: 0
+  leadingDistribution: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items: []
+  modRegisterConfigs:
+    items: []
+  highlighter:
+    rid: 3120738717071573128
+  references:
+    version: 2
+    RefIds:
+    - rid: 3120738717071573128
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
 --- !u!1001 &8326460150372074146
 PrefabInstance:
   m_ObjectHideFlags: 0
