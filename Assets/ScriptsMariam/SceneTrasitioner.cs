@@ -4,10 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransitioner : MonoBehaviour
 {
-    public static SceneTransitioner Instance { get; private set; }
+    private static SceneTransitioner Instance { get; set; }
 
     [SerializeField] private CanvasGroup fadeCanvasGroup;
     [SerializeField] private float fadeDuration = 0.5f;
+
+    private bool isTransitioning;
 
     private void Awake()
     {
@@ -28,7 +30,23 @@ public class SceneTransitioner : MonoBehaviour
         }
     }
 
-    public void LoadScene(string sceneName)
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+    }
+
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (isTransitioning) return;
+        StartCoroutine(Fade(0f));
+    }
+
+    public static void LoadScene(string sceneName)
     {
         if (string.IsNullOrEmpty(sceneName))
         {
@@ -36,21 +54,33 @@ public class SceneTransitioner : MonoBehaviour
             return;
         }
 
-        StartCoroutine(LoadSceneRoutine(sceneName));
+        if (Instance == null)
+        {
+            Debug.LogWarning("SceneTransitioner instance not found, loading without fade.");
+            SceneManager.LoadScene(sceneName);
+            return;
+        }
+
+        Time.timeScale = 1f;
+
+        Instance.StartCoroutine(Instance.LoadSceneRoutine(sceneName));
     }
 
     private IEnumerator LoadSceneRoutine(string targetSceneName)
     {
+        isTransitioning = true;
+
         yield return StartCoroutine(Fade(1f));
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(targetSceneName);
-
         while (!operation.isDone)
         {
             yield return null;
         }
 
         yield return StartCoroutine(Fade(0f));
+
+        isTransitioning = false;
     }
 
     private IEnumerator Fade(float targetAlpha)
@@ -65,7 +95,7 @@ public class SceneTransitioner : MonoBehaviour
 
         while (t < fadeDuration)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime; 
             fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t / fadeDuration);
             yield return null;
         }

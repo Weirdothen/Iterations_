@@ -20,6 +20,7 @@ namespace Iterations.Core
 
         [Header("Events - Raised by this manager")]
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
+        [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
 
         [Header("Events - Listened to by this manager")]
         [SerializeField] private VoidEventChannelSO onPauseRequested;
@@ -29,15 +30,23 @@ namespace Iterations.Core
 
         [Header("Level Flow")]
         private string nextLevelSceneName;
-        [SerializeField] private float loseRestartDelay = 3f;
-        [SerializeField] private float fadeDuration = 0.5f;
-
-        [Header("Fade")]
-        [SerializeField] private CanvasGroup fadeCanvasGroup;
+        [SerializeField] private float loseRestartDelay = 4f;
 
         [SerializeField] private string mainMenuSceneName = "MainMenuScene";
 
+        [Header("Retries")]
+        private const string RetriesKeyPrefix = "Retries_";
+
         public GameState CurrentState { get; private set; } = GameState.MainMenu;
+
+        public int CurrentLevelRetries { get; private set; }
+        public int BestRetriesForCurrentLevel { get; private set; }
+
+        private Coroutine _restartRoutine;
+        private bool _levelAdvancePending;
+
+       
+        private bool _isSameLevelReload;
 
         private void Awake()
         {
@@ -49,12 +58,6 @@ namespace Iterations.Core
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            if (fadeCanvasGroup != null)
-            {
-                fadeCanvasGroup.alpha = 0f;
-                fadeCanvasGroup.blocksRaycasts = false;
-            }
         }
 
         private void OnEnable()
@@ -81,6 +84,23 @@ namespace Iterations.Core
         {
             CurrentState = scene.name == mainMenuSceneName ? GameState.MainMenu : GameState.Playing;
             Time.timeScale = 1f;
+
+            _restartRoutine = null;
+            _levelAdvancePending = false;
+
+            if (_isSameLevelReload)
+            {
+               
+            }
+            else
+            {
+                
+                CurrentLevelRetries = 0;
+            }
+
+            _isSameLevelReload = false; 
+
+            BestRetriesForCurrentLevel = GetSavedBestRetries(scene.name);
         }
 
         private void HandlePauseRequested()
@@ -105,6 +125,19 @@ namespace Iterations.Core
 
             CurrentState = GameState.Won;
 
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
+
+            _levelAdvancePending = true;
+            onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
+        }
+
+       
+        public void AdvanceAfterWin()
+        {
+            if (!_levelAdvancePending) return;
+            _levelAdvancePending = false;
+
             if (string.IsNullOrEmpty(nextLevelSceneName))
             {
                 onAllLevelsComplete?.RaiseEvent();
@@ -114,7 +147,8 @@ namespace Iterations.Core
             PlayerPrefs.SetInt(nextLevelSceneName, 1);
             PlayerPrefs.Save();
 
-            StartCoroutine(FadeToScene(nextLevelSceneName));
+           
+            SceneTransitioner.LoadScene(nextLevelSceneName);
         }
 
         private void HandleLoseTriggered()
@@ -122,41 +156,34 @@ namespace Iterations.Core
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.Lost;
-            StartCoroutine(RestartAfterDelay());
+
+            if (_restartRoutine != null) return;
+
+            _restartRoutine = StartCoroutine(RestartAfterDelay());
         }
 
         private IEnumerator RestartAfterDelay()
         {
             yield return new WaitForSeconds(loseRestartDelay);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            RestartLevel();
         }
 
-        private IEnumerator FadeToScene(string sceneName)
+        private int GetSavedBestRetries(string sceneName)
         {
-            yield return StartCoroutine(Fade(1f));
-            SceneManager.LoadScene(sceneName);
-            yield return StartCoroutine(Fade(0f));
+            string key = RetriesKeyPrefix + sceneName;
+            return PlayerPrefs.HasKey(key) ? PlayerPrefs.GetInt(key) : -1;
         }
 
-        private IEnumerator Fade(float targetAlpha)
+        private void SaveRetriesIfBest(string sceneName, int retries)
         {
-            if (fadeCanvasGroup == null)
-                yield break;
+            string key = RetriesKeyPrefix + sceneName;
 
-            float startAlpha = fadeCanvasGroup.alpha;
-            float t = 0f;
-
-            fadeCanvasGroup.blocksRaycasts = true;
-
-            while (t < fadeDuration)
+            if (!PlayerPrefs.HasKey(key) || retries < PlayerPrefs.GetInt(key))
             {
-                t += Time.deltaTime;
-                fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t / fadeDuration);
-                yield return null;
+                PlayerPrefs.SetInt(key, retries);
+                PlayerPrefs.Save();
+                BestRetriesForCurrentLevel = retries;
             }
-
-            fadeCanvasGroup.alpha = targetAlpha;
-            fadeCanvasGroup.blocksRaycasts = targetAlpha > 0.99f;
         }
 
         public void SetNextLevel(string sceneName)
@@ -164,19 +191,24 @@ namespace Iterations.Core
             nextLevelSceneName = sceneName;
         }
 
+       
         public void RestartLevel()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            CurrentLevelRetries++;
+            _isSameLevelReload = true;
+            SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+      
         public void ReturnToMainMenu()
         {
-            SceneManager.LoadScene(mainMenuSceneName);
+            SceneTransitioner.LoadScene(mainMenuSceneName);
         }
 
+        
         public void LoadLevelFromMenu(string sceneName)
         {
-            StartCoroutine(FadeToScene(sceneName));
+            SceneTransitioner.LoadScene(sceneName);
         }
     }
 }

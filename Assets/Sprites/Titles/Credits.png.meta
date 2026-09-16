@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: ddc46b43464299b48b30e37904844e71
+guid: afa304105298e75469d5962109383f6f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8363144008919072003
-    second: Tile3_0
+      213: 325440641546151924
+    second: Credits_0
+  - first:
+      213: -7230797560680492228
+    second: Credits_1
+  - first:
+      213: 1660878261141922055
+    second: Credits_2
+  - first:
+      213: 3408833089268186296
+    second: Credits_3
+  - first:
+      213: -4505729462688360816
+    second: Credits_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,17 +134,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tile3_0
+      name: Credits_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 36
-        height: 36
+        x: 12
+        y: 24
+        width: 54
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +166,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: df241fe65d420fb80800000000000000
-      internalID: -8363144008919072003
+      spriteID: 4f765da0a82348400800000000000000
+      internalID: 325440641546151924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Credits_1
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 39
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c33d0e0ddeb07ab90800000000000000
+      internalID: -7230797560680492228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Credits_2
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 39
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70168829aff9c0710800000000000000
+      internalID: 1660878261141922055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Credits_3
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 25
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bc7d6842ab9e4f20800000000000000
+      internalID: 3408833089268186296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Credits_4
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 23
+        width: 34
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 096d2721dee6871c0800000000000000
+      internalID: -4505729462688360816
       vertices: []
       indices: 
       edges: []
@@ -161,7 +274,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tile3_0: -8363144008919072003
+      Credits_0: 325440641546151924
+      Credits_1: -7230797560680492228
+      Credits_2: 1660878261141922055
+      Credits_3: 3408833089268186296
+      Credits_4: -4505729462688360816
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
