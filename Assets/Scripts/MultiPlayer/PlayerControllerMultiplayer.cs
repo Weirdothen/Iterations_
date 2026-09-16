@@ -1,19 +1,24 @@
 using System;
 using UnityEngine;
 using Unity.Netcode;
+using Iterations.Events;
 
 namespace TarodevController
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-    public class PlayerControllerMultiplayer : NetworkBehaviour, IPlayerController
+    public class PlayerControllerMultiplayer : NetworkBehaviour, IPlayerControllerMultiplayer
     {
         [SerializeField] private ScriptableStats _stats;
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
         private Rigidbody2D _rb;
         private CapsuleCollider2D _col;
-        private FrameInput _frameInput;
+        private bool JumpDown;
+        private bool JumpHeld;
         private Vector2 _frameVelocity;
+
+        public NetworkVariable<Vector2> Move;
+
         private bool _cachedQueryStartInColliders;
 
         private NetworkVariable<Color> _playerColor = new NetworkVariable<Color>(
@@ -24,11 +29,15 @@ namespace TarodevController
 
         #region Interface
 
-        public Vector2 FrameInput => _frameInput.Move;
-        public event Action<bool, float> GroundedChanged;
-        public event Action Jumped;
+        public Vector2 FrameInput => Move.Value;
+
 
         #endregion
+
+        [Header("events Channels")]
+
+        [SerializeField] private BoolEventChannelSO GroundedChanged;
+        [SerializeField] private VoidEventChannelSO Jumped;
 
         private float _time;
 
@@ -101,53 +110,43 @@ namespace TarodevController
             GatherInput();
         }
 
-
+        Vector2 tempmove;
         private void GatherInput()
         {
-            _frameInput = new FrameInput
-            {
-                JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
-                JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
-                Move = new Vector2(
-                    Input.GetAxisRaw("Horizontal"),
-                    Input.GetAxisRaw("Vertical")
-                )
-            };
+
+
+            JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C);
+            JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C);
+            tempmove = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+             
+            
 
             if (_stats.SnapInput)
             {
-                _frameInput.Move.x =
-                    Mathf.Abs(_frameInput.Move.x) <
-                    _stats.HorizontalDeadZoneThreshold
-                        ? 0
-                        : Mathf.Sign(_frameInput.Move.x);
-
-                _frameInput.Move.y =
-                    Mathf.Abs(_frameInput.Move.y) <
-                    _stats.VerticalDeadZoneThreshold
-                        ? 0
-                        : Mathf.Sign(_frameInput.Move.y);
+                tempmove = new Vector2(Mathf.Abs(tempmove.x) <
+                    _stats.HorizontalDeadZoneThreshold? 0: Mathf.Sign(tempmove.x),
+                    Mathf.Abs(tempmove.y) <_stats.VerticalDeadZoneThreshold? 0: Mathf.Sign(tempmove.y));
             }
 
-            if (_frameInput.JumpDown)
+            if (JumpDown)
             {
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
             }
 
-            GatherInputServerRpc(_frameInput.JumpDown, _frameInput.JumpHeld, _frameInput.Move);
+            GatherInputServerRpc(JumpDown, JumpHeld, tempmove);
         }
 
         [ServerRpc]
         private void GatherInputServerRpc(bool jumpDown, bool jumpHeld, Vector2 move)
         {
-            _frameInput = new FrameInput
-            {
-                JumpDown = jumpDown,
-                JumpHeld = jumpHeld,
-                Move = move
-            };
-            if (_frameInput.JumpDown)
+
+
+            JumpDown = jumpDown;
+            JumpHeld = jumpHeld;
+            Move.Value = move;
+            
+            if (JumpDown)
             {
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
@@ -207,23 +206,24 @@ namespace TarodevController
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
 
-                GroundedChanged?.Invoke(
-                    true,
-                    Mathf.Abs(_frameVelocity.y)
-                );
+                GroundedChangedRaiseEventClientRpc(true);
             }
             else if (_grounded && !groundHit)
             {
                 _grounded = false;
                 _frameLeftGrounded = _time;
 
-                GroundedChanged?.Invoke(false, 0);
+                GroundedChangedRaiseEventClientRpc(false);
             }
 
             Physics2D.queriesStartInColliders =
                 _cachedQueryStartInColliders;
         }
-
+        [ClientRpc] 
+        void GroundedChangedRaiseEventClientRpc(bool value)
+        {
+            GroundedChanged.RaiseEvent(value);
+        }
         #endregion
 
 
@@ -249,7 +249,7 @@ namespace TarodevController
             if (
                 !_endedJumpEarly &&
                 !_grounded &&
-                !_frameInput.JumpHeld &&
+                !JumpHeld &&
                 _rb.linearVelocity.y > 0
             )
             {
@@ -276,7 +276,12 @@ namespace TarodevController
 
             _frameVelocity.y = _stats.JumpPower;
 
-            Jumped?.Invoke();
+            JumpedRaiseEventClientRpc();
+        }
+        [ClientRpc]
+        void JumpedRaiseEventClientRpc()
+        {
+            Jumped.RaiseEvent();
         }
 
         #endregion
@@ -285,7 +290,7 @@ namespace TarodevController
 
         private void HandleDirection()
         {
-            if (_frameInput.Move.x == 0)
+            if (Move.Value.x == 0)
             {
                 var deceleration =
                     _grounded
@@ -302,7 +307,7 @@ namespace TarodevController
             {
                 _frameVelocity.x = Mathf.MoveTowards(
                     _frameVelocity.x,
-                    _frameInput.Move.x * _stats.MaxSpeed,
+                    Move.Value.x * _stats.MaxSpeed,
                     _stats.Acceleration * Time.fixedDeltaTime
                 );
             }
@@ -358,5 +363,9 @@ namespace TarodevController
             }
         }
 #endif
+    }
+    public interface IPlayerControllerMultiplayer
+    {
+        public Vector2 FrameInput { get; }
     }
 }

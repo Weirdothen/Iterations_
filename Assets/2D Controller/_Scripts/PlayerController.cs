@@ -19,12 +19,12 @@ namespace TarodevController
 
         public Vector2 FrameInput => _frameInput.Move;
 
+
+        #endregion
         [Header("events Channels")]
 
         [SerializeField] private BoolEventChannelSO GroundedChanged;
         [SerializeField] private VoidEventChannelSO Jumped;
-
-        #endregion
 
         private float _time;
 
