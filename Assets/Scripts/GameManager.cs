@@ -125,6 +125,9 @@ namespace Iterations.Core
 
             CurrentState = GameState.Won;
 
+            ScoreManager.Instance.StopLevelTimer();
+            ScoreManager.Instance.ShowWinScore();
+
             string currentSceneName = SceneManager.GetActiveScene().name;
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 
