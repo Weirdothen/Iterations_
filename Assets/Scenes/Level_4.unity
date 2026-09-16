@@ -874,10 +874,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.125
+    x: 0.12421581
     y: 0
-    width: 0.7504605
-    height: 1.0006138
+    width: 0.7511502
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -2538,6 +2538,14 @@ PrefabInstance:
     - target: {fileID: 4906704218946750119, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8198367037097574194, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 70024324}
+    - target: {fileID: 8198367037097574194, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReturnToMainMenu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6445,7 +6453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3356594470730180377, guid: c86079108fa355449b28fc65d34e6123, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3873107412362306788, guid: c86079108fa355449b28fc65d34e6123, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6486,6 +6494,18 @@ PrefabInstance:
     - target: {fileID: 3873107412362306788, guid: c86079108fa355449b28fc65d34e6123, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4935120843827819707, guid: c86079108fa355449b28fc65d34e6123, type: 3}
+      propertyPath: m_Color.b
+      value: 0.52201253
+      objectReference: {fileID: 0}
+    - target: {fileID: 4935120843827819707, guid: c86079108fa355449b28fc65d34e6123, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5211097
+      objectReference: {fileID: 0}
+    - target: {fileID: 4935120843827819707, guid: c86079108fa355449b28fc65d34e6123, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5039555
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
