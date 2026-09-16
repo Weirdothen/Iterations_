@@ -93,6 +93,12 @@ namespace Iterations.Core
 
             debugBestScore = GetBestScore(currentLevel);
             debugOverallScore = GetOverallScore();
+            OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore(currentScore);
+
+            if (HaveAllLevelsBeenCompleted())
+            {
+                OnlineLeaderboardManager.Instance.SubmitOverallScore(debugOverallScore);
+            }
         }
 
         private void CalculateScore()
@@ -135,13 +141,31 @@ namespace Iterations.Core
             return GetBestScore(currentLevel);
         }
 
+        //public int GetOverallScore()
+        //{
+        //    int totalScore = 0;
+
+        //    for (int i = 1; i <= totalLevels; i++)
+        //    {
+        //        string levelName = "Level" + i;
+
+        //        int bestScore = GetBestScore(levelName);
+
+        //        if (bestScore > 0)
+        //        {
+        //            totalScore += bestScore;
+        //        }
+        //    }
+
+        //    return totalScore;
+        //}
         public int GetOverallScore()
         {
             int totalScore = 0;
 
-            for (int i = 1; i <= totalLevels; i++)
+            for (int i = 1; i <= 2; i++)
             {
-                string levelName = "Level" + i;
+                string levelName = "Level_" + i;
 
                 int bestScore = GetBestScore(levelName);
 
@@ -153,13 +177,13 @@ namespace Iterations.Core
 
             return totalScore;
         }
-       
+
 
         public bool HaveAllLevelsBeenCompleted()
         {
             for (int i = 1; i <= totalLevels; i++)
             {
-                string levelName = "Level" + i;
+                string levelName = "Level_" + i;
 
                 if (GetBestScore(levelName) == -1)
                 {
