@@ -3,7 +3,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Iterations.Events;
 
-namespace TarodevController
+namespace Controller
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerControllerMultiplayer : NetworkBehaviour, IPlayerControllerMultiplayer

@@ -93,7 +93,7 @@ namespace Iterations.UI
         {
             if (NetworkManager.Singleton.StartHost())
             {
-                NetworkManager.Singleton.SceneManager.LoadScene("MultiplayerScene", LoadSceneMode.Single);
+                NetworkManager.Singleton.SceneManager.LoadScene("BeforeStartMultiplayerScene", LoadSceneMode.Single);
             }
             else
             {

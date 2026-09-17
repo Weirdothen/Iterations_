@@ -15,6 +15,8 @@ public class CloningSystemMultiPlayer : NetworkBehaviour
 
     [Header("events Channels")]
     [SerializeField] private VoidEventChannelSO onLoseTriggered;
+    [SerializeField] private VoidEventChannelSO onJumpTriggered;
+    [SerializeField] private BoolEventChannelSO GroundedChanged;
 
     private ReplaySystem _system;
     public override void OnNetworkSpawn()
@@ -27,6 +29,8 @@ public class CloningSystemMultiPlayer : NetworkBehaviour
         if (onLoseTriggered != null)
         {
             onLoseTriggered.OnEventRaised += HandleOnLoseTriggered;
+            if (onJumpTriggered != null) onJumpTriggered.OnEventRaised += RecordPlayerJump;
+            if (GroundedChanged != null) GroundedChanged.OnEventRaised += RecordPlayerGrounded;
         }
 
        
@@ -54,6 +58,21 @@ public class CloningSystemMultiPlayer : NetworkBehaviour
     private void HandleOnLoseTriggered()
     {
         _system.FinishRun();
+    }
+
+    // Call this from your PlayerController script exactly when anim.SetTrigger("Jump") is called
+    public void RecordPlayerJump()
+    {
+        _system?.NotifyPlayerJump();
+    }
+
+    // Call this from your PlayerController script exactly when anim.SetTrigger("Grounded") is called
+    public void RecordPlayerGrounded(bool value)
+    {
+        if (value)
+        {
+            _system?.NotifyPlayerGrounded();
+        }
     }
 
     void SpawnClone()

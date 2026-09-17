@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1544650614272011794}
   - component: {fileID: -4596776186290917243}
   - component: {fileID: -7105234749072375891}
-  - component: {fileID: 7818538096523361025}
   m_Layer: 6
   m_Name: MultiPlayer Player Controller 1
   m_TagString: Untagged
@@ -168,7 +167,7 @@ MonoBehaviour:
   onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
   cloneTag: Clone
   onPickupCollected: {fileID: 11400000, guid: 51bab94ae5cdd934abb8ad96c5f6d1a4, type: 2}
-  pickupTag: Pickup
+  pickupTag: PickUp
 --- !u!114 &-7105234749072375891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,26 +214,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &7818538096523361025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544650614272011804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9922c755078e7c46992e31d2d48df8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CloningSystemMultiPlayer
-  ShowTopMostFoldoutHeaderGroup: 1
-  player: {fileID: 1544650614272011795}
-  ghostPrefabe: {fileID: 5304459651671198311, guid: 024e8d104ac854c4babb87a0196fae07, type: 3}
-  firstCloneTime: 15
-  cloneSpawningTime: 15
-  captureEveryNFrames: 2
-  maxRecordTime: 500
-  onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
 --- !u!1 &2969068311587289281
 GameObject:
   m_ObjectHideFlags: 0

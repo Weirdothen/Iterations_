@@ -1,10 +1,13 @@
+using System;
 using Iterations.Events;
 using Unity.Netcode;
 using UnityEngine;
 
 public class GameManagerMultiplayer : NetworkBehaviour
 {
-    private enum State
+    public static GameManagerMultiplayer Instance { get; private set; }
+
+    public enum State
     {
         WaitingToStart,
         CountdownStart,
@@ -12,20 +15,40 @@ public class GameManagerMultiplayer : NetworkBehaviour
         GameOver,
     }
 
+    // UI Event Hooks
+    public event Action<State> OnStateChanged;
+    public event Action<float> OnTimerUpdated;
+    public event Action<int, int> OnScoreUpdated;
+    public event Action<ulong, bool, string> OnGameOverEvent; // winnerId, isDraw, reason
+
     private NetworkVariable<State> state = new NetworkVariable<State>(State.WaitingToStart);
 
+    [Header("Player Settings")]
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject[] playerPrefabs;
     [SerializeField] private CloningSystemMultiPlayer[] cloningSystems;
 
+    [Header("Coin Spawning")]
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private Transform[] coinSpawnPoints;
+    [SerializeField] private float coinSpawnTimerMin = 2f;
+    [SerializeField] private float coinSpawnTimerMax = 5f;
+    private float currentCoinSpawnTimer;
+    private System.Collections.Generic.Dictionary<Transform, GameObject> activeCoins = new System.Collections.Generic.Dictionary<Transform, GameObject>();
+
+    [Header("Timers")]
     private NetworkVariable<float> gamePlayingTimer = new NetworkVariable<float>(0f);
     [SerializeField] private float gamePlayingTimerMax = 60f;
 
     private NetworkVariable<float> countdownToStartTimer = new NetworkVariable<float>(3f);
-    // player 1 Data
-    private int player1Score;
-    // player 2 Data
-    private int player2Score;
+    
+    // Player Scores
+    private NetworkVariable<int> player1Score = new NetworkVariable<int>(0);
+    private NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
+
+    // Player Status
+    private bool isPlayer1Dead = false;
+    private bool isPlayer2Dead = false;
 
     [Header("Event channels")]
     // player 1
@@ -37,84 +60,219 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     private void Awake()
     {
-        // Only execution on the server/host matters for spawning
-        if (!IsServer) return;
+        Instance = this;
+    }
 
-        // Subscribe to the scene load completed event
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
+    public override void OnNetworkSpawn()
+    {
+        // Wire up UI events to NetworkVariables
+        state.OnValueChanged += (State previousValue, State newValue) => 
+        {
+            OnStateChanged?.Invoke(newValue);
+        };
+        
+        gamePlayingTimer.OnValueChanged += (float prev, float curr) =>
+        {
+            if (state.Value == State.GamePlaying)
+                OnTimerUpdated?.Invoke(curr);
+        };
+
+        countdownToStartTimer.OnValueChanged += (float prev, float curr) =>
+        {
+            if (state.Value == State.CountdownStart)
+                OnTimerUpdated?.Invoke(curr);
+        };
+
+        player1Score.OnValueChanged += (int prev, int curr) => OnScoreUpdated?.Invoke(curr, player2Score.Value);
+        player2Score.OnValueChanged += (int prev, int curr) => OnScoreUpdated?.Invoke(player1Score.Value, curr);
+
+        // Only Server handles logic binding
+        if (IsServer)
         {
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnSceneLoaded;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+
+            OnLoseTriggered1.OnEventRaised += OnPlayer1Lose;
+            OnPickUpCollected1.OnEventRaised += OnPlayer1Pickup;
+
+            OnLoseTriggered2.OnEventRaised += OnPlayer2Lose;
+            OnPickUpCollected2.OnEventRaised += OnPlayer2Pickup;
         }
-
-        OnLoseTriggered1.OnEventRaised += OnPlayer1Lose;
-        OnPickUpCollected1.OnEventRaised += OnPlayer1Pickup;
-
-        OnLoseTriggered2.OnEventRaised += OnPlayer2Lose;
-        OnPickUpCollected2.OnEventRaised += OnPlayer2Pickup;
-
     }
-    //player 1
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnSceneLoaded;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
+
+            OnLoseTriggered1.OnEventRaised -= OnPlayer1Lose;
+            OnPickUpCollected1.OnEventRaised -= OnPlayer1Pickup;
+
+            OnLoseTriggered2.OnEventRaised -= OnPlayer2Lose;
+            OnPickUpCollected2.OnEventRaised -= OnPlayer2Pickup;
+        }
+    }
+
+    private void OnClientDisconnect(ulong clientId)
+    {
+        if (state.Value == State.GamePlaying)
+        {
+            // Forfeit! Remaining player wins
+            ulong winnerId = clientId == 0 ? 1ul : 0ul;
+            EndGame(winnerId, false, "Player Disconnected (Forfeit)");
+        }
+    }
+
+    private void EndGame(ulong winnerId, bool isDraw, string reason)
+    {
+        if (state.Value == State.GameOver) return;
+
+        state.Value = State.GameOver;
+        EndGameClientRpc(winnerId, isDraw, reason);
+    }
+
+    [ClientRpc]
+    private void EndGameClientRpc(ulong winnerId, bool isDraw, string reason)
+    {
+        OnGameOverEvent?.Invoke(winnerId, isDraw, reason);
+        Debug.Log($"Game Over! Draw: {isDraw}, Winner ID: {winnerId}, Reason: {reason}");
+    }
+
     private void OnPlayer1Pickup(int obj)
     {
-        
+        player1Score.Value++;
+        CheckWinConditionOnScoreChange();
     }
 
     private void OnPlayer1Lose()
     {
-        
-    } 
+        if (isPlayer1Dead || state.Value != State.GamePlaying) return;
+        isPlayer1Dead = true;
+        Debug.Log("Player 1 died!");
 
-    //player 2
+        if (player2Score.Value > player1Score.Value)
+        {
+            EndGame(1, false, "Player 1 died while trailing in score.");
+        }
+        else
+        {
+            if (isPlayer2Dead)
+            {
+                CheckTimerEndVictory();
+            }
+        }
+    }
+
     private void OnPlayer2Pickup(int obj)
     {
-        
+        player2Score.Value++;
+        CheckWinConditionOnScoreChange();
     }
 
     private void OnPlayer2Lose()
     {
-        
+        if (isPlayer2Dead || state.Value != State.GamePlaying) return;
+        isPlayer2Dead = true;
+        Debug.Log("Player 2 died!");
+
+        if (player1Score.Value > player2Score.Value)
+        {
+            EndGame(0, false, "Player 2 died while trailing in score.");
+        }
+        else
+        {
+            if (isPlayer1Dead)
+            {
+                CheckTimerEndVictory();
+            }
+        }
+    }
+
+    private void CheckWinConditionOnScoreChange()
+    {
+        if (state.Value != State.GamePlaying) return;
+
+        if (isPlayer1Dead && player2Score.Value > player1Score.Value)
+        {
+            EndGame(1, false, "Player 2 surpassed Player 1's score after P1 died.");
+        }
+        else if (isPlayer2Dead && player1Score.Value > player2Score.Value)
+        {
+            EndGame(0, false, "Player 1 surpassed Player 2's score after P2 died.");
+        }
+    }
+
+    private void CheckTimerEndVictory()
+    {
+        if (player1Score.Value > player2Score.Value)
+        {
+            EndGame(0, false, "Time up! Player 1 wins on score.");
+        }
+        else if (player2Score.Value > player1Score.Value)
+        {
+            EndGame(1, false, "Time up! Player 2 wins on score.");
+        }
+        else
+        {
+            EndGame(0, true, "Time up! It's a draw.");
+        }
     }
 
     private void OnSceneLoaded(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, System.Collections.Generic.List<ulong> clientsCompleted, System.Collections.Generic.List<ulong> timeoutClients)
     {
-        // Loop over every client that loaded into the scene and spawn their character
         foreach (ulong clientId in clientsCompleted)
         {
             SpawnPlayerForClient(clientId);
         }
+
+        currentCoinSpawnTimer = 0f; // Spawn a coin immediately when game starts
+        state.Value = State.CountdownStart;
     }
 
-    // THIS IS YOUR CUSTOM FUNCTION
+    private void SpawnCoinRandomly()
+    {
+        if (coinPrefab == null || coinSpawnPoints == null || coinSpawnPoints.Length == 0) return;
+        
+        // Try a few times to find an empty spot
+        int maxAttempts = 10;
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            int index = UnityEngine.Random.Range(0, coinSpawnPoints.Length);
+            Transform point = coinSpawnPoints[index];
+            
+            // If the dictionary has this point, and the GameObject hasn't been destroyed yet, it's occupied.
+            if (activeCoins.ContainsKey(point) && activeCoins[point] != null)
+            {
+                continue; // Try again
+            }
+
+            GameObject coin = Instantiate(coinPrefab, point.position, point.rotation);
+            coin.GetComponent<NetworkObject>().Spawn();
+            
+            // Track the newly spawned coin at this location
+            activeCoins[point] = coin;
+            return;
+        }
+    }
+
     private void SpawnPlayerForClient(ulong clientId)
     {
-        // Pick a spawn point (Host gets index 0, Client gets index 1)
         int Index = (int)clientId % spawnPoints.Length;
         Vector3 position = spawnPoints[Index].position;
         Quaternion rotation = spawnPoints[Index].rotation;
 
-        // 1. Instantiate the prefab locally on the Server
         GameObject playerInstance = Instantiate(playerPrefabs[Index], position, rotation);
-
-        // 2. Spawn it across the network and assign ownership to the client
         playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
-        // 3. setup cloning systems
         cloningSystems[Index].player = playerInstance.transform;
-    }
-
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+        cloningSystems[Index].StartRun();
     }
 
     private void Update()
     {
-        if (!IsServer)
-        {
-            return;
-        }
+        if (!IsServer) return;
 
         switch (state.Value)
         {
@@ -134,7 +292,17 @@ public class GameManagerMultiplayer : NetworkBehaviour
                 gamePlayingTimer.Value -= Time.deltaTime;
                 if (gamePlayingTimer.Value < 0f)
                 {
-                    state.Value = State.GameOver;
+                    CheckTimerEndVictory();
+                }
+                else
+                {
+                    // Handle Coin Spawning
+                    currentCoinSpawnTimer -= Time.deltaTime;
+                    if (currentCoinSpawnTimer <= 0f)
+                    {
+                        SpawnCoinRandomly();
+                        currentCoinSpawnTimer = UnityEngine.Random.Range(coinSpawnTimerMin, coinSpawnTimerMax);
+                    }
                 }
                 break;
 

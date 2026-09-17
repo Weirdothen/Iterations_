@@ -2,7 +2,7 @@ using Iterations.Events;
 using System;
 using UnityEngine;
 
-namespace TarodevController
+namespace Controller
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerController : MonoBehaviour, IPlayerController

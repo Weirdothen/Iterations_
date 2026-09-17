@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Iterations.Events;
 
-namespace TarodevController
+namespace Controller
 {
     public class PlayerAnimatorMultiplayer : MonoBehaviour
     {

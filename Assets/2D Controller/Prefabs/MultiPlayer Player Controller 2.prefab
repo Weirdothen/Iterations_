@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1544650614272011794}
   - component: {fileID: -4596776186290917243}
   - component: {fileID: -7105234749072375891}
-  - component: {fileID: 7818538096523361025}
   m_Layer: 6
   m_Name: MultiPlayer Player Controller 2
   m_TagString: Untagged
@@ -51,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1669860238
+  GlobalObjectIdHash: 4028718608
   InScenePlacedSourceGlobalObjectIdHash: 1669860238
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -81,15 +80,13 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
   _spriteRenderer: {fileID: 2969068313154050967}
-  JumpDown: 0
-  JumpHeld: 0
   Move:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: {x: 0, y: 0}
-  GroundedChanged: {fileID: 0}
-  Jumped: {fileID: 0}
+  GroundedChanged: {fileID: 11400000, guid: 63e273affc0515147ab9441d2b0b8bb7, type: 2}
+  Jumped: {fileID: 11400000, guid: 117ef9c0319beeb44abb743e313abd9e, type: 2}
 --- !u!50 &1544650614272011793
 Rigidbody2D:
   serializedVersion: 5
@@ -167,10 +164,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Iterations.Player.PlayerCollisionMultiplayer
   ShowTopMostFoldoutHeaderGroup: 1
-  onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
+  onLoseTriggered: {fileID: 11400000, guid: e71612c737aaf554984b2aad5a24645d, type: 2}
   cloneTag: Clone
-  onPickupCollected: {fileID: 11400000, guid: 51bab94ae5cdd934abb8ad96c5f6d1a4, type: 2}
-  pickupTag: Pickup
+  onPickupCollected: {fileID: 11400000, guid: f9b6a93a36431a046972ad5b479ec732, type: 2}
+  pickupTag: PickUp
 --- !u!114 &-7105234749072375891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,26 +214,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &7818538096523361025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544650614272011804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9922c755078e7c46992e31d2d48df8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CloningSystemMultiPlayer
-  ShowTopMostFoldoutHeaderGroup: 1
-  player: {fileID: 1544650614272011795}
-  ghostPrefabe: {fileID: 5304459651671198311, guid: 024e8d104ac854c4babb87a0196fae07, type: 3}
-  firstCloneTime: 15
-  cloneSpawningTime: 15
-  captureEveryNFrames: 2
-  maxRecordTime: 500
-  onLoseTriggered: {fileID: 0}
 --- !u!1 &2969068311587289281
 GameObject:
   m_ObjectHideFlags: 0
@@ -10015,7 +9992,6 @@ GameObject:
   - component: {fileID: 2969068311962969430}
   - component: {fileID: 2969068311962969768}
   - component: {fileID: 2578411146259690639}
-  - component: {fileID: 2969068311962969431}
   m_Layer: 6
   m_Name: Visual
   m_TagString: Untagged
@@ -10151,7 +10127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fe1a221987223542a0de2ff736ae9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TarodevController.PlayerAnimatorMultiplayer
-  ShowTopMostFoldoutHeaderGroup: 1
   _anim: {fileID: 5473250537024695344}
   _sprite: {fileID: 3777016705039758259}
   landImpact: 20
@@ -10163,36 +10138,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5d94063f45167b04ab62585e436da58c, type: 3}
   - {fileID: 8300000, guid: b5803c17557c59c40bf3a6d69cb46cb3, type: 3}
   - {fileID: 8300000, guid: 1876767bf7cbf284394dc3817af9593c, type: 3}
-  GroundedChanged: {fileID: 0}
-  Jumped: {fileID: 0}
---- !u!114 &2969068311962969431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2969068311962969429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb09df9db553ffc4ab6600e3070de9eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _anim: {fileID: 2969068313154050966}
-  _sprite: {fileID: 2969068313154050967}
-  _maxIdleSpeed: 2
-  landImpact: 20
-  _maxTilt: 5
-  _tiltSpeed: 20
-  _jumpParticles: {fileID: 2969068312619346371}
-  _launchParticles: {fileID: 2969068312669941334}
-  _moveParticles: {fileID: 2969068311631949152}
-  _landParticles: {fileID: 2969068312368229178}
-  _footsteps:
-  - {fileID: 8300000, guid: 5d94063f45167b04ab62585e436da58c, type: 3}
-  - {fileID: 8300000, guid: b5803c17557c59c40bf3a6d69cb46cb3, type: 3}
-  - {fileID: 8300000, guid: 1876767bf7cbf284394dc3817af9593c, type: 3}
-  GroundedChanged: {fileID: 0}
-  Jumped: {fileID: 0}
+  GroundedChanged: {fileID: 11400000, guid: 63e273affc0515147ab9441d2b0b8bb7, type: 2}
+  Jumped: {fileID: 11400000, guid: 117ef9c0319beeb44abb743e313abd9e, type: 2}
 --- !u!1 &2969068312368229159
 GameObject:
   m_ObjectHideFlags: 0

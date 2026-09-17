@@ -1,5 +1,5 @@
 using Iterations.Events;
-using TarodevController;
+using Controller;
 using UnityEngine;
 
 public class NewPlayerAnimator : MonoBehaviour

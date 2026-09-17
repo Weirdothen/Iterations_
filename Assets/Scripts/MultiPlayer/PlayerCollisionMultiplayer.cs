@@ -33,7 +33,7 @@ namespace Iterations.Player
 
         private void HandleContact(Collider2D other)
         {
-            if (!IsOwner) return;
+            if (!IsServer) return;
 
             if (other.CompareTag(cloneTag))
             {
@@ -63,7 +63,7 @@ namespace Iterations.Player
 
         
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void DespawnPlayerServerRpc()
         {
             if (NetworkObject != null && NetworkObject.IsSpawned)
@@ -72,7 +72,7 @@ namespace Iterations.Player
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void DespawnObjectServerRpc(ulong objectId)
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out NetworkObject netObj))
