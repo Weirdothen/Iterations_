@@ -128,11 +128,19 @@ namespace Iterations.Core
             string currentSceneName = SceneManager.GetActiveScene().name;
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 
+            // Unlock the next level immediately on win, regardless of whether the player
+            // clicks "Next Level" — winning alone is what unlocks it.
+            if (!string.IsNullOrEmpty(nextLevelSceneName))
+            {
+                PlayerPrefs.SetInt(nextLevelSceneName, 1);
+                PlayerPrefs.Save();
+            }
+
             _levelAdvancePending = true;
             onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
         }
 
-       
+
         public void AdvanceAfterWin()
         {
             if (!_levelAdvancePending) return;
@@ -144,10 +152,6 @@ namespace Iterations.Core
                 return;
             }
 
-            PlayerPrefs.SetInt(nextLevelSceneName, 1);
-            PlayerPrefs.Save();
-
-           
             SceneTransitioner.LoadScene(nextLevelSceneName);
         }
 
