@@ -674,13 +674,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2140457999972869282, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 410876203}
-    - targetCorrespondingSourceObject: {fileID: 2140457999972869282, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1339696013}
+    m_AddedGameObjects: [{targetCorrespondingSourceObject: {fileID: 2140457999972869282, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}, insertIndex: 3, addedObject: {fileID: 410876203}},
+      {targetCorrespondingSourceObject: {fileID: 2140457999972869282, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}, insertIndex: -1, addedObject: {fileID: 1339696013}}]
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
 --- !u!1 &271334351 stripped
@@ -4972,18 +4967,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 904522338}
-    m_RemovedComponents:
-    - {fileID: 8776511298002903743, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
-    - {fileID: 5956868094251297973, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
-    - {fileID: 7189945389363582141, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
-    - {fileID: 6504530751623500651, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
-    - {fileID: 8357379958791910827, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
-    - {fileID: 6878563258312050988, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+    m_RemovedComponents: [{fileID: 8776511298002903743, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3},
+      {fileID: 5956868094251297973, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3},
+      {fileID: 7189945389363582141, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3},
+      {fileID: 6504530751623500651, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3},
+      {fileID: 8357379958791910827, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3},
+      {fileID: 6878563258312050988, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}]
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4522849980644175531, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1440952610}
+    m_AddedGameObjects: [{targetCorrespondingSourceObject: {fileID: 4522849980644175531, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}, insertIndex: -1, addedObject: {fileID: 1440952610}}]
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8881761684733779877, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
       insertIndex: -1
