@@ -8,6 +8,9 @@ public class Bullet : MonoBehaviour
 
     private IObjectPool<Bullet> managedPool;
     private float timer;
+
+    private Rigidbody2D rb;
+   
     public void SetPool(IObjectPool<Bullet> pool)
     {
         managedPool = pool;
@@ -16,11 +19,13 @@ public class Bullet : MonoBehaviour
     void OnEnable()
     {
         timer = lifeTime;
+        rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocity = transform.up * speed;
     }
 
     void Update()
     {
-        transform.Translate(Vector2.up * speed * Time.deltaTime);
+       // transform.Translate(Vector2.up * speed * Time.deltaTime);
 
         timer -= Time.deltaTime;
         if (timer <= 0)
@@ -29,13 +34,18 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+
         ReturnToPool();
     }
-
     private void ReturnToPool()
     {
+        rb.linearVelocity = Vector2.zero;
+
         managedPool?.Release(this);
+
     }
 }
