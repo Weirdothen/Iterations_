@@ -14,6 +14,16 @@ namespace Iterations.Core
 
         public void Setup(LeaderboardEntry entry)
         {
+            if (rankText == null || nameText == null || attemptsText == null || timeText == null)
+            {
+                Debug.LogError(
+                    "[LeaderBoardEntryUI] One or more text fields are not assigned " +
+                    "on the entry PREFAB itself. Select the prefab asset (not the " +
+                    "instance in the scene) and drag its child text objects into these fields."
+                );
+                return;
+            }
+
             rankText.Text = entry.Rank.ToString();
             nameText.Text = entry.PlayerName;
             attemptsText.Text = GetAttempts(entry);

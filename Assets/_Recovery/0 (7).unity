@@ -614,6 +614,10 @@ MonoBehaviour:
   multiplayerPanel: {fileID: 0}
   settingsPanel: {fileID: 0}
   controlsPanel: {fileID: 0}
+  joinCodeInput: {fileID: 0}
+  multiplayerStatusText: {fileID: 0}
+  hostButton: {fileID: 0}
+  joinButton: {fileID: 0}
 --- !u!4 &1492549843
 Transform:
   m_ObjectHideFlags: 0

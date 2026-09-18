@@ -45,7 +45,6 @@ namespace Iterations.Core
         private Coroutine _restartRoutine;
         private bool _levelAdvancePending;
 
-       
         private bool _isSameLevelReload;
 
         private void Awake()
@@ -90,15 +89,14 @@ namespace Iterations.Core
 
             if (_isSameLevelReload)
             {
-               
+
             }
             else
             {
-                
                 CurrentLevelRetries = 0;
             }
 
-            _isSameLevelReload = false; 
+            _isSameLevelReload = false;
 
             BestRetriesForCurrentLevel = GetSavedBestRetries(scene.name);
         }
@@ -135,7 +133,7 @@ namespace Iterations.Core
         //    SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 
         //    // Unlock the next level immediately on win, regardless of whether the player
-        //    // clicks "Next Level" — winning alone is what unlocks it.
+        //    // clicks "Next Level" ï¿½ winning alone is what unlocks it.
         //    if (!string.IsNullOrEmpty(nextLevelSceneName))
         //    {
         //        PlayerPrefs.SetInt(nextLevelSceneName, 1);
@@ -180,7 +178,6 @@ namespace Iterations.Core
             onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
         }
 
-
         public void AdvanceAfterWin()
         {
             if (!_levelAdvancePending) return;
@@ -195,7 +192,6 @@ namespace Iterations.Core
             SceneTransitioner.LoadScene(nextLevelSceneName);
         }
 
-
         public void OnQuitPressed()
         {
 #if UNITY_EDITOR
@@ -204,7 +200,6 @@ namespace Iterations.Core
             Application.Quit();
 #endif
         }
-
 
         private void HandleLoseTriggered()
         {
@@ -246,7 +241,6 @@ namespace Iterations.Core
             nextLevelSceneName = sceneName;
         }
 
-       
         public void RestartLevel()
         {
             CurrentLevelRetries++;
@@ -254,13 +248,18 @@ namespace Iterations.Core
             SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-      
+        public void RestartLevelFresh()
+        {
+            CurrentLevelRetries = 0;
+            _isSameLevelReload = true;
+            SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
         public void ReturnToMainMenu()
         {
             SceneTransitioner.LoadScene(mainMenuSceneName);
         }
 
-        
         public void LoadLevelFromMenu(string sceneName)
         {
             SceneTransitioner.LoadScene(sceneName);
