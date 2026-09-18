@@ -170,7 +170,7 @@ namespace Iterations.Core
 
             SaveBestTimeIfBetter(sceneName, currentTime, retries);
 
-            CheckOverallScoreUnlock();
+            
 
             float overallScore = GetOverallScore();
 
@@ -178,6 +178,27 @@ namespace Iterations.Core
                 $"[ScoreManager] Overall Score: " +
                 $"{FormatTime(overallScore)}"
             );
+        }
+
+        // Sum of retries from each completed level's best run.
+        // Returns -1 if no level has been completed yet.
+        public int GetOverallRetries()
+        {
+            int totalRetries = 0;
+            int completed = 0;
+
+            for (int i = 1; i <= totalLevels; i++)
+            {
+                string sceneName = "Level_" + i;
+
+                if (GetBestTime(sceneName) < 0f)
+                    continue; // not completed, skip
+
+                totalRetries += GetBestRetries(sceneName);
+                completed++;
+            }
+
+            return completed > 0 ? totalRetries : -1;
         }
 
         private void SaveBestTimeIfBetter(
@@ -256,68 +277,27 @@ namespace Iterations.Core
             return PlayerPrefs.GetInt(key);
         }
 
-        private void CheckOverallScoreUnlock()
-        {
-            int completedLevels = 0;
+       
 
-            DebugLog("Checking Overall Score unlock...");
+        public int GetCompletedLevelCount()
+        {
+            int completed = 0;
 
             for (int i = 1; i <= totalLevels; i++)
             {
-                string sceneName = "Level_" + i;
-                float bestTime = GetBestTime(sceneName);
-
-                if (bestTime >= 0f)
-                {
-                    completedLevels++;
-
-                    int retries = GetBestRetries(sceneName);
-
-                    DebugLog(
-                        $"Level {i} completed | " +
-                        $"Best: {bestTime:F2}s | " +
-                        $"Retries: {retries}"
-                    );
-                }
-                else
-                {
-                    DebugLog(
-                        $"Level {i} has not been completed yet."
-                    );
-                }
+                if (GetBestTime("Level_" + i) >= 0f)
+                    completed++;
             }
 
-            Debug.Log(
-                $"[ScoreManager] Levels completed: " +
-                $"{completedLevels}/{totalLevels}"
-            );
-
-            if (completedLevels >= totalLevels)
-            {
-                PlayerPrefs.SetInt(OverallScoreUnlockedKey, 1);
-                PlayerPrefs.Save();
-
-                Debug.Log(
-                    "[ScoreManager] ★ OVERALL SCORE UNLOCKED ★"
-                );
-
-                Debug.Log(
-                    $"[ScoreManager] Overall Score: " +
-                    $"{FormatTime(GetOverallScore())}"
-                );
-            }
-            else
-            {
-                DebugLog("Overall Score is still locked.");
-            }
+            return completed;
         }
 
+        // Sum of best times across all completed levels.
+        // Returns -1 if no level has been completed yet.
         public float GetOverallScore()
         {
-            if (!OverallScoreUnlocked)
-                return -1f;
-
             float totalTime = 0f;
+            int completed = 0;
 
             for (int i = 1; i <= totalLevels; i++)
             {
@@ -326,24 +306,21 @@ namespace Iterations.Core
 
                 if (bestTime < 0f)
                 {
-                    DebugLog(
-                        $"Cannot calculate Overall Score. " +
-                        $"{sceneName} has no best time."
-                    );
-
-                    return -1f;
+                    DebugLog($"{sceneName} not completed, skipping.");
+                    continue;
                 }
 
                 totalTime += bestTime;
+                completed++;
             }
 
-            return totalTime;
+            return completed > 0 ? totalTime : -1f;
         }
 
         private string FormatTime(float time)
         {
             if (time < 0f)
-                return "LOCKED";
+                return "--:--:--"; // was "LOCKED", which no longer applies
 
             int totalSeconds = Mathf.FloorToInt(time);
 

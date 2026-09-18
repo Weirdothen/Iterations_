@@ -24,7 +24,7 @@ namespace Iterations.Core
                 return;
             }
 
-            rankText.Text = entry.Rank.ToString();
+            rankText.Text = (entry.Rank + 1).ToString();
             nameText.Text = entry.PlayerName;
             attemptsText.Text = GetAttempts(entry);
             timeText.Text = FormatTime(entry.Score);
@@ -60,7 +60,7 @@ namespace Iterations.Core
             int millisecondsPart =
                 Mathf.FloorToInt((float)(milliseconds % 1000));
 
-            return $"{minutes:00}:{remainingSeconds:00}.{millisecondsPart:000}";
+            return $"{minutes:00}:{remainingSeconds:00}:{millisecondsPart:000}";
         }
 
         [System.Serializable]

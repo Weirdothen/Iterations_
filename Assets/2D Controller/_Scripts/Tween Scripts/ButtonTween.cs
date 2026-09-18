@@ -7,6 +7,8 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private RectTransform rectTransform;
     private Vector3 originalScale;
 
+    private Tween scaleTween;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -15,18 +17,17 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        rectTransform.DOKill();
+        scaleTween?.Kill();
 
-        rectTransform.DOScale(originalScale * 1.05f, 0.15f)
+        scaleTween = rectTransform.DOScale(originalScale * 1.05f, 0.15f)
             .SetEase(Ease.OutBack);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        rectTransform.DOKill();
+        scaleTween?.Kill();
 
-        rectTransform.DOScale(originalScale, 0.15f)
+        scaleTween = rectTransform.DOScale(originalScale, 0.15f)
             .SetEase(Ease.OutBack);
     }
-
 }
