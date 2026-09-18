@@ -1,11 +1,18 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Networking.Transport.Relay;
-using Unity.Services.Relay;
-using Unity.Services.Relay.Models;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
+using Unity.Services.Multiplayer;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 
 /// <summary>
 /// Manages Unity Relay allocation for Host and Client flows.
@@ -24,6 +31,12 @@ using UnityEngine.SceneManagement;
 public class MultiplayerRelayManager : MonoBehaviour
 {
     public static MultiplayerRelayManager Instance { get; private set; }
+
+    private const string RELAY_JOIN_CODE_KEY = "RelayJoinCode";
+    private const float HEARTBEAT_INTERVAL = 15f;
+    private float heartbeatTimer;
+
+    private Lobby currentLobby;
 
     [Header("Settings")]
     [Tooltip("The scene to load after the host successfully starts.")]
@@ -70,24 +83,36 @@ public class MultiplayerRelayManager : MonoBehaviour
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections - 1);
 
             // 2. Get the human-readable join code
-            JoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            Debug.Log($"[Relay] Host Join Code: {JoinCode}");
+            string relayCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.Log($"[Relay] Host Join Code: {relayCode}");
 
             // 3. Build RelayServerData manually — compatible with com.unity.services.multiplayer
             //    which bundles relay without the convenience constructor from the standalone package.
-            RelayServerData relayServerData = BuildRelayServerData(
-                allocation.RelayServer.IpV4,
-                (ushort)allocation.RelayServer.Port,
-                allocation.AllocationIdBytes,
-                allocation.ConnectionData,
-                allocation.ConnectionData,   // host uses its own connection data as the "host" endpoint
-                allocation.Key,
-                isSecure: true               // true = DTLS (encrypted), false = UDP (unencrypted)
-            );
+            var relayServerData = AllocationUtils.ToRelayServerData(allocation, RelayProtocol.UDP);
+
 
             // 4. Hand the data to the UnityTransport component on the NetworkManager
             NetworkManager.Singleton.GetComponent<UnityTransport>()
                           .SetRelayServerData(relayServerData);
+
+            CreateLobbyOptions options = new CreateLobbyOptions
+            {
+                IsPrivate = false,
+                Player = CreatePlayer(),
+                Data = new Dictionary<string, DataObject>
+                    {
+                        { RELAY_JOIN_CODE_KEY, new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
+                    }
+            };
+
+            currentLobby = await LobbyService.Instance.CreateLobbyAsync(
+            $"player1's Lobby",
+                maxConnections,
+                options
+            );
+            JoinCode = currentLobby.LobbyCode;
+
+            Debug.Log($"[LobbyServiceManager] Lobby created: {currentLobby.LobbyCode}");
 
             // 5. Start hosting
             if (!NetworkManager.Singleton.StartHost())
@@ -134,20 +159,21 @@ public class MultiplayerRelayManager : MonoBehaviour
 
         try
         {
+            JoinLobbyByCodeOptions options = new JoinLobbyByCodeOptions
+            {
+                Player = CreatePlayer(),
+            };
+
+            currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(joinCode, options);
+            // Get Relay join code from lobby data
+            string relayJoinCode = currentLobby.Data[RELAY_JOIN_CODE_KEY].Value;
             // 1. Retrieve the Relay allocation from the join code
-            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode.Trim().ToUpper());
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
 
             // 2. Build RelayServerData manually for the client
-            //    Note: HostConnectionData is different from our own ConnectionData here.
-            RelayServerData relayServerData = BuildRelayServerData(
-                joinAllocation.RelayServer.IpV4,
-                (ushort)joinAllocation.RelayServer.Port,
-                joinAllocation.AllocationIdBytes,
-                joinAllocation.ConnectionData,
-                joinAllocation.HostConnectionData,   // the host's endpoint — different for clients
-                joinAllocation.Key,
-                isSecure: true
-            );
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            var relayServerData = AllocationUtils.ToRelayServerData(joinAllocation, RelayProtocol.UDP);
+            transport.SetRelayServerData(relayServerData);
 
             // 3. Configure the transport
             NetworkManager.Singleton.GetComponent<UnityTransport>()
@@ -183,29 +209,26 @@ public class MultiplayerRelayManager : MonoBehaviour
     // -------------------------------------------------------------------------
     // Helper — manual RelayServerData construction
     // -------------------------------------------------------------------------
-
-    /// <summary>
-    /// Constructs a <see cref="RelayServerData"/> from raw allocation bytes.
-    /// This avoids the convenience constructor that only existed in the
-    /// standalone com.unity.services.relay package and is not available when
-    /// using com.unity.services.multiplayer.
-    /// </summary>
-    private static RelayServerData BuildRelayServerData(
-        string  host,
-        ushort  port,
-        byte[]  allocationIdBytes,
-        byte[]  connectionData,
-        byte[]  hostConnectionData,
-        byte[]  key,
-        bool    isSecure)
+    private Player CreatePlayer()
     {
-        return new RelayServerData(
-            host,
-            port,
-            allocationIdBytes,
-            connectionData,
-            hostConnectionData,
-            key,
-            isSecure);
+        return new Player();
     }
+    private bool IsHost()
+    {
+        if (currentLobby == null) return false;
+        return currentLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
+    private void HandleHeartbeat()
+    {
+        if (currentLobby == null || !IsHost()) return;
+
+        heartbeatTimer -= Time.deltaTime;
+        if (heartbeatTimer <= 0f)
+        {
+            heartbeatTimer = HEARTBEAT_INTERVAL;
+            LobbyService.Instance.SendHeartbeatPingAsync(currentLobby.Id);
+        }
+    }
+
+
 }

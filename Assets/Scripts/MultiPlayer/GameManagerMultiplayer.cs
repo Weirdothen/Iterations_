@@ -22,7 +22,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
     public event Action<ulong, bool, string> OnGameOverEvent; // winnerId, isDraw, reason
 
     [Header("Scenes")]
-    [SerializeField] private string lobbySceneName = "CharacterSelectScene";
+    [SerializeField] private string lobbySceneName = "BeforeStartMultiplayerScene";
 
     private NetworkVariable<State> state = new NetworkVariable<State>(State.WaitingToStart);
     private NetworkVariable<ulong> partyLeaderId = new NetworkVariable<ulong>(0);
@@ -75,17 +75,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Wire up UI events to NetworkVariables
-        state.OnValueChanged += (State previousValue, State newValue) => 
-        {
-            if(newValue == State.GamePlaying)
-            {
-                for(int i = 0;i< cloningSystems.Length; i++)
-                {
-                    cloningSystems[i].StartRun();
-                }
-            }
-            OnStateChanged?.Invoke(newValue);
-        };
+       
         
         gamePlayingTimer.OnValueChanged += (float prev, float curr) =>
         {
@@ -113,6 +103,18 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
             OnLoseTriggered2.OnEventRaised += OnPlayer2Lose;
             OnPickUpCollected2.OnEventRaised += OnPlayer2Pickup;
+
+            state.OnValueChanged += (State previousValue, State newValue) =>
+            {
+                if (newValue == State.GamePlaying)
+                {
+                    for (int i = 0; i < cloningSystems.Length; i++)
+                    {
+                        cloningSystems[i].StartRun();
+                    }
+                }
+                OnStateChanged?.Invoke(newValue);
+            };
         }
     }
 
@@ -317,21 +319,21 @@ public class GameManagerMultiplayer : NetworkBehaviour
         {
             NetworkManager.Singleton.SceneManager.LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
-        else if(NetworkManager.Singleton.LocalClientId == PartyLeaderId)
-        {
-            ReturnToLobbyServerRpc();
-        }
+        //else if(NetworkManager.Singleton.LocalClientId == PartyLeaderId)
+        //{
+        //    ReturnToLobbyServerRpc();
+        //}
         else
         {
             Debug.Log("just the leader can back to the lobby");
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void ReturnToLobbyServerRpc()
-    {
-        NetworkManager.Singleton.SceneManager.LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //private void ReturnToLobbyServerRpc()
+    //{
+    //    NetworkManager.Singleton.SceneManager.LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+    //}
 
     private void Update()
     {
