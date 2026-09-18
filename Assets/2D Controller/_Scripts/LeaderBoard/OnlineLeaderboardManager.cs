@@ -1,8 +1,7 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Unity.Services.Core;
-using Unity.Services.Leaderboards;
 using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using Unity.Services.Leaderboards;
 
 namespace Iterations.Core
 {
@@ -10,12 +9,9 @@ namespace Iterations.Core
     {
         public static OnlineLeaderboardManager Instance { get; private set; }
 
-        [Header("Leaderboard IDs")]
-        [SerializeField] private string level1LeaderboardID = "Level_1";
-        [SerializeField] private string level2LeaderboardID = "Level_2";
-        [SerializeField] private string overallLeaderboardID = "overall";
-
-        private ILeaderboardsService leaderboardService;
+        private const string Level1LeaderboardId = "Level_1";
+        private const string Level2LeaderboardId = "Level_2";
+        private const string OverallLeaderboardId = "overall";
 
         private void Awake()
         {
@@ -29,104 +25,151 @@ namespace Iterations.Core
             DontDestroyOnLoad(gameObject);
         }
 
-        private async void Start()
+        public async void SubmitCurrentLevelScore()
         {
-            try
+            if (ScoreManager.Instance == null)
             {
-                // Wait until Unity Services are initialized
-                while (UnityServices.State != ServicesInitializationState.Initialized)
-                {
-                    await System.Threading.Tasks.Task.Yield();
-                }
-
-                leaderboardService = UnityServices.Instance.GetLeaderboardsService();
-
-                Debug.Log("Leaderboard service initialized!");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(
-                    "Failed to initialize Leaderboard service: " + e
-                );
-            }
-        }
-
-        public async void SubmitCurrentLevelScore(int score)
-        {
-            string leaderboardID = GetCurrentLevelLeaderboardID();
-
-            if (string.IsNullOrEmpty(leaderboardID))
-            {
-                Debug.LogError("No leaderboard found for this level.");
+                Debug.LogError("[LeaderboardManager] ScoreManager not found.");
                 return;
             }
 
-            // Wait if the leaderboard service is still initializing
-            while (leaderboardService == null)
+            if (!ScoreManager.Instance.LastRunWasNewBest)
             {
-                await System.Threading.Tasks.Task.Yield();
-            }
-
-            try
-            {
-                await leaderboardService.AddPlayerScoreAsync(
-                    leaderboardID,
-                    score
+                Debug.Log(
+                    "[LeaderboardManager] Current run was not a new best. " +
+                    "No leaderboard submission needed."
                 );
 
+                return;
+            }
+
+            string sceneName = UnityEngine.SceneManagement.SceneManager
+                .GetActiveScene().name;
+
+            string leaderboardId = GetLeaderboardId(sceneName);
+
+            if (string.IsNullOrEmpty(leaderboardId))
+            {
+                Debug.LogWarning(
+                    $"[LeaderboardManager] No leaderboard configured for scene: {sceneName}"
+                );
+
+                return;
+            }
+
+            float bestTime = ScoreManager.Instance.GetBestTime(sceneName);
+            int retries = ScoreManager.Instance.GetBestRetries(sceneName);
+
+            int score = Mathf.RoundToInt(bestTime * 1000f);
+
+            await SubmitScore(
+                leaderboardId,
+                score,
+                retries
+            );
+        }
+
+        public async void SubmitOverallScore()
+        {
+            if (ScoreManager.Instance == null)
+            {
+                Debug.LogError("[LeaderboardManager] ScoreManager not found.");
+                return;
+            }
+
+            if (!ScoreManager.Instance.OverallScoreUnlocked)
+            {
                 Debug.Log(
-                    $"Submitted {score} to {leaderboardID}"
+                    "[LeaderboardManager] Overall leaderboard is still locked."
+                );
+
+                return;
+            }
+
+            float overallTime = ScoreManager.Instance.GetOverallScore();
+
+            if (overallTime < 0f)
+            {
+                Debug.LogWarning(
+                    "[LeaderboardManager] Could not calculate overall score."
+                );
+
+                return;
+            }
+
+            int score = Mathf.RoundToInt(overallTime * 1000f);
+
+            await SubmitScore(
+                OverallLeaderboardId,
+                score,
+                0
+            );
+        }
+
+        private async Task SubmitScore(
+            string leaderboardId,
+            int score,
+            int retries)
+        {
+            try
+            {
+                Debug.Log(
+                    $"[LeaderboardManager] Submitting score | " +
+                    $"Leaderboard: {leaderboardId} | " +
+                    $"Score: {score}ms | " +
+                    $"Time: {score / 1000f:F3}s | " +
+                    $"Retries: {retries}"
+                );
+
+                var metadata = new ScoreMetadata
+                {
+                    retries = retries
+                };
+
+                var response =
+                    await LeaderboardsService.Instance.AddPlayerScoreAsync(
+                        leaderboardId,
+                        score,
+                        new AddPlayerScoreOptions
+                        {
+                            Metadata = metadata
+                        }
+                    );
+
+                Debug.Log(
+                    $"[LeaderboardManager] Score submitted successfully | " +
+                    $"Leaderboard: {leaderboardId} | " +
+                    $"Score: {score}ms"
                 );
             }
             catch (Exception e)
             {
                 Debug.LogError(
-                    $"Failed to submit score: {e}"
+                    $"[LeaderboardManager] Failed to submit score to " +
+                    $"{leaderboardId}\n{e}"
                 );
             }
         }
 
-        private string GetCurrentLevelLeaderboardID()
+        private string GetLeaderboardId(string sceneName)
         {
-            string currentScene = SceneManager.GetActiveScene().name;
-
-            switch (currentScene)
+            switch (sceneName)
             {
                 case "Level_1":
-                    return level1LeaderboardID;
+                    return Level1LeaderboardId;
 
                 case "Level_2":
-                    return level2LeaderboardID;
+                    return Level2LeaderboardId;
 
                 default:
                     return null;
             }
         }
 
-        public async void SubmitOverallScore(int score)
+        [Serializable]
+        private class ScoreMetadata
         {
-            while (leaderboardService == null)
-            {
-                await System.Threading.Tasks.Task.Yield();
-            }
-
-            try
-            {
-                await leaderboardService.AddPlayerScoreAsync(
-                    overallLeaderboardID,
-                    score
-                );
-
-                Debug.Log(
-                    $"Submitted overall score: {score}"
-                );
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(
-                    $"Failed to submit overall score: {e}"
-                );
-            }
+            public int retries;
         }
     }
 }

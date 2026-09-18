@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -70,11 +71,13 @@ namespace Clone
         private int _frameCount;
         private float _maxRecordingTimeLimit;
         private bool usePhysics;
+        private bool isRecored = false;
 
         public void StartRun(Transform target, int snapshotEveryNFrames = 2, float maxRecordingTimeLimit = 60)
         {
             if (_currentRun != null) Debug.LogError("Cant create another record??");
             _currentRun = new Recording(target);
+            isRecored = true;
 
             _elapsedRecordingTime = 0;
             _snapshotEveryNFrames = Mathf.Max(1, snapshotEveryNFrames);
@@ -84,7 +87,7 @@ namespace Clone
 
         private void AddSnapshot()
         {
-            if (_currentRun == null) return;
+            if (_currentRun == null || !isRecored) return;
 
             if (_frameCount++ % _snapshotEveryNFrames == 0)
             {
@@ -94,10 +97,11 @@ namespace Clone
             if (_currentRun.Duration >= _maxRecordingTimeLimit) FinishRun();
         }
 
-        public bool FinishRun(bool save = true)
+        public bool FinishRun()
         {
             if (_currentRun == null) return false;
-            _currentRun = null;
+            //_currentRun = null;
+            isRecored = false;
             return true;
         }
 
@@ -139,6 +143,7 @@ namespace Clone
                 if (anim !=null)
                 {
                     _ghostAnimators.Add(anim);
+                    Debug.Log("found");
                 }
                 else
                 {
@@ -192,7 +197,14 @@ namespace Clone
                 {
                     if (_destroyOnComplete && _ghostObjs[i] != null)
                     {
-                        Object.Destroy(_ghostObjs[i]);
+                        if (_ghostObjs[i].TryGetComponent<NetworkObject>(out NetworkObject networkObject))
+                        {
+                            networkObject.Despawn();
+                        }
+                        else
+                        {
+                            Object.Destroy(_ghostObjs[i]);
+                        }
                     }
                 }
             }

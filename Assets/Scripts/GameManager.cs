@@ -125,6 +125,12 @@ namespace Iterations.Core
 
             CurrentState = GameState.Won;
 
+            ScoreManager.Instance?.StopLevelTimer();
+
+            OnlineLeaderboardManager.Instance?.SubmitCurrentLevelScore();
+            OnlineLeaderboardManager.Instance?.SubmitOverallScore();
+
+
             string currentSceneName = SceneManager.GetActiveScene().name;
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 
@@ -154,6 +160,17 @@ namespace Iterations.Core
 
             SceneTransitioner.LoadScene(nextLevelSceneName);
         }
+
+
+        public void OnQuitPressed()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
 
         private void HandleLoseTriggered()
         {
