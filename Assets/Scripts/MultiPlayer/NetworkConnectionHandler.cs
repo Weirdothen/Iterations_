@@ -4,11 +4,10 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Attach this to your NetworkManager GameObject.
-/// Handles connection approval (room-full checks, etc.) and
-/// notifies the UI via the static ConnectionFailedData class
-/// when a local connection attempt fails.
+/// Handles connection approval (room-full checks) and notifies the UI
+/// via the static ConnectionFailedData class when a local connection attempt fails.
 ///
-/// IMPORTANT: ConnectionApprovalCallback is a property on NGO, not a true C# event.
+/// NOTE: ConnectionApprovalCallback is a property on NGO, not a true C# event.
 /// Only one handler can be assigned at a time. We use direct assignment (=)
 /// and a singleton guard to prevent double-registration when scenes reload.
 /// </summary>
@@ -23,7 +22,6 @@ public class NetworkConnectionHandler : MonoBehaviour
 
     private void Awake()
     {
-        // If another instance already exists, destroy this one and bail out.
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
@@ -37,19 +35,15 @@ public class NetworkConnectionHandler : MonoBehaviour
     {
         if (NetworkManager.Singleton == null) return;
 
-        // Direct assignment (=) instead of += because ConnectionApprovalCallback
-        // is a property that only allows one handler. This also naturally
-        // overwrites any stale handler from a previous session.
-        NetworkManager.Singleton.ConnectionApprovalCallback = OnConnectionApproval;
+        NetworkManager.Singleton.ConnectionApprovalCallback  = OnConnectionApproval;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
     }
 
     private void OnDisable()
     {
         if (NetworkManager.Singleton == null) return;
-        // Clear the property entirely when we disable
-        NetworkManager.Singleton.ConnectionApprovalCallback = null;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
+        NetworkManager.Singleton.ConnectionApprovalCallback   = null;
+        NetworkManager.Singleton.OnClientDisconnectCallback  -= OnClientDisconnect;
     }
 
     private void OnDestroy()
@@ -64,19 +58,17 @@ public class NetworkConnectionHandler : MonoBehaviour
         NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response)
     {
-        // Count current real players (exclude dedicated server client ID)
         int currentPlayers = NetworkManager.Singleton.ConnectedClientsIds.Count;
 
         if (currentPlayers >= maxPlayers)
         {
-            // Deny – room is full
             response.Approved = false;
-            response.Reason = "Room is full. Maximum 2 players allowed.";
+            response.Reason   = "Room is full. Maximum 2 players allowed.";
             return;
         }
 
-        response.Approved = true;
-        response.CreatePlayerObject = false; // GameManagerMultiplayer handles spawning
+        response.Approved            = true;
+        response.CreatePlayerObject  = false; // GameManagerMultiplayer handles spawning
     }
 
     // -------------------------------------------------------------------------
@@ -84,25 +76,37 @@ public class NetworkConnectionHandler : MonoBehaviour
     // -------------------------------------------------------------------------
     private void OnClientDisconnect(ulong clientId)
     {
-        // Only react to our own local client being disconnected
         if (!IsLocalClientDisconnect(clientId)) return;
 
-        // If we are still in the game scene (not already on the menu), navigate back
-        if (SceneManager.GetActiveScene().name != mainMenuSceneName)
+        // Build a meaningful reason. NGO populates DisconnectReason when the server
+        // explicitly denies or kicks a client (e.g. "Room is full").
+        string reason = NetworkManager.Singleton.DisconnectReason;
+        if (string.IsNullOrEmpty(reason))
         {
-            // The GameManagerMultiplayer already handles the "forfeit" for the remaining player.
-            // Here we just handle the player who GOT disconnected.
-            ConnectionFailedData.HasMessage = true;
-            ConnectionFailedData.Message = "You lost connection to the session.";
+            reason = "You lost connection to the session.";
+        }
+
+        // Always store the reason — the popup UI will display it wherever it lives.
+        ConnectionFailedData.HasMessage = true;
+        ConnectionFailedData.Message    = reason;
+
+        bool alreadyOnMenu = SceneManager.GetActiveScene().name == mainMenuSceneName;
+
+        if (!alreadyOnMenu)
+        {
+            // Disconnected from a game scene — shut down and go back to the menu.
+            // The GameManagerMultiplayer already handles the forfeit for the remaining player.
             NetworkManager.Singleton.Shutdown();
             SceneManager.LoadScene(mainMenuSceneName);
         }
+        // If we are already on the menu (e.g. join was rejected), just let
+        // ConnectionFailedPopupUI.Update() pick up the message — no scene load needed.
     }
 
     private bool IsLocalClientDisconnect(ulong clientId)
     {
         if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsHost)
-            return false; // We are a dedicated server, not a player
+            return false; // dedicated server, not a player
 
         return clientId == NetworkManager.Singleton.LocalClientId ||
                (!NetworkManager.Singleton.IsConnectedClient && clientId == 0);
@@ -114,6 +118,6 @@ public class NetworkConnectionHandler : MonoBehaviour
 // -------------------------------------------------------------------------
 public static class ConnectionFailedData
 {
-    public static bool HasMessage = false;
-    public static string Message = "";
+    public static bool   HasMessage = false;
+    public static string Message    = string.Empty;
 }

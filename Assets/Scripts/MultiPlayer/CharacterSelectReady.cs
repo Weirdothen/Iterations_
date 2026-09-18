@@ -4,6 +4,15 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Manages the lobby state (player join/leave, ready-up, arena selection).
+/// Uses NetworkList<LobbyPlayerState> to sync player states to all clients automatically.
+///
+/// HOW TO EXTEND:
+///   - Add fields to LobbyPlayerState.cs.
+///   - Add a new Server RPC here (e.g. SetPlayerNameServerRpc) that finds the entry
+///     in LobbyPlayers and replaces it with an updated struct.
+/// </summary>
 public class CharacterSelectReady : NetworkBehaviour
 {
     public static CharacterSelectReady Instance { get; private set; }
@@ -11,19 +20,22 @@ public class CharacterSelectReady : NetworkBehaviour
     // -------------------------------------------------------------------------
     // UI Event Hooks (subscribe from your Lobby UI script)
     // -------------------------------------------------------------------------
+
     /// <summary>Fires whenever the local player's ready state changes (true = ready).</summary>
     public event Action<bool> OnLocalReadyStateChanged;
 
     /// <summary>Fires when the party leader status is confirmed (true = I am the leader).</summary>
     public event Action<bool> OnPartyLeaderStatusReceived;
 
-    /// <summary>Fires whenever any player's ready state changes so the UI can refresh.</summary>
-    public event Action OnAnyReadyStateChanged;
+    // -------------------------------------------------------------------------
+    // Synced Player List  ← the main extensible state container
+    // -------------------------------------------------------------------------
 
-    // -------------------------------------------------------------------------
-    // Private state
-    // -------------------------------------------------------------------------
-    private Dictionary<ulong, bool> playerReadyDictionary = new Dictionary<ulong, bool>();
+    /// <summary>
+    /// The authoritative, server-managed list of all players currently in the lobby.
+    /// Subscribe to LobbyPlayers.OnListChanged to react to join/leave/ready changes.
+    /// </summary>
+    public NetworkList<LobbyPlayerState> LobbyPlayers { get; private set; }
 
     // Party Leader – synced so all clients know who the leader is
     private NetworkVariable<ulong> partyLeaderId = new NetworkVariable<ulong>(ulong.MaxValue);
@@ -45,6 +57,7 @@ public class CharacterSelectReady : NetworkBehaviour
     // -------------------------------------------------------------------------
     // Unity / Network lifecycle
     // -------------------------------------------------------------------------
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -53,6 +66,9 @@ public class CharacterSelectReady : NetworkBehaviour
             return;
         }
         Instance = this;
+
+        // NetworkList MUST be created in Awake, before OnNetworkSpawn
+        LobbyPlayers = new NetworkList<LobbyPlayerState>();
     }
 
     public override void OnNetworkSpawn()
@@ -64,31 +80,88 @@ public class CharacterSelectReady : NetworkBehaviour
             OnPartyLeaderStatusReceived?.Invoke(amLeader);
         };
 
+        // When the arena selection changes, let UI scripts know
         selectedArenaIndex.OnValueChanged += (prev, curr) =>
         {
-            // Notify UI that arena changed (optional, hook in your UI)
-            OnAnyReadyStateChanged?.Invoke();
+            // LobbyPlayers.OnListChanged listeners will see this indirectly;
+            // fire a dummy change so UI refreshes if it only watches the list event.
+            // Or, subscribe to selectedArenaIndex directly in your UI if preferred.
         };
 
-        if (!IsServer) return;
-
-        // -------------------------------------------------------
-        // Determine Party Leader on the server
-        // Skip the headless dedicated server's own client ID
-        // -------------------------------------------------------
-        foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        if (IsServer)
         {
-            bool isHeadlessServer = clientId == NetworkManager.ServerClientId && !NetworkManager.Singleton.IsHost;
+            // Server tracks clients joining and leaving
+            NetworkManager.Singleton.OnClientConnectedCallback    += Server_OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback   += Server_OnClientDisconnected;
+
+            // Add the host itself as the first player immediately
+            Server_AddPlayer(NetworkManager.Singleton.LocalClientId);
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback    -= Server_OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback   -= Server_OnClientDisconnected;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Server: manage player join / leave
+    // -------------------------------------------------------------------------
+
+    private void Server_OnClientConnected(ulong clientId)
+    {
+        Server_AddPlayer(clientId);
+    }
+
+    private void Server_OnClientDisconnected(ulong clientId)
+    {
+        for (int i = 0; i < LobbyPlayers.Count; i++)
+        {
+            if (LobbyPlayers[i].ClientId == clientId)
+            {
+                LobbyPlayers.RemoveAt(i);
+                break;
+            }
+        }
+        // Reassign party leader if they left
+        Server_RefreshPartyLeader();
+    }
+
+    private void Server_AddPlayer(ulong clientId)
+    {
+        var state = new LobbyPlayerState
+        {
+            ClientId = clientId,
+            IsReady  = false,
+            // Initialize new fields here when you extend LobbyPlayerState
+        };
+        LobbyPlayers.Add(state);
+
+        Server_RefreshPartyLeader();
+    }
+
+    private void Server_RefreshPartyLeader()
+    {
+        // The first real player in the list is the party leader
+        foreach (var player in LobbyPlayers)
+        {
+            bool isHeadlessServer = player.ClientId == NetworkManager.ServerClientId && !NetworkManager.Singleton.IsHost;
             if (isHeadlessServer) continue;
 
-            partyLeaderId.Value = clientId; // First real player = leader
-            break;
+            partyLeaderId.Value = player.ClientId;
+            return;
         }
+        partyLeaderId.Value = ulong.MaxValue; // No players left
     }
 
     // -------------------------------------------------------------------------
     // Ready Toggle (call this from your "Ready" button)
     // -------------------------------------------------------------------------
+
     public void ToggleReady()
     {
         ToggleReadyServerRpc();
@@ -99,49 +172,50 @@ public class CharacterSelectReady : NetworkBehaviour
     {
         ulong senderId = rpcParams.Receive.SenderClientId;
 
-        // Toggle state
-        bool currentState = playerReadyDictionary.ContainsKey(senderId) && playerReadyDictionary[senderId];
-        bool newState = !currentState;
-        playerReadyDictionary[senderId] = newState;
-
-        // Sync to all clients so their UI can update indicators
-        SyncReadyStateClientRpc(senderId, newState);
-
-        // Check if exactly 2 players are connected and all are ready
-        if (NetworkManager.Singleton.ConnectedClientsIds.Count != 2) return;
-
-        bool allReady = true;
-        foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        for (int i = 0; i < LobbyPlayers.Count; i++)
         {
-            if (!playerReadyDictionary.ContainsKey(clientId) || !playerReadyDictionary[clientId])
+            if (LobbyPlayers[i].ClientId == senderId)
             {
-                allReady = false;
+                // Structs in NetworkList must be replaced, not mutated in-place
+                var updated = LobbyPlayers[i];
+                updated.IsReady = !updated.IsReady;
+                LobbyPlayers[i] = updated;
+
+                // Notify the local player's own UI
+                NotifyLocalReadyStateClientRpc(senderId, updated.IsReady);
                 break;
             }
         }
 
-        if (allReady)
-        {
-            NetworkManager.Singleton.SceneManager.LoadScene(SelectedArenaName, LoadSceneMode.Single);
-        }
+        Server_CheckAllReady();
     }
 
     [ClientRpc]
-    private void SyncReadyStateClientRpc(ulong clientId, bool isReady)
+    private void NotifyLocalReadyStateClientRpc(ulong clientId, bool isReady)
     {
-        playerReadyDictionary[clientId] = isReady;
-
-        // Notify UI that something changed
-        OnAnyReadyStateChanged?.Invoke();
-
-        // If this was the local player, also fire the personal event
         if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
             OnLocalReadyStateChanged?.Invoke(isReady);
+        }
+    }
+
+    private void Server_CheckAllReady()
+    {
+        if (LobbyPlayers.Count != 2) return;
+
+        foreach (var player in LobbyPlayers)
+        {
+            if (!player.IsReady) return;
+        }
+
+        // All 2 players are ready — load the arena
+        NetworkManager.Singleton.SceneManager.LoadScene(SelectedArenaName, LoadSceneMode.Single);
     }
 
     // -------------------------------------------------------------------------
     // Arena Selection (only the leader should call this from UI)
     // -------------------------------------------------------------------------
+
     public void SelectArena(int arenaIndex)
     {
         if (!IsPartyLeader)
@@ -149,7 +223,6 @@ public class CharacterSelectReady : NetworkBehaviour
             Debug.LogWarning("CharacterSelectReady: Non-leader tried to select an arena.");
             return;
         }
-        Debug.Log("sent");
         SelectArenaServerRpc(arenaIndex);
     }
 
@@ -161,10 +234,24 @@ public class CharacterSelectReady : NetworkBehaviour
     }
 
     // -------------------------------------------------------------------------
-    // Helper
+    // Helpers
     // -------------------------------------------------------------------------
+
     public bool IsPlayerReady(ulong clientId)
     {
-        return playerReadyDictionary.ContainsKey(clientId) && playerReadyDictionary[clientId];
+        foreach (var player in LobbyPlayers)
+        {
+            if (player.ClientId == clientId) return player.IsReady;
+        }
+        return false;
+    }
+
+    public LobbyPlayerState? GetPlayerState(ulong clientId)
+    {
+        foreach (var player in LobbyPlayers)
+        {
+            if (player.ClientId == clientId) return player;
+        }
+        return null;
     }
 }
