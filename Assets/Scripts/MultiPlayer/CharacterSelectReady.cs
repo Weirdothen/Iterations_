@@ -94,8 +94,14 @@ public class CharacterSelectReady : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback    += Server_OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback   += Server_OnClientDisconnected;
 
-            // Add the host itself as the first player immediately
-            Server_AddPlayer(NetworkManager.Singleton.LocalClientId);
+            // Add all currently connected clients (including host and any clients that are already here when reloading the scene)
+            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                if (GetPlayerState(clientId) == null)
+                {
+                    Server_AddPlayer(clientId);
+                }
+            }
         }
     }
 

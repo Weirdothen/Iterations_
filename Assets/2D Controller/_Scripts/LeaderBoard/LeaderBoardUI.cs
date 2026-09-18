@@ -17,10 +17,8 @@ namespace Iterations.Core
         [SerializeField] private Transform entriesContainer;
         [SerializeField] private GameObject entryPrefab;
 
-        private void OnEnable()
-        {
-            ShowLeaderboard();
-        }
+        private int requestId = 0;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -30,6 +28,11 @@ namespace Iterations.Core
             }
 
             Instance = this;
+        }
+
+        private void OnEnable()
+        {
+            ShowLeaderboard();
         }
 
         public async void ShowLeaderboard()
@@ -44,6 +47,10 @@ namespace Iterations.Core
                 );
                 return;
             }
+
+            // Mark this as the newest request; any older call still
+            // awaiting the network will check this and back off.
+            int thisRequest = ++requestId;
 
             leaderboardPanel.SetActive(true);
 
@@ -61,6 +68,14 @@ namespace Iterations.Core
                 await OnlineLeaderboardManager.Instance
                     .GetCurrentLevelLeaderboard();
 
+            // If another call started after this one, drop these
+            // results — they're stale, the newer call owns the container.
+            if (thisRequest != requestId)
+            {
+                Debug.Log("[LeaderboardUI] Stale request, discarding results.");
+                return;
+            }
+
             if (leaderboard == null)
             {
                 Debug.LogWarning(
@@ -72,6 +87,10 @@ namespace Iterations.Core
             Debug.Log(
                 $"[LeaderboardUI] Leaderboard loaded! Entries: {leaderboard.Results.Count}"
             );
+
+            // Clear again right before populating, in case anything
+            // slipped in between the first clear and now.
+            ClearEntries();
 
             foreach (LeaderboardEntry entry in leaderboard.Results)
             {
