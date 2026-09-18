@@ -9,6 +9,7 @@ namespace Iterations.Core
 
         [Header("Level Setup")]
         [SerializeField] private int totalLevels = 12;
+        public int TotalLevels => totalLevels;
 
         [Header("Debug")]
         [SerializeField] private bool enableDebugLogs = true;
@@ -317,7 +318,7 @@ namespace Iterations.Core
             return completed > 0 ? totalTime : -1f;
         }
 
-        private string FormatTime(float time)
+        public string FormatTime(float time)
         {
             if (time < 0f)
                 return "--:--:--"; // was "LOCKED", which no longer applies

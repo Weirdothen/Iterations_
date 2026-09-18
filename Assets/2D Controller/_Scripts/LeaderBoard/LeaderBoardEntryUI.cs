@@ -1,7 +1,9 @@
-using TMPro;
-using UnityEngine;
 using LightSide;
+using System.Text.RegularExpressions;
+using TMPro;
 using Unity.Services.Leaderboards.Models;
+using UnityEngine;
+
 
 namespace Iterations.Core
 {
@@ -25,7 +27,7 @@ namespace Iterations.Core
             }
 
             rankText.Text = (entry.Rank + 1).ToString();
-            nameText.Text = entry.PlayerName;
+            nameText.Text = StripNameSuffix(entry.PlayerName);
             attemptsText.Text = GetAttempts(entry);
             timeText.Text = FormatTime(entry.Score);
         }
@@ -61,6 +63,14 @@ namespace Iterations.Core
                 Mathf.FloorToInt((float)(milliseconds % 1000));
 
             return $"{minutes:00}:{remainingSeconds:00}:{millisecondsPart:000}";
+        }
+        private static string StripNameSuffix(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName))
+                return "Unknown";
+
+            // Removes a trailing "#" followed by digits, e.g. "Sam#123456" -> "Sam"
+            return Regex.Replace(playerName, @"#\d+$", "");
         }
 
         [System.Serializable]

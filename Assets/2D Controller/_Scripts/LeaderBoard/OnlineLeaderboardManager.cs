@@ -76,33 +76,18 @@ namespace Iterations.Core
                 return;
             }
 
-            if (!ScoreManager.Instance.OverallScoreUnlocked)
-            {
-                Debug.Log(
-                    "[LeaderboardManager] Overall leaderboard is still locked."
-                );
-
-                return;
-            }
-
             float overallTime = ScoreManager.Instance.GetOverallScore();
 
             if (overallTime < 0f)
             {
-                Debug.LogWarning(
-                    "[LeaderboardManager] Could not calculate overall score."
-                );
-
+                Debug.Log("[LeaderboardManager] No completed levels yet, nothing to submit.");
                 return;
             }
 
             int score = Mathf.RoundToInt(overallTime * 1000f);
+            int retries = ScoreManager.Instance.GetOverallRetries();
 
-            await SubmitScore(
-                OverallLeaderboardId,
-                score,
-                0
-            );
+            await SubmitScore(OverallLeaderboardId, score, retries);
         }
 
         // =========================

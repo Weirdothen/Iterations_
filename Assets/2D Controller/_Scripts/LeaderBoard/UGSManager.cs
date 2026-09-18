@@ -26,6 +26,18 @@ namespace Iterations.Core
         [SerializeField] private TMP_Text settingsErrorText;
 
         private const string PlayerNameKey = "PlayerName";
+        private const int MaxNameLength = 8;
+
+        private void ApplyNameLimit()
+        {
+            if (startupNameInput != null)
+                startupNameInput.characterLimit = MaxNameLength;
+
+            if (settingsNameInput != null)
+                settingsNameInput.characterLimit = MaxNameLength;
+        }
+
+
 
 
         private void OnEnable()
@@ -61,6 +73,7 @@ namespace Iterations.Core
             startupErrorText =
                 panel.GetComponentInChildren<TMP_Text>(true);
 
+            ApplyNameLimit(); // <-- add this
             if (PlayerPrefs.HasKey(PlayerNameKey))
             {
                 string savedName = PlayerPrefs.GetString(PlayerNameKey);
@@ -90,6 +103,7 @@ namespace Iterations.Core
 
         private void Start()
         {
+            ApplyNameLimit();
             InitializeUGS();
         }
 
@@ -176,11 +190,12 @@ namespace Iterations.Core
                 return false;
             }
 
-            if (playerName.Length > 20)
+            if (playerName.Length > MaxNameLength)
             {
-                errorText.text = "Name must be 20 characters or less.";
+                errorText.text = $"Name must be {MaxNameLength} characters or less.";
                 return false;
             }
+
 
             errorText.text = "";
             return true;
