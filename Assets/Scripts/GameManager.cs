@@ -125,6 +125,12 @@ namespace Iterations.Core
 
             CurrentState = GameState.Won;
 
+            ScoreManager.Instance?.StopLevelTimer();
+
+            OnlineLeaderboardManager.Instance?.SubmitCurrentLevelScore();
+            OnlineLeaderboardManager.Instance?.SubmitOverallScore();
+
+
             string currentSceneName = SceneManager.GetActiveScene().name;
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 

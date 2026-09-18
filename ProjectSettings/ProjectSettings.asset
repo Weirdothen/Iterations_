@@ -114,7 +114,6 @@ PlayerSettings:
   xboxEnableGuest: 0
   xboxEnablePIXSampling: 0
   metalFramebufferOnly: 0
-  metalUseMetalDisplayLink: 0
   xboxOneResolution: 0
   xboxOneSResolution: 0
   xboxOneXResolution: 3
@@ -893,11 +892,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 7c333743-d5bd-4613-bc4f-4ac135f2180b
+  cloudProjectId: fa99916b-954e-4930-89d7-920e736d0667
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Iterations_
-  organizationId: khaoooooled77
+  projectName: Copy Paste
+  organizationId: mennaomar100
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
