@@ -7834,6 +7834,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1466356570139913923, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_text
+      value: 'LEVEL: 1
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466356570139913923, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_fontSize
       value: 45.4
       objectReference: {fileID: 0}
