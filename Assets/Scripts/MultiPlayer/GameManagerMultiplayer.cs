@@ -21,7 +21,12 @@ public class GameManagerMultiplayer : NetworkBehaviour
     public event Action<int, int> OnScoreUpdated;
     public event Action<ulong, bool, string> OnGameOverEvent; // winnerId, isDraw, reason
 
+    [Header("Scenes")]
+    [SerializeField] private string lobbySceneName = "CharacterSelectScene";
+
     private NetworkVariable<State> state = new NetworkVariable<State>(State.WaitingToStart);
+    private NetworkVariable<ulong> partyLeaderId = new NetworkVariable<ulong>(0);
+    public ulong PartyLeaderId => partyLeaderId.Value;
 
     [Header("Player Settings")]
     [SerializeField] private Transform[] spawnPoints;
@@ -50,6 +55,10 @@ public class GameManagerMultiplayer : NetworkBehaviour
     private bool isPlayer1Dead = false;
     private bool isPlayer2Dead = false;
 
+    // Spawn index counter – increments per player spawned, independent of clientId
+    // This avoids the clientId % length bug when clients reconnect and get higher IDs
+    private int _spawnCounter = 0;
+
     [Header("Event channels")]
     // player 1
     [SerializeField] private VoidEventChannelSO OnLoseTriggered1;
@@ -68,6 +77,13 @@ public class GameManagerMultiplayer : NetworkBehaviour
         // Wire up UI events to NetworkVariables
         state.OnValueChanged += (State previousValue, State newValue) => 
         {
+            if(newValue == State.GamePlaying)
+            {
+                for(int i = 0;i< cloningSystems.Length; i++)
+                {
+                    cloningSystems[i].StartRun();
+                }
+            }
             OnStateChanged?.Invoke(newValue);
         };
         
@@ -142,6 +158,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     private void OnPlayer1Pickup(int obj)
     {
+        if (isPlayer1Dead || state.Value != State.GamePlaying) return;
         player1Score.Value++;
         CheckWinConditionOnScoreChange();
     }
@@ -167,6 +184,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     private void OnPlayer2Pickup(int obj)
     {
+        if (isPlayer2Dead || state.Value != State.GamePlaying) return;
         player2Score.Value++;
         CheckWinConditionOnScoreChange();
     }
@@ -222,6 +240,22 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     private void OnSceneLoaded(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, System.Collections.Generic.List<ulong> clientsCompleted, System.Collections.Generic.List<ulong> timeoutClients)
     {
+        // Determine the Party Leader (first actual player, ignoring headless dedicated server)
+        foreach (ulong clientId in clientsCompleted)
+        {
+            if (clientId == NetworkManager.ServerClientId && !NetworkManager.Singleton.IsHost) continue;
+            partyLeaderId.Value = clientId;
+            break;
+        }
+
+        // Reset spawn counter and game state for a fresh round
+        _spawnCounter = 0;
+        isPlayer1Dead = false;
+        isPlayer2Dead = false;
+        player1Score.Value = 0;
+        player2Score.Value = 0;
+        activeCoins.Clear();
+
         foreach (ulong clientId in clientsCompleted)
         {
             SpawnPlayerForClient(clientId);
@@ -249,7 +283,11 @@ public class GameManagerMultiplayer : NetworkBehaviour
             }
 
             GameObject coin = Instantiate(coinPrefab, point.position, point.rotation);
-            coin.GetComponent<NetworkObject>().Spawn();
+            NetworkObject netObj = coin.GetComponent<NetworkObject>();
+
+            
+
+            netObj.Spawn(true);
             
             // Track the newly spawned coin at this location
             activeCoins[point] = coin;
@@ -259,15 +297,40 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     private void SpawnPlayerForClient(ulong clientId)
     {
-        int Index = (int)clientId % spawnPoints.Length;
-        Vector3 position = spawnPoints[Index].position;
-        Quaternion rotation = spawnPoints[Index].rotation;
+       
+        int index = _spawnCounter % spawnPoints.Length;
+        _spawnCounter++;
 
-        GameObject playerInstance = Instantiate(playerPrefabs[Index], position, rotation);
+        Vector3 position = spawnPoints[index].position;
+        Quaternion rotation = spawnPoints[index].rotation;
+
+        GameObject playerInstance = Instantiate(playerPrefabs[index], position, rotation);
         playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
-        cloningSystems[Index].player = playerInstance.transform;
-        cloningSystems[Index].StartRun();
+        cloningSystems[index].player = playerInstance.transform;
+        
+    }
+
+    public void ReturnToLobby()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Singleton.SceneManager.LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+        else if(NetworkManager.Singleton.LocalClientId == PartyLeaderId)
+        {
+            ReturnToLobbyServerRpc();
+        }
+        else
+        {
+            Debug.Log("just the leader can back to the lobby");
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ReturnToLobbyServerRpc()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 
     private void Update()
@@ -309,5 +372,9 @@ public class GameManagerMultiplayer : NetworkBehaviour
             case State.GameOver:
                 break;
         }
+    }
+    public State GetCurrentStat()
+    {
+        return state.Value;
     }
 }

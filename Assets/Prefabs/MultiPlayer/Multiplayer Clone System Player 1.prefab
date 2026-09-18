@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 97737506
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 2924308372
+  InScenePlacedSourceGlobalObjectIdHash: 1110155367
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -78,4 +78,6 @@ MonoBehaviour:
   cloneSpawningTime: 10
   captureEveryNFrames: 2
   maxRecordTime: 500
-  onLoseTriggered: {fileID: 11400000, guid: e71612c737aaf554984b2aad5a24645d, type: 2}
+  onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
+  onJumpTriggered: {fileID: 11400000, guid: 6b5ba3b9b833d93468b57679172c8966, type: 2}
+  GroundedChanged: {fileID: 11400000, guid: cf9e022a76c4d814dafaefe19e77eb57, type: 2}

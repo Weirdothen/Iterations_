@@ -78,7 +78,11 @@ public class CloningSystemMultiPlayer : NetworkBehaviour
     void SpawnClone()
     {
         GameObject obj = Instantiate(ghostPrefabe);
-        obj.GetComponent<NetworkObject>().Spawn();
+        NetworkObject netObj = obj.GetComponent<NetworkObject>();
+
+
+        netObj.Spawn(true);
+        //netObj.DestroyWithScene = true;
         _system.PlayRecording(obj);
     }
 }

@@ -104,6 +104,10 @@ namespace Controller
 
         private void Update()
         {
+            if (GameManagerMultiplayer.Instance.GetCurrentStat() != GameManagerMultiplayer.State.GamePlaying) {
+                GatherInputServerRpc(false, false, Vector2.zero);
+                return;
+            }
             _time += Time.deltaTime;
 
             if (!IsOwner) return;
@@ -233,7 +237,7 @@ namespace Controller
         private bool _bufferedJumpUsable;
         private bool _endedJumpEarly;
         private bool _coyoteUsable;
-        private float _timeJumpWasPressed;
+        private float _timeJumpWasPressed = float.MinValue;
 
         private bool HasBufferedJump =>
             _bufferedJumpUsable &&
@@ -270,7 +274,7 @@ namespace Controller
         private void ExecuteJump()
         {
             _endedJumpEarly = false;
-            _timeJumpWasPressed = 0;
+            _timeJumpWasPressed = float.MinValue;
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
 

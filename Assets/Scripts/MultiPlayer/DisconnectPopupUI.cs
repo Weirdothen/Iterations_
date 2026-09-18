@@ -1,31 +1,35 @@
 using UnityEngine;
 using TMPro;
 
-public class DisconnectPopupUI : MonoBehaviour
+/// <summary>
+/// Attach to your Main Menu Canvas.
+/// Automatically shows a popup if the player arrived here due to a
+/// connection failure or disconnection.
+/// </summary>
+public class ConnectionFailedPopupUI : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("Popup References")]
     [SerializeField] private GameObject popupPanel;
-    [SerializeField] private TMP_Text popupMessageText;
+    [SerializeField] private TMP_Text messageText;
 
     private void Start()
     {
-        // Check if we arrived here because of a disconnect
-        if (DisconnectReasonData.HasDisconnectedMessage)
+        if (ConnectionFailedData.HasMessage)
         {
-            if (popupPanel != null) popupPanel.SetActive(true);
-            if (popupMessageText != null) popupMessageText.text = DisconnectReasonData.DisconnectMessage;
+            if (popupPanel != null)  popupPanel.SetActive(true);
+            if (messageText != null) messageText.text = ConnectionFailedData.Message;
 
-            // Reset it so it doesn't show again next time they visit the main menu normally
-            DisconnectReasonData.HasDisconnectedMessage = false;
+            // Clear so it doesn't show next time the menu is visited normally
+            ConnectionFailedData.HasMessage = false;
+            ConnectionFailedData.Message   = "";
         }
         else
         {
-            // Ensure it's hidden by default
             if (popupPanel != null) popupPanel.SetActive(false);
         }
     }
 
-    // Call this from an "OK" button on the popup
+    /// <summary>Hook this to your popup's OK / Close button.</summary>
     public void ClosePopup()
     {
         if (popupPanel != null) popupPanel.SetActive(false);
