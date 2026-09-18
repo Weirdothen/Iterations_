@@ -1,0 +1,62 @@
+using TMPro;
+using UnityEngine;
+using LightSide;
+using Unity.Services.Leaderboards.Models;
+
+namespace Iterations.Core
+{
+    public class LeaderBoardEntryUI : MonoBehaviour
+    {
+        [SerializeField] private UniText rankText;
+        [SerializeField] private UniText nameText;
+        [SerializeField] private UniText attemptsText;
+        [SerializeField] private UniText timeText;
+
+        public void Setup(LeaderboardEntry entry)
+        {
+            rankText.Text = entry.Rank.ToString();
+            nameText.Text = entry.PlayerName;
+            attemptsText.Text = GetAttempts(entry);
+            timeText.Text = FormatTime(entry.Score);
+        }
+
+        private string GetAttempts(LeaderboardEntry entry)
+        {
+            if (string.IsNullOrEmpty(entry.Metadata))
+                return "0";
+
+            try
+            {
+                ScoreMetadata metadata =
+                    JsonUtility.FromJson<ScoreMetadata>(entry.Metadata);
+
+                return metadata.retries.ToString();
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+
+        private string FormatTime(double milliseconds)
+        {
+            double seconds = milliseconds / 1000.0;
+
+            int minutes = Mathf.FloorToInt((float)seconds / 60f);
+
+            int remainingSeconds =
+                Mathf.FloorToInt((float)seconds % 60f);
+
+            int millisecondsPart =
+                Mathf.FloorToInt((float)(milliseconds % 1000));
+
+            return $"{minutes:00}:{remainingSeconds:00}.{millisecondsPart:000}";
+        }
+
+        [System.Serializable]
+        private class ScoreMetadata
+        {
+            public int retries;
+        }
+    }
+}

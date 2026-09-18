@@ -15,6 +15,7 @@ namespace Iterations.Core
 
         [Header("Startup Name Setup")]
         [SerializeField] private GameObject startupNamePanel;
+       
         [SerializeField] private TMP_InputField startupNameInput;
         [SerializeField] private TMP_Text startupErrorText;
 
@@ -166,7 +167,8 @@ namespace Iterations.Core
 
             settingsNamePanel.SetActive(true);
         }
-
        
+
+
     }
 }

@@ -2,6 +2,9 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Services.Leaderboards;
+using Unity.Services.Leaderboards.Models;
+using UnityEngine.SceneManagement;
+
 
 namespace Iterations.Core
 {
@@ -9,8 +12,6 @@ namespace Iterations.Core
     {
         public static OnlineLeaderboardManager Instance { get; private set; }
 
-        private const string Level1LeaderboardId = "Level_1";
-        private const string Level2LeaderboardId = "Level_2";
         private const string OverallLeaderboardId = "overall";
 
         private void Awake()
@@ -25,7 +26,11 @@ namespace Iterations.Core
             DontDestroyOnLoad(gameObject);
         }
 
-        public async void SubmitCurrentLevelScore()
+        // =========================
+        // SUBMIT CURRENT LEVEL
+        // =========================
+
+        public async Task SubmitCurrentLevelScore()
         {
             if (ScoreManager.Instance == null)
             {
@@ -33,19 +38,9 @@ namespace Iterations.Core
                 return;
             }
 
-            if (!ScoreManager.Instance.LastRunWasNewBest)
-            {
-                Debug.Log(
-                    "[LeaderboardManager] Current run was not a new best. " +
-                    "No leaderboard submission needed."
-                );
+          
 
-                return;
-            }
-
-            string sceneName = UnityEngine.SceneManagement.SceneManager
-                .GetActiveScene().name;
-
+            string sceneName = SceneManager.GetActiveScene().name;
             string leaderboardId = GetLeaderboardId(sceneName);
 
             if (string.IsNullOrEmpty(leaderboardId))
@@ -68,6 +63,10 @@ namespace Iterations.Core
                 retries
             );
         }
+
+        // =========================
+        // SUBMIT OVERALL
+        // =========================
 
         public async void SubmitOverallScore()
         {
@@ -106,6 +105,67 @@ namespace Iterations.Core
             );
         }
 
+        // =========================
+        // GET LEADERBOARD
+        // =========================
+
+        public async Task<LeaderboardScoresPage> GetCurrentLevelLeaderboard()
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            string leaderboardId = GetLeaderboardId(sceneName);
+
+            if (string.IsNullOrEmpty(leaderboardId))
+            {
+                Debug.LogWarning(
+                    $"[LeaderboardManager] No leaderboard configured for {sceneName}"
+                );
+
+                return null;
+            }
+
+            return await GetLeaderboard(leaderboardId);
+        }
+
+        public async Task<LeaderboardScoresPage> GetLeaderboard(
+            string leaderboardId)
+        {
+            try
+            {
+                Debug.Log(
+                    $"[LeaderboardManager] Getting leaderboard: {leaderboardId}"
+                );
+
+                LeaderboardScoresPage response =
+                    await LeaderboardsService.Instance.GetScoresAsync(
+                        leaderboardId,
+                        new GetScoresOptions
+                        {
+                            Limit = 100,
+                            IncludeMetadata = true
+                        }
+                    );
+
+                Debug.Log(
+                    $"[LeaderboardManager] Retrieved {response.Results.Count} entries."
+                );
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(
+                    $"[LeaderboardManager] Failed to get leaderboard " +
+                    $"{leaderboardId}\n{e}"
+                );
+
+                return null;
+            }
+        }
+
+        // =========================
+        // SUBMIT SCORE
+        // =========================
+
         private async Task SubmitScore(
             string leaderboardId,
             int score,
@@ -126,15 +186,14 @@ namespace Iterations.Core
                     retries = retries
                 };
 
-                var response =
-                    await LeaderboardsService.Instance.AddPlayerScoreAsync(
-                        leaderboardId,
-                        score,
-                        new AddPlayerScoreOptions
-                        {
-                            Metadata = metadata
-                        }
-                    );
+                await LeaderboardsService.Instance.AddPlayerScoreAsync(
+                    leaderboardId,
+                    score,
+                    new AddPlayerScoreOptions
+                    {
+                        Metadata = metadata
+                    }
+                );
 
                 Debug.Log(
                     $"[LeaderboardManager] Score submitted successfully | " +
@@ -151,20 +210,25 @@ namespace Iterations.Core
             }
         }
 
+        // =========================
+        // LEADERBOARD ID
+        // =========================
+
         private string GetLeaderboardId(string sceneName)
         {
-            switch (sceneName)
+            // Your leaderboard IDs should match these.
+
+            if (sceneName.StartsWith("Level_"))
             {
-                case "Level_1":
-                    return Level1LeaderboardId;
-
-                case "Level_2":
-                    return Level2LeaderboardId;
-
-                default:
-                    return null;
+                return sceneName;
             }
+
+            return null;
         }
+
+        // =========================
+        // METADATA
+        // =========================
 
         [Serializable]
         private class ScoreMetadata
