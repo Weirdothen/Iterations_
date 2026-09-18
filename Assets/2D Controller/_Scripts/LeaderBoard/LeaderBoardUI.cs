@@ -10,7 +10,6 @@ namespace Iterations.Core
     {
         public static LeaderboardUI Instance { get; private set; }
 
-
         [Header("Main UI")]
         [SerializeField] private GameObject leaderboardPanel;
 
@@ -18,17 +17,33 @@ namespace Iterations.Core
         [SerializeField] private Transform entriesContainer;
         [SerializeField] private GameObject entryPrefab;
 
-        
-
-
+        private void OnEnable()
+        {
+            ShowLeaderboard();
+        }
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             Instance = this;
         }
 
         public async void ShowLeaderboard()
         {
             Debug.Log("[LeaderboardUI] ShowLeaderboard CALLED");
+
+            if (leaderboardPanel == null || entriesContainer == null || entryPrefab == null)
+            {
+                Debug.LogError(
+                    "[LeaderboardUI] Missing Inspector references " +
+                    "(leaderboardPanel / entriesContainer / entryPrefab)."
+                );
+                return;
+            }
 
             leaderboardPanel.SetActive(true);
 
@@ -39,7 +54,6 @@ namespace Iterations.Core
                 Debug.LogError(
                     "[LeaderboardUI] OnlineLeaderboardManager not found."
                 );
-
                 return;
             }
 
@@ -52,7 +66,6 @@ namespace Iterations.Core
                 Debug.LogWarning(
                     "[LeaderboardUI] Could not load leaderboard."
                 );
-
                 return;
             }
 
@@ -69,6 +82,13 @@ namespace Iterations.Core
                 CreateEntry(entry);
             }
         }
+
+        public void HideLeaderboard()
+        {
+            if (leaderboardPanel != null)
+                leaderboardPanel.SetActive(false);
+        }
+
         private void CreateEntry(LeaderboardEntry entry)
         {
             GameObject newEntry =
@@ -80,16 +100,13 @@ namespace Iterations.Core
             if (entryUI == null)
             {
                 Debug.LogError(
-                    "[LeaderboardUI] Entry prefab is missing LeaderboardEntryUI."
+                    "[LeaderboardUI] Entry prefab is missing LeaderBoardEntryUI component."
                 );
-
                 return;
             }
 
             entryUI.Setup(entry);
         }
-
-       
 
         private void ClearEntries()
         {

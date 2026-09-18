@@ -3355,9 +3355,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.123947054
+    x: 0.124449335
     y: 0
-    width: 0.75090253
+    width: 0.7503671
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -4037,13 +4037,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1639808853411588091, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1928727159}
-    - target: {fileID: 1639808853411588091, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RestartLevel
+    - target: {fileID: 1658983752005074969, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2491413148160084488, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4089,44 +4085,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5351788535165689403, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1928727159}
-    - target: {fileID: 5351788535165689403, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReturnToMainMenu
-      objectReference: {fileID: 0}
     - target: {fileID: 5950997304651507010, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1928727159}
-    - target: {fileID: 5950997304651507010, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: AdvanceAfterWin
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348088472916980255, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1928727159}
-    - target: {fileID: 6348088472916980255, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RestartLevel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7199268484857301820, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 7422842670603037137, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8198367037097574194, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1928727159}
-    - target: {fileID: 8198367037097574194, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReturnToMainMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 8977742572687838060, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 7422842670603037137, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
