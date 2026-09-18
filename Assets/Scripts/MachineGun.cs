@@ -1,12 +1,21 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using DG.Tweening;
 
 public class MachineGun : MonoBehaviour
 {
     [Header("Gun Settings")]
     public Bullet bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 0.5f;
+    public float fireRate = 0.1f;
+
+    [Header("Game Feel - Visuals & Feedback")]
+    public Transform gunVisual;
+    public ParticleSystem muzzleFlash;
+
+    [Header("Recoil Settings")]
+    public float recoilStrength = 0.2f;
+    public float recoilDuration = 0.1f;
 
     [Header("Pool Settings")]
     public int defaultCapacity = 20;
@@ -14,6 +23,7 @@ public class MachineGun : MonoBehaviour
 
     private IObjectPool<Bullet> bulletPool;
     private float nextFireTime;
+    private Vector3 originalVisualPosition;
 
     void Awake()
     {
@@ -26,6 +36,9 @@ public class MachineGun : MonoBehaviour
             defaultCapacity,
             maxSize
         );
+
+        if (gunVisual != null)
+            originalVisualPosition = gunVisual.localPosition;
     }
 
     void Update()
@@ -43,6 +56,26 @@ public class MachineGun : MonoBehaviour
 
         bullet.transform.position = firePoint.position;
         bullet.transform.rotation = firePoint.rotation;
+
+        ApplyGameFeelEffects();
+    }
+
+    private void ApplyGameFeelEffects()
+    {
+        if (muzzleFlash != null)
+        {
+            muzzleFlash.Play();
+        }
+
+        if (gunVisual != null)
+        {
+            gunVisual.DOKill();
+            gunVisual.localPosition = originalVisualPosition;
+
+            gunVisual.DOLocalMoveX(originalVisualPosition.x - recoilStrength, recoilDuration / 2f)
+                     .SetEase(Ease.OutBack)
+                     .OnComplete(() => gunVisual.DOLocalMoveX(originalVisualPosition.x, recoilDuration / 2f));
+        }
     }
 
     #region Pool Callbacks

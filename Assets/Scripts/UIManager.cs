@@ -19,7 +19,7 @@ namespace Iterations.UI
 
         [Header("Win Panel - Retries Display")]
         [SerializeField] private TMP_Text retriesText;
-        [SerializeField] private string retriesLabelFormat = "Retries: {0}";
+        [SerializeField] private string retriesLabelFormat = "{0}";
 
         [Header("Events - Listened to by this manager")]
         [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
@@ -79,7 +79,7 @@ namespace Iterations.UI
             onResumeRequested?.RaiseEvent();
         }
 
-       
+
         private void HandleLevelWonWithRetries(int retries)
         {
             if (retriesText != null)
