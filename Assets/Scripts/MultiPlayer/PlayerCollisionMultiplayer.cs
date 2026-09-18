@@ -17,9 +17,7 @@ namespace Iterations.Player
         [SerializeField] private IntEventChannelSO onPickupCollected;
         [SerializeField] private string pickupTag = "Pickup";
 
-        [Header("Level Finish")]
-        [SerializeField] private VoidEventChannelSO onWinTriggered;
-        [SerializeField] private string finishTag = "Finish";
+
 
         private int _pickupsCollected;
 
@@ -35,7 +33,7 @@ namespace Iterations.Player
 
         private void HandleContact(Collider2D other)
         {
-            if (!IsOwner) return;
+            if (!IsServer) return;
 
             if (other.CompareTag(cloneTag))
             {
@@ -60,27 +58,12 @@ namespace Iterations.Player
                 }
                 return;
             }
-
-            if (other.CompareTag(finishTag))
-            {
-                TryFinishLevel();
-            }
+            
         }
 
-        private void TryFinishLevel()
-        {
-            int required = LevelConfig.Instance != null ? LevelConfig.Instance.TotalPickups : 0;
+        
 
-            if (_pickupsCollected < required)
-            {
-                Debug.Log($"Need all pickups first: {_pickupsCollected}/{required}");
-                return;
-            }
-
-            onWinTriggered?.RaiseEvent();
-        }
-
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void DespawnPlayerServerRpc()
         {
             if (NetworkObject != null && NetworkObject.IsSpawned)
@@ -89,7 +72,7 @@ namespace Iterations.Player
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void DespawnObjectServerRpc(ulong objectId)
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out NetworkObject netObj))

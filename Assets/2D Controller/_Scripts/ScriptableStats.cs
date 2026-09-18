@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TarodevController
+namespace Controller
 {
     [CreateAssetMenu]
     public class ScriptableStats : ScriptableObject

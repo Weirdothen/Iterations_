@@ -1,7 +1,7 @@
 using Iterations.Events;
 using UnityEngine;
 
-namespace TarodevController
+namespace Controller
 {
     /// <summary>
     /// VERY primitive animator example.

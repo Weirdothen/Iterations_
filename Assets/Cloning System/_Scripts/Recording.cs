@@ -30,7 +30,7 @@ namespace Clone
         public void AddSnapshot(float elapsed, bool jumpTriggered, bool groundedTriggered)
         {
             Duration = elapsed;
-
+            if (_target == null) return;
             var pos = _target.position;
             var rot = _target.rotation.eulerAngles;
 
