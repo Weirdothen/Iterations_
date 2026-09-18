@@ -2,7 +2,7 @@ using Iterations.Events;
 using System;
 using UnityEngine;
 
-namespace TarodevController
+namespace Controller
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerController : MonoBehaviour, IPlayerController
@@ -19,12 +19,12 @@ namespace TarodevController
 
         public Vector2 FrameInput => _frameInput.Move;
 
+
+        #endregion
         [Header("events Channels")]
 
         [SerializeField] private BoolEventChannelSO GroundedChanged;
         [SerializeField] private VoidEventChannelSO Jumped;
-
-        #endregion
 
         private float _time;
 
@@ -129,7 +129,7 @@ namespace TarodevController
         private bool _bufferedJumpUsable;
         private bool _endedJumpEarly;
         private bool _coyoteUsable;
-        private float _timeJumpWasPressed;
+        private float _timeJumpWasPressed = float.MinValue;
 
         private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
         private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
@@ -148,7 +148,7 @@ namespace TarodevController
         private void ExecuteJump()
         {
             _endedJumpEarly = false;
-            _timeJumpWasPressed = 0;
+            _timeJumpWasPressed = float.MinValue;
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;

@@ -1,5 +1,5 @@
 using Iterations.Events;
-using TarodevController;
+using Controller;
 using UnityEngine;
 
 public class NewPlayerAnimator : MonoBehaviour
@@ -66,7 +66,7 @@ public class NewPlayerAnimator : MonoBehaviour
 
         HandleSpriteFlip();
 
-        HandleIdleSpeed();
+        HandleWalk();
 
         //HandleCharacterTilt();
     }
@@ -76,7 +76,7 @@ public class NewPlayerAnimator : MonoBehaviour
         if (_player.FrameInput.x != 0) _sprite.flipX = _player.FrameInput.x < 0;
     }
 
-    private void HandleIdleSpeed()
+    private void HandleWalk()
     {
         var inputStrength = Mathf.Abs(_player.FrameInput.x);
         _anim.SetFloat(WalkKey, inputStrength);
