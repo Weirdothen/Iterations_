@@ -105,6 +105,7 @@ namespace Controller
         private void Update()
         {
             if (GameManagerMultiplayer.Instance.GetCurrentStat() != GameManagerMultiplayer.State.GamePlaying) {
+                if (!IsOwner) return;
                 GatherInputServerRpc(false, false, Vector2.zero);
                 return;
             }
