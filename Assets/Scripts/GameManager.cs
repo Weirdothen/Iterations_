@@ -117,7 +117,34 @@ namespace Iterations.Core
             Time.timeScale = 1f;
         }
 
-        private void HandleWinTriggered()
+        //private void HandleWinTriggered()
+        //{
+        //    if (CurrentState != GameState.Playing) return;
+
+        //    CurrentState = GameState.Won;
+
+        //    ScoreManager.Instance?.StopLevelTimer();
+
+        //    OnlineLeaderboardManager.Instance?.SubmitCurrentLevelScore();
+        //    OnlineLeaderboardManager.Instance?.SubmitOverallScore();
+
+
+        //    string currentSceneName = SceneManager.GetActiveScene().name;
+        //    SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
+
+        //    // Unlock the next level immediately on win, regardless of whether the player
+        //    // clicks "Next Level" � winning alone is what unlocks it.
+        //    if (!string.IsNullOrEmpty(nextLevelSceneName))
+        //    {
+        //        PlayerPrefs.SetInt(nextLevelSceneName, 1);
+        //        PlayerPrefs.Save();
+        //    }
+
+        //    _levelAdvancePending = true;
+        //    onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
+        //}
+
+        private async void HandleWinTriggered()
         {
             if (CurrentState != GameState.Playing) return;
 
@@ -125,12 +152,22 @@ namespace Iterations.Core
 
             ScoreManager.Instance?.StopLevelTimer();
 
-            OnlineLeaderboardManager.Instance?.SubmitCurrentLevelScore();
-            OnlineLeaderboardManager.Instance?.SubmitOverallScore();
+            // Wait until the level score is submitted
+            if (OnlineLeaderboardManager.Instance != null)
+            {
+                await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
+
+                // Submit overall score after the level score
+                OnlineLeaderboardManager.Instance.SubmitOverallScore();
+            }
+
+            // Show leaderboard
+            LeaderboardUI.Instance?.ShowLeaderboard();
 
             string currentSceneName = SceneManager.GetActiveScene().name;
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 
+            // Unlock the next level immediately on win
             if (!string.IsNullOrEmpty(nextLevelSceneName))
             {
                 PlayerPrefs.SetInt(nextLevelSceneName, 1);
