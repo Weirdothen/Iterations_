@@ -155,6 +155,17 @@ namespace Iterations.Core
             SceneTransitioner.LoadScene(nextLevelSceneName);
         }
 
+
+        public void OnQuitPressed()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+
         private void HandleLoseTriggered()
         {
             if (CurrentState != GameState.Playing) return;
