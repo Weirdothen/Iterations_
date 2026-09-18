@@ -4,6 +4,7 @@ using Unity.Services.Authentication;
 using TMPro;
 using System.Threading.Tasks;
 using LightSide;
+using UnityEngine.SceneManagement;
 
 namespace Iterations.Core
 {
@@ -25,6 +26,55 @@ namespace Iterations.Core
         [SerializeField] private TMP_Text settingsErrorText;
 
         private const string PlayerNameKey = "PlayerName";
+
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == "MainMenuScene")
+            {
+                FindMainMenuNameUI();
+            }
+        }
+
+        private void FindMainMenuNameUI()
+        {
+            GameObject panel = GameObject.Find("StartingNamePanel (1)");
+
+            if (panel == null)
+                return;
+
+            startupNamePanel = panel;
+
+            startupNameInput =
+                panel.GetComponentInChildren<TMP_InputField>(true);
+
+            startupErrorText =
+                panel.GetComponentInChildren<TMP_Text>(true);
+
+            if (PlayerPrefs.HasKey(PlayerNameKey))
+            {
+                string savedName = PlayerPrefs.GetString(PlayerNameKey);
+
+                startupNameInput.text = savedName;
+                startupNamePanel.SetActive(false);
+
+                Debug.Log("Returning to Main Menu - name already exists.");
+            }
+            else
+            {
+                startupNamePanel.SetActive(true);
+            }
+        }
 
         private void Awake()
         {
@@ -167,8 +217,14 @@ namespace Iterations.Core
 
             settingsNamePanel.SetActive(true);
         }
-       
 
+        public void RemoveSavedName()
+        {
+            PlayerPrefs.DeleteKey(PlayerNameKey);
+            PlayerPrefs.Save();
+
+            Debug.Log("Saved player name removed.");
+        }
 
     }
 }
