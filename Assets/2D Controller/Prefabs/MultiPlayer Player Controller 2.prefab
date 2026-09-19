@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1544650614272011794}
   - component: {fileID: -4596776186290917243}
   - component: {fileID: -7105234749072375891}
+  - component: {fileID: 2243276232685122965}
   m_Layer: 6
   m_Name: MultiPlayer Player Controller 2
   m_TagString: Untagged
@@ -168,6 +169,11 @@ MonoBehaviour:
   cloneTag: Clone
   onPickupCollected: {fileID: 11400000, guid: f9b6a93a36431a046972ad5b479ec732, type: 2}
   pickupTag: PickUp
+  playerAudioSource: {fileID: 2969068311962969768}
+  deathSound: {fileID: 8300000, guid: bd6e64f2ae718bd449417e6aeca63ba9, type: 3}
+  deathEffect: {fileID: 2243276232685122965}
+  pickupSound: {fileID: 8300000, guid: 3021323f0f2b6fd4692b511839c1d820, type: 3}
+  pickupParticle: {fileID: 5526102255847859882, guid: a23587478f0be20498e8b1f1dd9a7c9f, type: 3}
 --- !u!114 &-7105234749072375891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +220,23 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2243276232685122965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544650614272011804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598e1cac7f345aa4faecbcc5ef55784a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Iterations.Player.PlayerDeathEffect
+  dotPrefab: {fileID: 146619161666038582, guid: b9fc0f6dbf01f45458a3df9bbce8a294, type: 3}
+  dotsCount: 30
+  explosionRadius: 3
+  explosionDuration: 0.8
+  onLoseTriggeredListener: {fileID: 0}
 --- !u!1 &2969068311587289281
 GameObject:
   m_ObjectHideFlags: 0

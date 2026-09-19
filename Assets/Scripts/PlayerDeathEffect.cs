@@ -46,7 +46,10 @@ namespace Iterations.Player
 
         private void OnDestroy()
         {
-            onLoseTriggeredListener.OnEventRaised -= () => TriggerExplosion(transform.position);
+            if (onLoseTriggeredListener != null)
+            {
+                onLoseTriggeredListener.OnEventRaised -= () => TriggerExplosion(transform.position);
+            }
         }
     }
 }
