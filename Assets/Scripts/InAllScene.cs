@@ -6,5 +6,6 @@ public class InAllScene : MonoBehaviour
     void Start()
     {
        DontDestroyOnLoad(gameObject);
+        GetComponent<AudioSource>().volume =  PlayerPrefs.GetFloat("MusicVolume", .2f);
     }
 }
