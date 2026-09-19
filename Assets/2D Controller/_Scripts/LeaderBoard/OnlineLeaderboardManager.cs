@@ -90,40 +90,26 @@ namespace Iterations.Core
         //    await SubmitScore(OverallLeaderboardId, score, retries);
         //}
 
-        public async void SubmitOverallScoreVersionTwo()
+        public async Task SubmitOverallScoreVersionTwo()
         {
-            if (ScoreManager.Instance == null)
+            var sm = ScoreManager.Instance;
+            if (sm == null)
             {
                 Debug.LogError("[LeaderboardManager] ScoreManager not found.");
                 return;
             }
 
-            // Only allow an overall score after ALL levels are completed
-            if (ScoreManager.Instance.GetCompletedLevelCount() < ScoreManager.Instance.TotalLevels)
+            if (!sm.HasCompletedAllLevels())
             {
-                Debug.Log(
-                    "[LeaderboardManager] Overall leaderboard is locked for this player. " +
-                    "Not all levels have been completed."
-                );
+                Debug.Log($"[LeaderboardManager] Overall locked: " +
+                          $"{sm.GetCompletedLevelCount()}/{sm.TotalLevels} levels completed.");
                 return;
             }
 
-            float overallTime = ScoreManager.Instance.GetOverallScore();
+            float overallTime = sm.GetOverallScore();   // sum of all 12 best times
+            int retries = sm.GetOverallRetries();       // sum of retries from those best runs
 
-            if (overallTime < 0f)
-            {
-                Debug.Log("[LeaderboardManager] No overall score available.");
-                return;
-            }
-
-            int score = Mathf.RoundToInt(overallTime * 1000f);
-            int retries = ScoreManager.Instance.GetOverallRetries();
-
-            await SubmitScore(
-                OverallLeaderboardId,
-                score,
-                retries
-            );
+            await SubmitScore(OverallLeaderboardId, Mathf.RoundToInt(overallTime * 1000f), retries);
         }
 
         // =========================

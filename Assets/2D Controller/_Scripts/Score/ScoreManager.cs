@@ -9,7 +9,7 @@ namespace Iterations.Core
         public static ScoreManager Instance { get; private set; }
 
         [Header("Level Setup")]
-        [SerializeField] private int totalLevels = 12;
+        [SerializeField] private const int totalLevels = 12;
         public int TotalLevels => totalLevels;
 
         [Header("Debug")]
@@ -374,6 +374,15 @@ namespace Iterations.Core
             }
 
             return totalRetries;
+        }
+        public bool HasCompletedAllLevels()
+        {
+            for (int i = 1; i <= totalLevels; i++)
+            {
+                if (GetBestTime("Level_" + i) < 0f)
+                    return false;
+            }
+            return true;
         }
     }
 }

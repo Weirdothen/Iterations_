@@ -162,7 +162,7 @@ namespace Iterations.Core
                 if (OnlineLeaderboardManager.Instance != null)
                 {
                     await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
-                    OnlineLeaderboardManager.Instance.SubmitOverallScoreVersionTwo();
+                    await OnlineLeaderboardManager.Instance.SubmitOverallScoreVersionTwo();
                 }
 
                 levelWinLeaderboard?.ShowLeaderboard();
@@ -266,5 +266,15 @@ namespace Iterations.Core
         {
             SceneTransitioner.LoadScene(sceneName);
         }
+
+        [ContextMenu("Clear All PlayerPrefs")]
+        public void ClearAllPrefs()
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            Debug.Log("PlayerPrefs cleared.");
+        }
     }
+
+
 }
