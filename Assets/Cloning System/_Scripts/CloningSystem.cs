@@ -69,15 +69,17 @@ public class CloningSystem : MonoBehaviour
     {
         GameObject obj = Instantiate(ghostPrefabe);
         _system.PlayRecording(obj);
+        
         StartCoroutine(SpawnEffect(obj));
     }
 
     IEnumerator SpawnEffect(GameObject obj)
     {
         yield return new WaitForSeconds(0.05f);
+
+        obj.SetActive(true);
         if (spawnEffect != null)
         {
-            obj.SetActive(true);
             Instantiate(spawnEffect, obj.transform.position, Quaternion.identity);
         }
     }
