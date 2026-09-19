@@ -17,9 +17,14 @@ namespace Iterations.Player
         {
             if (onLoseTriggeredListener != null)
             {
-                onLoseTriggeredListener.OnEventRaised += () => TriggerExplosion(transform.position);
+                onLoseTriggeredListener.OnEventRaised += HandleLoseEvent;
             }
         }
+        private void HandleLoseEvent()
+        {
+            TriggerExplosion(transform.position);
+        }
+
         public void TriggerExplosion(Vector3 explosionPosition)
         {
             for (int i = 0; i < dotsCount; i++)
@@ -28,6 +33,7 @@ namespace Iterations.Player
                 Vector2 randomDirection = Random.insideUnitCircle.normalized;
                 float randomDistance = Random.Range(explosionRadius * 0.5f, explosionRadius);
                 Vector3 targetPosition = explosionPosition + (Vector3)(randomDirection * randomDistance);
+
                 dot.transform.DOMove(targetPosition, explosionDuration).SetEase(Ease.OutExpo);
                 dot.transform.DOScale(Vector3.zero, explosionDuration)
                     .SetEase(Ease.InQuad)
@@ -35,6 +41,7 @@ namespace Iterations.Player
                     {
                         Destroy(dot);
                     });
+
                 SpriteRenderer sr = dot.GetComponent<SpriteRenderer>();
                 if (sr != null)
                 {
@@ -46,7 +53,10 @@ namespace Iterations.Player
 
         private void OnDestroy()
         {
-            onLoseTriggeredListener.OnEventRaised -= () => TriggerExplosion(transform.position);
+            if (onLoseTriggeredListener != null)
+            {
+                onLoseTriggeredListener.OnEventRaised -= HandleLoseEvent;
+            }
         }
     }
 }
