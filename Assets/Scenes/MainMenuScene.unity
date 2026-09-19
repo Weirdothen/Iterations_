@@ -7513,7 +7513,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8675742257794619301, guid: c8574c7fa0f5c274cbfa61bcd956fc42, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8675742257794619301, guid: c8574c7fa0f5c274cbfa61bcd956fc42, type: 3}
+      propertyPath: m_MaxValue
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8675742257794619301, guid: c8574c7fa0f5c274cbfa61bcd956fc42, type: 3}
       propertyPath: m_MinValue

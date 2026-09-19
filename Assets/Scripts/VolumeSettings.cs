@@ -19,7 +19,7 @@ public class VolumeSettings : MonoBehaviour
         if (PlayerPrefs.HasKey(musicParameter))
             musicSlider.value = PlayerPrefs.GetFloat(musicParameter);
         else
-            musicSlider.value = 1f;
+            musicSlider.value = 0.2f;
 
         if (PlayerPrefs.HasKey(sfxParameter))
             sfxSlider.value = PlayerPrefs.GetFloat(sfxParameter);
