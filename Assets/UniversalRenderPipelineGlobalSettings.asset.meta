@@ -6,3 +6,10 @@ NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 325160
+  packageName: Buttons, Slides, Dings and Drops
+  packageVersion: 1.0
+  assetPath: Assets/UniversalRenderPipelineGlobalSettings.asset
+  uploadId: 770899

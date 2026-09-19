@@ -46,7 +46,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
     [SerializeField] private float gamePlayingTimerMax = 60f;
 
     private NetworkVariable<float> countdownToStartTimer = new NetworkVariable<float>(3f);
-    
+
     // Player Scores
     private NetworkVariable<int> player1Score = new NetworkVariable<int>(0);
     private NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
@@ -74,9 +74,22 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        // Wire up UI events to NetworkVariables
-       
-        
+        // Wire up UI events to NetworkVariables (runs on ALL clients)
+
+        // State changes must reach the UI on every client, not only on the server
+        state.OnValueChanged += (State previousValue, State newValue) =>
+        {
+            // Only the server starts the cloning systems
+            if (IsServer && newValue == State.GamePlaying)
+            {
+                for (int i = 0; i < cloningSystems.Length; i++)
+                {
+                    cloningSystems[i].StartRun();
+                }
+            }
+            OnStateChanged?.Invoke(newValue);
+        };
+
         gamePlayingTimer.OnValueChanged += (float prev, float curr) =>
         {
             if (state.Value == State.GamePlaying)
@@ -103,18 +116,6 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
             OnLoseTriggered2.OnEventRaised += OnPlayer2Lose;
             OnPickUpCollected2.OnEventRaised += OnPlayer2Pickup;
-
-            state.OnValueChanged += (State previousValue, State newValue) =>
-            {
-                if (newValue == State.GamePlaying)
-                {
-                    for (int i = 0; i < cloningSystems.Length; i++)
-                    {
-                        cloningSystems[i].StartRun();
-                    }
-                }
-                OnStateChanged?.Invoke(newValue);
-            };
         }
     }
 
@@ -270,14 +271,14 @@ public class GameManagerMultiplayer : NetworkBehaviour
     private void SpawnCoinRandomly()
     {
         if (coinPrefab == null || coinSpawnPoints == null || coinSpawnPoints.Length == 0) return;
-        
+
         // Try a few times to find an empty spot
         int maxAttempts = 10;
         for (int i = 0; i < maxAttempts; i++)
         {
             int index = UnityEngine.Random.Range(0, coinSpawnPoints.Length);
             Transform point = coinSpawnPoints[index];
-            
+
             // If the dictionary has this point, and the GameObject hasn't been destroyed yet, it's occupied.
             if (activeCoins.ContainsKey(point) && activeCoins[point] != null)
             {
@@ -287,10 +288,10 @@ public class GameManagerMultiplayer : NetworkBehaviour
             GameObject coin = Instantiate(coinPrefab, point.position, point.rotation);
             NetworkObject netObj = coin.GetComponent<NetworkObject>();
 
-            
+
 
             netObj.Spawn(true);
-            
+
             // Track the newly spawned coin at this location
             activeCoins[point] = coin;
             return;
@@ -299,7 +300,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
 
     private void SpawnPlayerForClient(ulong clientId)
     {
-       
+
         int index = _spawnCounter % spawnPoints.Length;
         _spawnCounter++;
 
@@ -310,7 +311,7 @@ public class GameManagerMultiplayer : NetworkBehaviour
         playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
         cloningSystems[index].player = playerInstance.transform;
-        
+
     }
 
     public void ReturnToLobby()

@@ -18,6 +18,8 @@ namespace Iterations.Core
     {
         public static GameManager Instance { get; private set; }
 
+        [SerializeField] private LeaderboardUI levelWinLeaderboard;
+
         [Header("Events - Raised by this manager")]
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
         [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
@@ -160,10 +162,10 @@ namespace Iterations.Core
                 if (OnlineLeaderboardManager.Instance != null)
                 {
                     await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
-                    OnlineLeaderboardManager.Instance.SubmitOverallScore();
+                    OnlineLeaderboardManager.Instance.SubmitOverallScoreVersionTwo();
                 }
 
-                LeaderboardUI.Instance?.ShowLeaderboard();
+                levelWinLeaderboard?.ShowLeaderboard();
             }
 
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);

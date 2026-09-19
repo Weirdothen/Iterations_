@@ -7,10 +7,17 @@ using UnityEngine.UI;
 /// <summary>
 /// Manages the arena-selection buttons and the local ready button (label + color).
 /// Subscribes to the NetworkList.OnListChanged event on CharacterSelectReady.
+/// Every CHILD of this object is treated as one arena button, in order.
 /// </summary>
 public class ArenaSelectoinUi : MonoBehaviour
 {
     private Outline[] buttonoutlines;
+
+    [Header("Arena Outline")]
+    [Tooltip("Outline color of the currently selected arena button")]
+    [SerializeField] private Color selectedOutlineColor = Color.red;
+    [Tooltip("Outline thickness (X, Y). Y is usually the negative of X, e.g. 4 and -4")]
+    [SerializeField] private Vector2 outlineThickness = new Vector2(4f, -4f);
 
     [Header("Ready Button")]
     [SerializeField] private UniText readyButtonText;
@@ -29,12 +36,20 @@ public class ArenaSelectoinUi : MonoBehaviour
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            buttonoutlines[i] = transform.GetChild(i).GetComponent<Outline>();
+            Transform child = transform.GetChild(i);
+
+            // Use the button's Outline, or add one automatically if it's missing
+            buttonoutlines[i] = child.GetComponent<Outline>();
+            if (buttonoutlines[i] == null)
+            {
+                buttonoutlines[i] = child.gameObject.AddComponent<Outline>();
+            }
+
             int index = i;
 
             if (CharacterSelectReady.Instance.IsPartyLeader)
             {
-                transform.GetChild(i).GetComponent<Button>().onClick.AddListener(() =>
+                child.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     DisableOtherOutlines(index);
                     CharacterSelectReady.Instance.SelectArena(index);
@@ -42,7 +57,7 @@ public class ArenaSelectoinUi : MonoBehaviour
             }
             else
             {
-                transform.GetChild(i).GetComponent<Button>().interactable = false;
+                child.GetComponent<Button>().interactable = false;
             }
         }
 
@@ -71,7 +86,6 @@ public class ArenaSelectoinUi : MonoBehaviour
     {
         // Update the local ready button text + color
         bool localReady = CharacterSelectReady.Instance.IsPlayerReady(NetworkManager.Singleton.LocalClientId);
-        
 
         UpdateReadyButtonVisuals(localReady);
     }
@@ -99,6 +113,10 @@ public class ArenaSelectoinUi : MonoBehaviour
     {
         for (int i = 0; i < buttonoutlines.Length; i++)
         {
+            if (buttonoutlines[i] == null) continue;
+
+            buttonoutlines[i].effectColor = selectedOutlineColor;
+            buttonoutlines[i].effectDistance = outlineThickness;
             buttonoutlines[i].enabled = (i == activeOutline);
         }
     }

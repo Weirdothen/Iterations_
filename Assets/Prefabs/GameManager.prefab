@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed56661e32623045ae1137d07629f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Iterations.Core.GameManager
+  levelWinLeaderboard: {fileID: 0}
   onAllLevelsComplete: {fileID: 11400000, guid: e69c6fb9b8757044d84b69ff7173a57a, type: 2}
   onLevelWonWithRetries: {fileID: 11400000, guid: 43087032a8bb4ee40a8b83e094693ee2, type: 2}
   onPauseRequested: {fileID: 11400000, guid: 4f2074c9825759144a5421173fd2b67f, type: 2}
@@ -145,6 +146,8 @@ MonoBehaviour:
   onLoseTriggered: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
   loseRestartDelay: 4
   mainMenuSceneName: MainMenuScene
+  tutorialSceneName: Tutorial
+  tutorialWinPanel: {fileID: 0}
 --- !u!82 &9221293495038184595
 AudioSource:
   m_ObjectHideFlags: 0

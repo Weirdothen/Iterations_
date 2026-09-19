@@ -8,10 +8,9 @@ public class MachineGun : MonoBehaviour
     public Bullet bulletPrefab;
     public Transform firePoint;
     public float fireRate = 0.1f;
-
-    [Header("Game Feel - Visuals & Feedback")]
     public Transform gunVisual;
     public ParticleSystem muzzleFlash;
+    public AudioSource gunAudioSource;
 
     [Header("Recoil Settings")]
     public float recoilStrength = 0.2f;
@@ -56,6 +55,11 @@ public class MachineGun : MonoBehaviour
 
         bullet.transform.position = firePoint.position;
         bullet.transform.rotation = firePoint.rotation;
+        
+        if (gunAudioSource != null)
+        {
+            gunAudioSource.Play();
+        }
 
         ApplyGameFeelEffects();
     }
