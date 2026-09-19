@@ -43,5 +43,10 @@ namespace Iterations.Player
             }
             Destroy(gameObject);
         }
+
+        private void OnDestroy()
+        {
+            onLoseTriggeredListener.OnEventRaised -= () => TriggerExplosion(transform.position);
+        }
     }
 }
