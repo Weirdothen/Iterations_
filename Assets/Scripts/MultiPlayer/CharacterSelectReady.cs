@@ -27,6 +27,9 @@ public class CharacterSelectReady : NetworkBehaviour
     /// <summary>Fires when the party leader status is confirmed (true = I am the leader).</summary>
     public event Action<bool> OnPartyLeaderStatusReceived;
 
+    /// <summary>Fires when the selected arena changes so the UI can highlight the correct button.</summary>
+    public event Action<int> OnArenaIndexChanged;
+
     // -------------------------------------------------------------------------
     // Synced Player List  ← the main extensible state container
     // -------------------------------------------------------------------------
@@ -83,9 +86,7 @@ public class CharacterSelectReady : NetworkBehaviour
         // When the arena selection changes, let UI scripts know
         selectedArenaIndex.OnValueChanged += (prev, curr) =>
         {
-            // LobbyPlayers.OnListChanged listeners will see this indirectly;
-            // fire a dummy change so UI refreshes if it only watches the list event.
-            // Or, subscribe to selectedArenaIndex directly in your UI if preferred.
+            OnArenaIndexChanged?.Invoke(curr);
         };
 
         if (IsServer)

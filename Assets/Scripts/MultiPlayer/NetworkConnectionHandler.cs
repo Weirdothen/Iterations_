@@ -15,6 +15,7 @@ public class NetworkConnectionHandler : MonoBehaviour
 {
     // Singleton guard so scene reloads don't re-register
     private static NetworkConnectionHandler _instance;
+    public static NetworkConnectionHandler Instance => _instance;
 
     [Header("Settings")]
     [SerializeField] private int maxPlayers = 2;
@@ -33,17 +34,36 @@ public class NetworkConnectionHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        if (NetworkManager.Singleton == null) return;
-
-        NetworkManager.Singleton.ConnectionApprovalCallback  = OnConnectionApproval;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+        RegisterCallbacks();
     }
 
     private void OnDisable()
     {
+        UnregisterCallbacks();
+    }
+
+    /// <summary>
+    /// NGO clears all callbacks when Shutdown() is called. 
+    /// We must explicitly re-register them before starting a new session 
+    /// if this script survives via DontDestroyOnLoad.
+    /// </summary>
+    public void RegisterCallbacks()
+    {
         if (NetworkManager.Singleton == null) return;
-        NetworkManager.Singleton.ConnectionApprovalCallback   = null;
-        NetworkManager.Singleton.OnClientDisconnectCallback  -= OnClientDisconnect;
+
+        NetworkManager.Singleton.ConnectionApprovalCallback = OnConnectionApproval;
+
+        // Prevent double subscriptions by unsubscribing first
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+    }
+
+    public void UnregisterCallbacks()
+    {
+        if (NetworkManager.Singleton == null) return;
+        
+        NetworkManager.Singleton.ConnectionApprovalCallback = null;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
     }
 
     private void OnDestroy()
@@ -77,6 +97,13 @@ public class NetworkConnectionHandler : MonoBehaviour
     private void OnClientDisconnect(ulong clientId)
     {
         if (!IsLocalClientDisconnect(clientId)) return;
+
+        // If the user clicked "Leave", we don't want to show an error popup.
+        if (ConnectionFailedData.IntentionalDisconnect)
+        {
+            ConnectionFailedData.IntentionalDisconnect = false; // Reset
+            return;
+        }
 
         // Build a meaningful reason. NGO populates DisconnectReason when the server
         // explicitly denies or kicks a client (e.g. "Room is full").
@@ -120,4 +147,5 @@ public static class ConnectionFailedData
 {
     public static bool   HasMessage = false;
     public static string Message    = string.Empty;
+    public static bool   IntentionalDisconnect = false;
 }

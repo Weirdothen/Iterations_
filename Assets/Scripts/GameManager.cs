@@ -18,6 +18,8 @@ namespace Iterations.Core
     {
         public static GameManager Instance { get; private set; }
 
+        [SerializeField] private LeaderboardUI levelWinLeaderboard;
+
         [Header("Events - Raised by this manager")]
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
         [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
@@ -33,6 +35,10 @@ namespace Iterations.Core
         [SerializeField] private float loseRestartDelay = 4f;
 
         [SerializeField] private string mainMenuSceneName = "MainMenuScene";
+
+        [Header("Tutorial")]
+        [SerializeField] private string tutorialSceneName = "TutorialScene";
+        [SerializeField] private GameObject tutorialWinPanel;
 
         [Header("Retries")]
         private const string RetriesKeyPrefix = "Retries_";
@@ -82,7 +88,9 @@ namespace Iterations.Core
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             CurrentState = scene.name == mainMenuSceneName ? GameState.MainMenu : GameState.Playing;
+
             Time.timeScale = 1f;
+            AudioListener.pause = false;
 
             _restartRoutine = null;
             _levelAdvancePending = false;
@@ -103,6 +111,11 @@ namespace Iterations.Core
 
         private void HandlePauseRequested()
         {
+            // Pausing (e.g. via Esc) is disabled entirely while in the
+            // tutorial scene.
+            if (SceneManager.GetActiveScene().name == tutorialSceneName)
+                return;
+
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.Paused;
@@ -117,33 +130,6 @@ namespace Iterations.Core
             Time.timeScale = 1f;
         }
 
-        //private void HandleWinTriggered()
-        //{
-        //    if (CurrentState != GameState.Playing) return;
-
-        //    CurrentState = GameState.Won;
-
-        //    ScoreManager.Instance?.StopLevelTimer();
-
-        //    OnlineLeaderboardManager.Instance?.SubmitCurrentLevelScore();
-        //    OnlineLeaderboardManager.Instance?.SubmitOverallScore();
-
-
-        //    string currentSceneName = SceneManager.GetActiveScene().name;
-        //    SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
-
-        //    // Unlock the next level immediately on win, regardless of whether the player
-        //    // clicks "Next Level" � winning alone is what unlocks it.
-        //    if (!string.IsNullOrEmpty(nextLevelSceneName))
-        //    {
-        //        PlayerPrefs.SetInt(nextLevelSceneName, 1);
-        //        PlayerPrefs.Save();
-        //    }
-
-        //    _levelAdvancePending = true;
-        //    onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
-        //}
-
         private async void HandleWinTriggered()
         {
             if (CurrentState != GameState.Playing) return;
@@ -152,22 +138,38 @@ namespace Iterations.Core
 
             ScoreManager.Instance?.StopLevelTimer();
 
-            // Wait until the level score is submitted
-            if (OnlineLeaderboardManager.Instance != null)
-            {
-                await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            bool isTutorial = currentSceneName == tutorialSceneName;
 
-                // Submit overall score after the level score
-                OnlineLeaderboardManager.Instance.SubmitOverallScore();
+            Time.timeScale = 0f;
+            //AudioListener.pause = true;
+
+            if (isTutorial)
+            {
+                if (tutorialWinPanel != null)
+                {
+                    tutorialWinPanel.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogWarning("HandleWinTriggered: tutorialWinPanel is not assigned.");
+                }
+
+                UGSManager.Instance?.ShowTutorialNamePanelIfNeeded();
+            }
+            else
+            {
+                if (OnlineLeaderboardManager.Instance != null)
+                {
+                    await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
+                    OnlineLeaderboardManager.Instance.SubmitOverallScoreVersionTwo();
+                }
+
+                levelWinLeaderboard?.ShowLeaderboard();
             }
 
-            // Show leaderboard
-            LeaderboardUI.Instance?.ShowLeaderboard();
-
-            string currentSceneName = SceneManager.GetActiveScene().name;
             SaveRetriesIfBest(currentSceneName, CurrentLevelRetries);
 
-            // Unlock the next level immediately on win
             if (!string.IsNullOrEmpty(nextLevelSceneName))
             {
                 PlayerPrefs.SetInt(nextLevelSceneName, 1);

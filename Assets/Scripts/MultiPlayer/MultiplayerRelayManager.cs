@@ -113,6 +113,10 @@ public class MultiplayerRelayManager : MonoBehaviour
             JoinCode = currentLobby.LobbyCode;
 
             Debug.Log($"[LobbyServiceManager] Lobby created: {currentLobby.LobbyCode}");
+            
+            // 4.5. Re-register NGO callbacks since Shutdown() clears them
+            NetworkConnectionHandler.Instance?.RegisterCallbacks();
+            RegisterCallbacks();
 
             // 5. Start hosting
             if (!NetworkManager.Singleton.StartHost())
@@ -179,6 +183,10 @@ public class MultiplayerRelayManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>()
                           .SetRelayServerData(relayServerData);
 
+            // 3.5. Re-register NGO callbacks since Shutdown() clears them
+            NetworkConnectionHandler.Instance?.RegisterCallbacks();
+            RegisterCallbacks();
+
             // 4. Start the client
             if (!NetworkManager.Singleton.StartClient())
             {
@@ -218,6 +226,12 @@ public class MultiplayerRelayManager : MonoBehaviour
         if (currentLobby == null) return false;
         return currentLobby.HostId == AuthenticationService.Instance.PlayerId;
     }
+
+    private void Update()
+    {
+        HandleHeartbeat();
+    }
+
     private void HandleHeartbeat()
     {
         if (currentLobby == null || !IsHost()) return;
@@ -230,5 +244,72 @@ public class MultiplayerRelayManager : MonoBehaviour
         }
     }
 
+    // -------------------------------------------------------------------------
+    // CLEANUP & CALLBACKS
+    // -------------------------------------------------------------------------
+    private void OnEnable()
+    {
+        RegisterCallbacks();
+    }
 
+    private void OnDisable()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
+            NetworkManager.Singleton.OnServerStopped -= OnServerStopped;
+        }
+    }
+
+    /// <summary>
+    /// NGO clears all callbacks when Shutdown() is called. 
+    /// We must explicitly re-register them before starting a new session.
+    /// </summary>
+    public void RegisterCallbacks()
+    {
+        if (NetworkManager.Singleton == null) return;
+
+        NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
+        NetworkManager.Singleton.OnClientStopped += OnClientStopped;
+
+        NetworkManager.Singleton.OnServerStopped -= OnServerStopped;
+        NetworkManager.Singleton.OnServerStopped += OnServerStopped;
+    }
+
+    private void OnClientStopped(bool wasHost)
+    {
+        if (!wasHost) CleanUpLobby();
+    }
+
+    private void OnServerStopped(bool wasHost)
+    {
+        CleanUpLobby();
+    }
+
+    public async void CleanUpLobby()
+    {
+        if (currentLobby == null) return;
+        
+        string lobbyId = currentLobby.Id;
+        bool wasHost = IsHost();
+        currentLobby = null; // Clear immediately to prevent double-calls
+        
+        try
+        {
+            if (wasHost)
+            {
+                await LobbyService.Instance.DeleteLobbyAsync(lobbyId);
+                Debug.Log("[Lobby] Deleted lobby successfully.");
+            }
+            else
+            {
+                await LobbyService.Instance.RemovePlayerAsync(lobbyId, AuthenticationService.Instance.PlayerId);
+                Debug.Log("[Lobby] Left lobby successfully.");
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[Lobby] Failed to clean up lobby: {e}");
+        }
+    }
 }

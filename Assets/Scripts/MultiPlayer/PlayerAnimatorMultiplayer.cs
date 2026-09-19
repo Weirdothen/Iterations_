@@ -119,7 +119,7 @@ namespace Controller
 
                 _anim.SetTrigger(GroundedKey);
 
-                if (_footsteps != null && _footsteps.Length > 0)
+                if (_footsteps != null && _footsteps.Length > 0 && _player.isOwner)
                 {
                     _source.PlayOneShot(_footsteps[Random.Range(0, _footsteps.Length)]);
                 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1544650614272011793}
   - component: {fileID: 1544650614272011794}
   - component: {fileID: 3870247573995237555}
+  - component: {fileID: 6432135994173564406}
   m_Layer: 6
   m_Name: Player Controller
   m_TagString: Untagged
@@ -133,6 +134,24 @@ MonoBehaviour:
   pickupTag: PickUp
   onWinTriggered: {fileID: 11400000, guid: b5de4e6e903c4f44e9709d73d03b082f, type: 2}
   finishTag: Finish
+  onAllPickupsCollected: {fileID: 11400000, guid: 7c91f3d599123dd4094362466ca20734, type: 2}
+--- !u!114 &6432135994173564406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544650614272011804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598e1cac7f345aa4faecbcc5ef55784a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Iterations.Player.PlayerDeathEffect
+  dotPrefab: {fileID: 146619161666038582, guid: b9fc0f6dbf01f45458a3df9bbce8a294, type: 3}
+  dotsCount: 25
+  explosionRadius: 2
+  explosionDuration: 1
+  onLoseTriggeredListener: {fileID: 11400000, guid: cce1f2114a3e9bc439222dd1440700bd, type: 2}
 --- !u!1 &2969068311587289281
 GameObject:
   m_ObjectHideFlags: 0

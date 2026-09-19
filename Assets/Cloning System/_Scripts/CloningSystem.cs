@@ -1,11 +1,14 @@
 using Clone;
 using UnityEngine;
+using System.Collections;
 using Iterations.Events;
+using Unity.VisualScripting;
 
 public class CloningSystem : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private GameObject ghostPrefabe;
+    [SerializeField] private ParticleSystem spawnEffect;
     [SerializeField] private int firstCloneTime = 5;
     [SerializeField] private int cloneSpawningTime = 5;
     [SerializeField, Range(1, 10)] private int captureEveryNFrames = 2;
@@ -66,5 +69,18 @@ public class CloningSystem : MonoBehaviour
     {
         GameObject obj = Instantiate(ghostPrefabe);
         _system.PlayRecording(obj);
+        
+        StartCoroutine(SpawnEffect(obj));
+    }
+
+    IEnumerator SpawnEffect(GameObject obj)
+    {
+        yield return new WaitForSeconds(0.05f);
+
+        obj.SetActive(true);
+        if (spawnEffect != null)
+        {
+            Instantiate(spawnEffect, obj.transform.position, Quaternion.identity);
+        }
     }
 }

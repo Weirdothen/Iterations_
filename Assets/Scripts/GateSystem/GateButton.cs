@@ -15,6 +15,11 @@ namespace Iterations.Mechanics
         [SerializeField] private float animationDuration = 0.2f;
         [SerializeField] private ParticleSystem pressParticles;
 
+        [Header("Audio Setup")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip pressSound;
+        [SerializeField] private AudioClip releaseSound;
+
         private int _occupantCount;
         private Vector3 _originalScale;
 
@@ -80,6 +85,11 @@ namespace Iterations.Mechanics
             {
                 pressParticles.Play();
             }
+
+            if (audioSource != null && pressSound != null)
+            {
+                audioSource.PlayOneShot(pressSound);
+            }
         }
 
         private void AnimateRelease()
@@ -89,6 +99,11 @@ namespace Iterations.Mechanics
                 buttonVisual.DOKill();
                 buttonVisual.DOScaleY(_originalScale.y, animationDuration * 2f)
                             .SetEase(Ease.OutElastic);
+            }
+
+            if (audioSource != null && releaseSound != null)
+            {
+                audioSource.PlayOneShot(releaseSound);
             }
         }
 

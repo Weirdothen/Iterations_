@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CloningSystem
   player: {fileID: 0}
   ghostPrefabe: {fileID: 5304459651671198311, guid: cf58bf933a92e604194c5bc9877479b7, type: 3}
+  spawnEffect: {fileID: 7648406486478606958, guid: 0f4814f5423a3d945b64c0dd75ad495a, type: 3}
   firstCloneTime: 10
   cloneSpawningTime: 10
   captureEveryNFrames: 2
