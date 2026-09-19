@@ -133,6 +133,7 @@ MonoBehaviour:
   pickupTag: PickUp
   onWinTriggered: {fileID: 11400000, guid: b5de4e6e903c4f44e9709d73d03b082f, type: 2}
   finishTag: Finish
+  onAllPickupsCollected: {fileID: 11400000, guid: 7c91f3d599123dd4094362466ca20734, type: 2}
 --- !u!1 &2969068311587289281
 GameObject:
   m_ObjectHideFlags: 0
