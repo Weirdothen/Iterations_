@@ -1066,6 +1066,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8528576392511874699}
+  - component: {fileID: 3111177833757827654}
   m_Layer: 5
   m_Name: Credits Panel
   m_TagString: Untagged
@@ -1100,6 +1101,38 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3111177833757827654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9167180957825610667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 5118015373747500552}
+  - {fileID: 8538640502320572123}
+  - {fileID: 2227255806078476788}
+  - {fileID: 4420298143272099973}
+  - {fileID: 4554221892601389936}
+  - {fileID: 860202155213990440}
+  - {fileID: 5652262660544208204}
+  - {fileID: 2110128258577151674}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &9189723278732292044
 GameObject:
   m_ObjectHideFlags: 0

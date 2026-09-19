@@ -17,6 +17,12 @@ namespace Iterations.Player
         [SerializeField] private IntEventChannelSO onPickupCollected;
         [SerializeField] private string pickupTag = "Pickup";
 
+        [Header("Effects")]
+        [SerializeField] private AudioSource playerAudioSource;
+        [SerializeField] private AudioClip deathSound;
+        [SerializeField] private PlayerDeathEffect deathEffect;
+        [SerializeField] private AudioClip pickupSound;
+        [SerializeField] private GameObject pickupParticle;
 
 
         private int _pickupsCollected;
@@ -38,6 +44,7 @@ namespace Iterations.Player
             if (other.CompareTag(cloneTag))
             {
                 onLoseTriggered?.RaiseEvent();
+                PlayDeathEffectsClientRpc();
                 DespawnPlayerServerRpc();
                 return;
             }
@@ -46,6 +53,7 @@ namespace Iterations.Player
             {
                 _pickupsCollected++;
                 onPickupCollected?.RaiseEvent(_pickupsCollected);
+                PlayPickupEffectsClientRpc();
 
                 NetworkObject pickupNetObj = other.GetComponent<NetworkObject>();
                 if (pickupNetObj != null)
@@ -61,7 +69,35 @@ namespace Iterations.Player
             
         }
 
-        
+        [ClientRpc]
+        private void PlayDeathEffectsClientRpc()
+        {
+            if (deathEffect != null)
+            {
+                deathEffect.TriggerExplosion(transform.position);
+            }
+
+            // Both players hear the death sound if anyone dies
+            if (playerAudioSource != null && deathSound != null)
+            {
+                playerAudioSource.PlayOneShot(deathSound);
+            }
+        }
+
+        [ClientRpc]
+        private void PlayPickupEffectsClientRpc()
+        {
+            if (pickupParticle != null)
+            {
+                Instantiate( pickupParticle, transform.position,Quaternion.identity);
+            }
+
+            // Only the player who picked it up hears the sound
+            if (IsOwner && playerAudioSource != null && pickupSound != null)
+            {
+                playerAudioSource.PlayOneShot(pickupSound);
+            }
+        }
 
         [ServerRpc(RequireOwnership = false)]
         private void DespawnPlayerServerRpc()

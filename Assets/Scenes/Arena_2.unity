@@ -407,7 +407,7 @@ Camera:
     serializedVersion: 2
     x: 0.125
     y: 0
-    width: 0.75000006
+    width: 0.7509579
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -988,10 +988,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1505452520}
-    - target: {fileID: 7114922316259230344, guid: cb6acb74433653949b2e5c06c655625e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7115516995394079673, guid: cb6acb74433653949b2e5c06c655625e, type: 3}
       propertyPath: m_Pivot.x
       value: 0

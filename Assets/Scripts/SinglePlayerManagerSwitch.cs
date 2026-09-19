@@ -13,6 +13,11 @@ public class SinglePlayerManagerSwitch : MonoBehaviour
         SetSinglePlayerManagers(false);
     }
 
+    public void OnBackPressed()
+    {
+        SetSinglePlayerManagers(true);
+    }
+
     private void SetSinglePlayerManagers(bool active)
     {
         GameManager[] managers = FindObjectsByType<GameManager>(

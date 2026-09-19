@@ -85,7 +85,7 @@ RectTransform:
   m_Father: {fileID: 7621392491376458200}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -772,7 +772,7 @@ RectTransform:
   m_Father: {fileID: 1974263177254915322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -1.252}
   m_SizeDelta: {x: 42.7, y: -19.758}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1025,7 +1025,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8426172882017810510}
         m_TargetAssemblyTypeName: Iterations.Core.SettingsNamePanel, Assembly-CSharp
         m_MethodName: OnConfirmPressed
         m_Mode: 1
@@ -1429,13 +1429,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6117651785061928843}
+  - component: {fileID: 8426172882017810510}
+  - component: {fileID: 4054490953864485211}
   m_Layer: 5
   m_Name: Settings Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6117651785061928843
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1463,6 +1465,56 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8426172882017810510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5411700221364237652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c8f3c64d7dc4a64da9f2fce0859c6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Iterations.Core.SettingsNamePanel
+  settingsPanel: {fileID: 1749802660649420709}
+  settingsNameInput: {fileID: 1611586505955031387}
+  settingsErrorText: {fileID: 7115372579803490571}
+--- !u!114 &4054490953864485211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5411700221364237652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 4913258193802286034}
+  - {fileID: 4932973546134800983}
+  - {fileID: 6354125483574634829}
+  - {fileID: 4114654517887933270}
+  - {fileID: 7619625772333665513}
+  - {fileID: 3790131675938527319}
+  - {fileID: 8286820587751347546}
+  - {fileID: 691008607112055303}
+  - {fileID: 1568988279180328068}
+  - {fileID: 2587064592905815603}
+  - {fileID: 2381035934983060789}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &5459587712962142640
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,7 +2092,7 @@ RectTransform:
   m_Father: {fileID: 8989408073627132698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2115,7 +2167,7 @@ RectTransform:
   m_Father: {fileID: 7838542680184675299}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -1.252}
   m_SizeDelta: {x: 42.7, y: -19.758}
   m_Pivot: {x: 0.5, y: 0.5}
