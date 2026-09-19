@@ -8,7 +8,7 @@ namespace Iterations.Core
 {
     public class LeaderboardUI : MonoBehaviour
     {
-        public static LeaderboardUI Instance { get; private set; }
+     
 
         [Header("Main UI")]
         [SerializeField] private GameObject leaderboardPanel;
@@ -18,17 +18,9 @@ namespace Iterations.Core
         [SerializeField] private GameObject entryPrefab;
 
         private int requestId = 0;
+        [SerializeField] private bool isOverallLeaderboard;
 
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-        }
+       
 
         private void OnEnable()
         {
@@ -48,8 +40,6 @@ namespace Iterations.Core
                 return;
             }
 
-            // Mark this as the newest request; any older call still
-            // awaiting the network will check this and back off.
             int thisRequest = ++requestId;
 
             leaderboardPanel.SetActive(true);
@@ -64,12 +54,23 @@ namespace Iterations.Core
                 return;
             }
 
-            LeaderboardScoresPage leaderboard =
-                await OnlineLeaderboardManager.Instance
-                    .GetCurrentLevelLeaderboard();
+            LeaderboardScoresPage leaderboard;
 
-            // If another call started after this one, drop these
-            // results — they're stale, the newer call owns the container.
+            if (isOverallLeaderboard)
+            {
+                Debug.Log("[LeaderboardUI] Loading OVERALL leaderboard.");
+
+                leaderboard = await OnlineLeaderboardManager.Instance
+                    .GetOverallLeaderboard();
+            }
+            else
+            {
+                Debug.Log("[LeaderboardUI] Loading CURRENT LEVEL leaderboard.");
+
+                leaderboard = await OnlineLeaderboardManager.Instance
+                    .GetCurrentLevelLeaderboard();
+            }
+
             if (thisRequest != requestId)
             {
                 Debug.Log("[LeaderboardUI] Stale request, discarding results.");
@@ -88,8 +89,6 @@ namespace Iterations.Core
                 $"[LeaderboardUI] Leaderboard loaded! Entries: {leaderboard.Results.Count}"
             );
 
-            // Clear again right before populating, in case anything
-            // slipped in between the first clear and now.
             ClearEntries();
 
             foreach (LeaderboardEntry entry in leaderboard.Results)
