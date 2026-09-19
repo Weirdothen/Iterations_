@@ -16,6 +16,7 @@ namespace Controller
         private bool JumpDown;
         private bool JumpHeld;
         private Vector2 _frameVelocity;
+        private Vector2 _platformVelocity;
 
         public NetworkVariable<Vector2> Move;
 
@@ -30,6 +31,7 @@ namespace Controller
         #region Interface
 
         public Vector2 FrameInput => Move.Value;
+        public bool isOwner => IsOwner;
 
 
         #endregion
@@ -179,25 +181,18 @@ namespace Controller
         {
             Physics2D.queriesStartInColliders = false;
 
-            bool groundHit = Physics2D.CapsuleCast(
-                _col.bounds.center,
-                _col.size,
-                _col.direction,
-                0,
-                Vector2.down,
-                _stats.GrounderDistance,
-                ~_stats.PlayerLayer
-            );
+            RaycastHit2D groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            RaycastHit2D ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
 
-            bool ceilingHit = Physics2D.CapsuleCast(
-                _col.bounds.center,
-                _col.size,
-                _col.direction,
-                0,
-                Vector2.up,
-                _stats.GrounderDistance,
-                ~_stats.PlayerLayer
-            );
+            // Read platform velocity if we are standing on one
+            if (groundHit && groundHit.collider.TryGetComponent(out MovingPlatformMultiplayer platform))
+            {
+                _platformVelocity = platform.Velocity;
+            }
+            else
+            {
+                _platformVelocity = Vector2.zero;
+            }
 
             if (ceilingHit)
             {
@@ -353,7 +348,7 @@ namespace Controller
 
         private void ApplyMovement()
         {
-            _rb.linearVelocity = _frameVelocity;
+            _rb.linearVelocity = _frameVelocity + _platformVelocity;
         }
 
 #if UNITY_EDITOR
@@ -372,5 +367,6 @@ namespace Controller
     public interface IPlayerControllerMultiplayer
     {
         public Vector2 FrameInput { get; }
+        public bool isOwner{ get; }
     }
 }

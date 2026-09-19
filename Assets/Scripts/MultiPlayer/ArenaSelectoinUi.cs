@@ -42,6 +42,9 @@ public class ArenaSelectoinUi : MonoBehaviour
         // Subscribe to the NetworkList change event — fires on join, leave, and ready toggles
         CharacterSelectReady.Instance.LobbyPlayers.OnListChanged += OnLobbyPlayersChanged;
 
+        // Subscribe to the Arena Index change event
+        CharacterSelectReady.Instance.OnArenaIndexChanged += OnArenaIndexChanged;
+
         readyButtonText.SetText("Not Ready");
     }
 
@@ -50,6 +53,7 @@ public class ArenaSelectoinUi : MonoBehaviour
         if (CharacterSelectReady.Instance != null)
         {
             CharacterSelectReady.Instance.LobbyPlayers.OnListChanged -= OnLobbyPlayersChanged;
+            CharacterSelectReady.Instance.OnArenaIndexChanged -= OnArenaIndexChanged;
         }
     }
 
@@ -58,9 +62,12 @@ public class ArenaSelectoinUi : MonoBehaviour
         // Update the local ready button label
         bool localReady = CharacterSelectReady.Instance.IsPlayerReady(NetworkManager.Singleton.LocalClientId);
         readyButtonText.SetText(localReady ? "Ready" : "Not Ready");
+    }
 
-        // Refresh the arena outline to match any server-side arena change
-        DisableOtherOutlines(CharacterSelectReady.Instance.SelectedArenaIndex);
+    private void OnArenaIndexChanged(int newIndex)
+    {
+        // Refresh the arena outline to match the new server-side arena choice
+        DisableOtherOutlines(newIndex);
     }
 
     private void DisableOtherOutlines(int activeOutline)

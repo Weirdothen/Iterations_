@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3503a619da1c204428ffa74d15f13dc9
+guid: a9c4faf1a7d3c7141b801855e50504db
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4421393401252370526
-    second: 2ndPlayerJump11_0
+      213: 2620691893139873270
+    second: 2ndPlayerJump2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 35
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 2ndPlayerJump11_0
+      name: 2ndPlayerJump2_0
       rect:
         serializedVersion: 2
-        x: 14
+        x: 17
         y: 3
-        width: 39
-        height: 48
+        width: 34
+        height: 50
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e5857e57fd1fb5d30800000000000000
-      internalID: 4421393401252370526
+      spriteID: 6fd195c44619e5420800000000000000
+      internalID: 2620691893139873270
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      2ndPlayerJump11_0: 4421393401252370526
+      2ndPlayerJump2_0: 2620691893139873270
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
