@@ -68,7 +68,29 @@ namespace Iterations.Core
         // SUBMIT OVERALL
         // =========================
 
-        public async void SubmitOverallScore()
+        //public async void SubmitOverallScore()
+        //{
+        //    if (ScoreManager.Instance == null)
+        //    {
+        //        Debug.LogError("[LeaderboardManager] ScoreManager not found.");
+        //        return;
+        //    }
+
+        //    float overallTime = ScoreManager.Instance.GetOverallScore();
+
+        //    if (overallTime < 0f)
+        //    {
+        //        Debug.Log("[LeaderboardManager] No completed levels yet, nothing to submit.");
+        //        return;
+        //    }
+
+        //    int score = Mathf.RoundToInt(overallTime * 1000f);
+        //    int retries = ScoreManager.Instance.GetOverallRetries();
+
+        //    await SubmitScore(OverallLeaderboardId, score, retries);
+        //}
+
+        public async void SubmitOverallScoreVersionTwo()
         {
             if (ScoreManager.Instance == null)
             {
@@ -76,18 +98,32 @@ namespace Iterations.Core
                 return;
             }
 
+            // Only allow an overall score after ALL levels are completed
+            if (ScoreManager.Instance.GetCompletedLevelCount() < ScoreManager.Instance.TotalLevels)
+            {
+                Debug.Log(
+                    "[LeaderboardManager] Overall leaderboard is locked for this player. " +
+                    "Not all levels have been completed."
+                );
+                return;
+            }
+
             float overallTime = ScoreManager.Instance.GetOverallScore();
 
             if (overallTime < 0f)
             {
-                Debug.Log("[LeaderboardManager] No completed levels yet, nothing to submit.");
+                Debug.Log("[LeaderboardManager] No overall score available.");
                 return;
             }
 
             int score = Mathf.RoundToInt(overallTime * 1000f);
             int retries = ScoreManager.Instance.GetOverallRetries();
 
-            await SubmitScore(OverallLeaderboardId, score, retries);
+            await SubmitScore(
+                OverallLeaderboardId,
+                score,
+                retries
+            );
         }
 
         // =========================

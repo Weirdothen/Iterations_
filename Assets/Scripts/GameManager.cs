@@ -162,7 +162,7 @@ namespace Iterations.Core
                 if (OnlineLeaderboardManager.Instance != null)
                 {
                     await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
-                    OnlineLeaderboardManager.Instance.SubmitOverallScore();
+                    OnlineLeaderboardManager.Instance.SubmitOverallScoreVersionTwo();
                 }
 
                 levelWinLeaderboard?.ShowLeaderboard();
