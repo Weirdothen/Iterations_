@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using LightSide;
 using UnityEngine;
 using Unity.Netcode;
@@ -45,6 +45,12 @@ namespace Iterations.UI
         [Header("Host Only Buttons")]
         [Tooltip("Assign your pause menu 'Back to Lobby' button here. It will only be active for the host.")]
         [SerializeField] private GameObject backToLobbyPauseButton;
+
+        [Header("Game Over Effects")]
+        [SerializeField] private float delayBeforeGameOverUI = 1f;
+        [SerializeField] private AudioSource uiAudioSource;
+        [SerializeField] private AudioClip winSound;
+        [SerializeField] private AudioClip loseSound;
 
         private const string ResultLabel = "النتيجة:";
         private const string DrawLabel = "تعادل";
@@ -262,10 +268,38 @@ namespace Iterations.UI
 
         private void ShowGameOverUI(ulong winnerId, bool isDraw, string reason)
         {
+            StartCoroutine(ShowGameOverRoutine(winnerId, isDraw, reason));
+        }
+
+        private IEnumerator ShowGameOverRoutine(ulong winnerId, bool isDraw, string reason)
+        {
             gameOverShown = true;
 
             // Make sure to hide pause menu if it was open
             if (localPausePanel != null) localPausePanel.SetActive(false);
+
+            // Determine winner
+            bool amIWinner = (!isDraw && NetworkManager.Singleton.LocalClientId == winnerId);
+
+            // Play Sound immediately
+            if (uiAudioSource != null)
+            {
+                if (isDraw)
+                {
+                    // Optional: play a draw sound, or just play nothing/lose sound
+                }
+                else if (amIWinner && winSound != null)
+                {
+                    uiAudioSource.PlayOneShot(winSound);
+                }
+                else if (!amIWinner && loseSound != null)
+                {
+                    uiAudioSource.PlayOneShot(loseSound);
+                }
+            }
+
+            // Wait before showing UI
+            yield return new WaitForSeconds(delayBeforeGameOverUI);
 
             if (gameOverPanel != null) gameOverPanel.SetActive(true);
 
@@ -292,8 +326,6 @@ namespace Iterations.UI
             }
             else
             {
-                bool amIWinner = (NetworkManager.Singleton.LocalClientId == winnerId);
-
                 if (amIWinner)
                 {
                     if (winImage != null) winImage.SetActive(true);
