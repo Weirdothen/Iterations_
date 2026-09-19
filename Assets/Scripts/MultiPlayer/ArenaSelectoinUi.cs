@@ -54,7 +54,6 @@ public class ArenaSelectoinUi : MonoBehaviour
         // Subscribe to the Arena Index change event
         CharacterSelectReady.Instance.OnArenaIndexChanged += OnArenaIndexChanged;
 
-        readyButtonText.SetText("Not Ready");
         // Start in the "not ready" look
         UpdateReadyButtonVisuals(false);
     }
@@ -72,9 +71,10 @@ public class ArenaSelectoinUi : MonoBehaviour
     {
         // Update the local ready button text + color
         bool localReady = CharacterSelectReady.Instance.IsPlayerReady(NetworkManager.Singleton.LocalClientId);
-        readyButtonText.SetText(localReady ? "Ready" : "Not Ready");
-    }
+        
+
         UpdateReadyButtonVisuals(localReady);
+    }
 
     private void OnArenaIndexChanged(int newIndex)
     {
