@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2559813954928603617}
   - component: {fileID: 2117772934613735117}
   m_Layer: 0
-  m_Name: GhostMultiPlayer
+  m_Name: GhostMultiPlayer 2
   m_TagString: Clone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2840121795
+  GlobalObjectIdHash: 1348200728
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -327,7 +327,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5905681027756182028, guid: 37b6c8833af38864bb14eb8e02d6ab9e, type: 3}
+  m_Sprite: {fileID: -3338271674793859455, guid: af12292cd625f7d43b60b65d2a6bfaa5, type: 3}
   m_Color: {r: 0.6132076, g: 0.5554957, b: 0.45412073, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -347,7 +347,7 @@ Animator:
   m_GameObject: {fileID: 9159362112772527799}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 97692e376461ad94a9cfb80d7b327b3e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 45b265a71c2c3074b9203ab9caae6340, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
