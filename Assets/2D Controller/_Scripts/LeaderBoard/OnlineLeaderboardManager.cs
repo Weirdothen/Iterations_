@@ -111,6 +111,11 @@ namespace Iterations.Core
             return await GetLeaderboard(leaderboardId);
         }
 
+        public async Task<LeaderboardScoresPage> GetOverallLeaderboard()
+        {
+            return await GetLeaderboard(OverallLeaderboardId);
+        }
+
         public async Task<LeaderboardScoresPage> GetLeaderboard(
             string leaderboardId)
         {
@@ -214,6 +219,14 @@ namespace Iterations.Core
         // =========================
         // METADATA
         // =========================
+
+        public enum LeaderboardType
+        {
+            CurrentLevel,
+            Overall
+        }
+
+        [SerializeField] private LeaderboardType leaderboardType;
 
         [Serializable]
         private class ScoreMetadata

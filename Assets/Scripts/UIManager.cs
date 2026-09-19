@@ -21,6 +21,11 @@ namespace Iterations.UI
         [SerializeField] private TMP_Text retriesText;
         [SerializeField] private string retriesLabelFormat = "{0}";
 
+        [Header("All Levels Win - Total Retries")]
+        [SerializeField] private TMP_Text totalRetriesText;
+
+        [SerializeField] private TMP_Text totalSuccessfulTimeText;
+
         [Header("Tutorial")]
         [SerializeField] private string tutorialSceneName = "TutorialScene";
 
@@ -98,9 +103,24 @@ namespace Iterations.UI
 
         private void HandleAllLevelsComplete()
         {
+            if (totalRetriesText != null && ScoreManager.Instance != null)
+            {
+                int totalRetries = ScoreManager.Instance.GetTotalRetries();
+
+                totalRetriesText.text = totalRetries.ToString();
+            }
+            if (totalSuccessfulTimeText != null && ScoreManager.Instance != null)
+            {
+                totalSuccessfulTimeText.text =
+                    ScoreManager.Instance.FormatTime(
+                        ScoreManager.Instance.TotalSuccessfulRunTime
+                    );
+            }
+
             if (allLevelsWinPanel != null)
                 allLevelsWinPanel.SetActive(true);
         }
+       
 
         private void HandlePauseRequested()
         {
