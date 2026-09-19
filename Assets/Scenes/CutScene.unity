@@ -483,6 +483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4564f269e9751c04297ac613e3b86fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Iterations.Core.OnlineLeaderboardManager
+  leaderboardType: 0
 --- !u!114 &1452164210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,6 +515,8 @@ MonoBehaviour:
   totalLevels: 2
   enableDebugLogs: 1
   debugTimerInterval: 5
+  lastLevelTime: 0
+  lastLevelTimeText: {fileID: 0}
 --- !u!4 &1452164212
 Transform:
   m_ObjectHideFlags: 0
@@ -630,7 +633,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
   m_WaitForFirstFrame: 1
@@ -772,7 +775,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 
   m_DirectAudioMutes: 
   m_ControlledAudioTrackCount: 0
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
   m_WaitForFirstFrame: 1
@@ -826,10 +829,14 @@ MonoBehaviour:
   cutsceneVideoPlayer: {fileID: 1513673496}
   skipPromptUI: {fileID: 407915812}
   skipKey: 32
+  allowSkipOnFirstLaunch: 0
   tutorialSceneName: Tutorial
   mainMenuSceneName: MainMenuScene
   introWatchedKey: HAHHAH
   startDelay: 0.4
+  prepareTimeout: 6
+  stallTimeout: 3
+  overrunGrace: 2
 --- !u!4 &1874284465
 Transform:
   m_ObjectHideFlags: 0
