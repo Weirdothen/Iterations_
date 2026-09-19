@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d36bac947591a7b4593c685669533ba7
+guid: 43499fb01d22197438355d25a42a5c09
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6300953934908815667
-    second: "\u0644\u0642\u0637\u0629 \u0634\u0627\u0634\u0629 2026-09-19 075452_0"
+      213: -7056669109631163431
+    second: "\u0644\u0642\u0637\u0629 \u0634\u0627\u0634\u0629 2026-09-19 082005_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u0644\u0642\u0637\u0629 \u0634\u0627\u0634\u0629 2026-09-19 075452_0"
+      name: "\u0644\u0642\u0637\u0629 \u0634\u0627\u0634\u0629 2026-09-19 082005_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1118
-        height: 802
+        width: 1136
+        height: 783
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dc609a3b7c38e88a0800000000000000
-      internalID: -6300953934908815667
+      spriteID: 9d366f625dca11e90800000000000000
+      internalID: -7056669109631163431
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u0644\u0642\u0637\u0629 \u0634\u0627\u0634\u0629 2026-09-19 075452_0": -6300953934908815667
+      "\u0644\u0642\u0637\u0629 \u0634\u0627\u0634\u0629 2026-09-19 082005_0": -7056669109631163431
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
