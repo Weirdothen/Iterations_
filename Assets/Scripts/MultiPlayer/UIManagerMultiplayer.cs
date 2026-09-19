@@ -19,6 +19,10 @@ namespace Iterations.UI
         [SerializeField] private TMP_Text gameOverMessageText;
         [SerializeField] private GameObject rematchButton;
 
+        [Header("Host Only Buttons")]
+        [Tooltip("Assign your pause menu 'Back to Lobby' button here. It will only be active for the host.")]
+        [SerializeField] private GameObject backToLobbyPauseButton;
+
         private void Start()
         {
             // Ensure panels are in correct starting state
@@ -60,7 +64,14 @@ namespace Iterations.UI
 
                 if (localPausePanel != null)
                 {
-                    localPausePanel.SetActive(!localPausePanel.activeSelf);
+                    bool willShow = !localPausePanel.activeSelf;
+                    localPausePanel.SetActive(willShow);
+
+                    // When opening the pause menu, check if we are the host to show the Back to Lobby button
+                    if (willShow && backToLobbyPauseButton != null && NetworkManager.Singleton != null)
+                    {
+                        backToLobbyPauseButton.SetActive(NetworkManager.Singleton.IsHost);
+                    }
                 }
             }
         }
@@ -149,6 +160,9 @@ namespace Iterations.UI
 
         public void OnLeaveMatchPressed()
         {
+            // Flag this as intentional so the disconnect popup doesn't appear
+            ConnectionFailedData.IntentionalDisconnect = true;
+
             // Shutdown the network session. This safely disconnects us.
             if (NetworkManager.Singleton != null)
             {
@@ -157,6 +171,15 @@ namespace Iterations.UI
 
             // Return to the main menu
             SceneManager.LoadScene("MainMenuScene"); 
+        }
+
+        public void OnBackToLobbyPressed()
+        {
+            // Hook this to the Back to Lobby button in your pause menu
+            if (GameManagerMultiplayer.Instance != null)
+            {
+                GameManagerMultiplayer.Instance.ReturnToLobby();
+            }
         }
 
         public void OnRematchPressed()

@@ -78,6 +78,13 @@ public class NetworkConnectionHandler : MonoBehaviour
     {
         if (!IsLocalClientDisconnect(clientId)) return;
 
+        // If the user clicked "Leave", we don't want to show an error popup.
+        if (ConnectionFailedData.IntentionalDisconnect)
+        {
+            ConnectionFailedData.IntentionalDisconnect = false; // Reset
+            return;
+        }
+
         // Build a meaningful reason. NGO populates DisconnectReason when the server
         // explicitly denies or kicks a client (e.g. "Room is full").
         string reason = NetworkManager.Singleton.DisconnectReason;
@@ -120,4 +127,5 @@ public static class ConnectionFailedData
 {
     public static bool   HasMessage = false;
     public static string Message    = string.Empty;
+    public static bool   IntentionalDisconnect = false;
 }
