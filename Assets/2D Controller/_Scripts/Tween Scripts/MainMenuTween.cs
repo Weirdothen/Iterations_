@@ -9,6 +9,7 @@ public class MainMenuTween : MonoBehaviour
     [SerializeField] private RectTransform creditsButton;
     [SerializeField] private RectTransform settingsButton;
     [SerializeField] private RectTransform controlsButton;
+    [SerializeField] private RectTransform LeaderboardButton;
     [SerializeField] private RectTransform quitButton;
 
     private void Start()
@@ -53,11 +54,13 @@ public class MainMenuTween : MonoBehaviour
         Vector2 settingsPos = settingsButton.anchoredPosition;
         Vector2 controlsPos = controlsButton.anchoredPosition;
         Vector2 quitPos = quitButton.anchoredPosition;
+        Vector2 leaderBoardPos = LeaderboardButton.anchoredPosition;
 
         creditsButton.anchoredPosition = creditsPos + Vector2.down * 80f;
         settingsButton.anchoredPosition = settingsPos + Vector2.down * 80f;
         controlsButton.anchoredPosition = controlsPos + Vector2.down * 80f;
         quitButton.anchoredPosition = quitPos + Vector2.down * 80f;
+        LeaderboardButton.anchoredPosition = leaderBoardPos + Vector2.down * 80f;
 
         creditsButton.DOAnchorPos(creditsPos, 0.5f)
             .SetDelay(0.6f)
@@ -72,6 +75,9 @@ public class MainMenuTween : MonoBehaviour
             .SetEase(Ease.OutBack);
 
         quitButton.DOAnchorPos(quitPos, 0.5f)
+            .SetDelay(0.9f)
+            .SetEase(Ease.OutBack);
+        LeaderboardButton.DOAnchorPos(leaderBoardPos, 0.5f)
             .SetDelay(0.9f)
             .SetEase(Ease.OutBack);
     }
