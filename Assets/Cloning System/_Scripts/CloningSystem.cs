@@ -76,8 +76,8 @@ public class CloningSystem : MonoBehaviour
     IEnumerator SpawnEffect(GameObject obj)
     {
         yield return new WaitForSeconds(.2f);
+        obj.GetComponentInChildren<SpriteRenderer>().enabled = true;
 
-        obj.SetActive(true);
         if (spawnEffect != null)
         {
             Instantiate(spawnEffect, obj.transform.position, Quaternion.identity);
