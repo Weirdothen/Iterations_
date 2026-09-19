@@ -10,17 +10,26 @@ public class CameraShaker : MonoBehaviour
     [SerializeField] private float magnitude = 0.1f;
     [SerializeField] private VoidEventChannelSO onLoseTriggeredListener;
 
-    private void Start()
+    private void OnEnable()
     {
         if (onLoseTriggeredListener != null)
         {
             onLoseTriggeredListener.OnEventRaised += Shake;
         }
+    }
+
+    private void Start()
+    {
         targetCamera = Camera.main;
     }
 
     public void Shake()
     {
+        if (targetCamera == null)
+        {
+            targetCamera = Camera.main;
+        }
+
         if (targetCamera != null)
         {
             StartCoroutine(ShakeRoutine(targetCamera, duration, magnitude));
@@ -38,12 +47,26 @@ public class CameraShaker : MonoBehaviour
 
         while (elapsed < duration)
         {
+            if (cam == null) yield break;
+
             float x = Random.Range(-1f, 1f) * magnitude;
             float y = Random.Range(-1f, 1f) * magnitude;
             cam.transform.localPosition = new Vector3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
             elapsed += Time.deltaTime;
             yield return null;
         }
-        cam.transform.localPosition = originalPosition;
+
+        if (cam != null)
+        {
+            cam.transform.localPosition = originalPosition;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (onLoseTriggeredListener != null)
+        {
+            onLoseTriggeredListener.OnEventRaised -= Shake;
+        }
     }
 }
