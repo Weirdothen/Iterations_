@@ -16,9 +16,10 @@ namespace Iterations.Player
         [SerializeField] private IntEventChannelSO onPickupCollected;
         [SerializeField] private string pickupTag = "Pickup";
 
-        [Header("Level Finish")]
+        [Header("Level Finish & Gate")]
         [SerializeField] private VoidEventChannelSO onWinTriggered;
         [SerializeField] private string finishTag = "Finish";
+        [SerializeField] private VoidEventChannelSO onAllPickupsCollected;
 
         private int _pickupsCollected;
 
@@ -37,7 +38,6 @@ namespace Iterations.Player
             if (other.CompareTag(cloneTag))
             {
                 onLoseTriggered?.RaiseEvent();
-                
                 Destroy(gameObject);
                 return;
             }
@@ -47,6 +47,12 @@ namespace Iterations.Player
                 _pickupsCollected++;
                 onPickupCollected?.RaiseEvent(_pickupsCollected);
                 Destroy(other.gameObject);
+
+                int required = LevelConfig.Instance != null ? LevelConfig.Instance.TotalPickups : 0;
+                if (_pickupsCollected == required)
+                {
+                    onAllPickupsCollected?.RaiseEvent();
+                }
                 return;
             }
 
