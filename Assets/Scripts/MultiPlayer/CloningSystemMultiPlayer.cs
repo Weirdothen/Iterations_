@@ -2,6 +2,7 @@ using Clone;
 using Iterations.Events;
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 public class CloningSystemMultiPlayer : NetworkBehaviour
 {
@@ -12,6 +13,7 @@ public class CloningSystemMultiPlayer : NetworkBehaviour
     [SerializeField] private int cloneSpawningTime = 5;
     [SerializeField, Range(1, 10)] private int captureEveryNFrames = 2;
     [SerializeField] private int maxRecordTime = 500;
+    [SerializeField] private ParticleSystem spawnEffect;
 
     [Header("events Channels")]
     [SerializeField] private VoidEventChannelSO onLoseTriggered;
@@ -82,7 +84,32 @@ public class CloningSystemMultiPlayer : NetworkBehaviour
 
 
         netObj.Spawn(true);
-        //netObj.DestroyWithScene = true;
+        //obj.SetActive(true);
         _system.PlayRecording(obj);
+        SpawnEffectClientRpc(netObj);
+    }
+
+    [ClientRpc]
+    void SpawnEffectClientRpc(NetworkObjectReference objRef)
+    {
+        if(objRef.TryGet(out NetworkObject netObj))
+        {
+            GameObject obj = netObj.gameObject;
+            StartCoroutine(SpawnEffect(obj));
+        }
+        else
+        {
+            Debug.LogError("cant get the object from the ref");
+        }
+    }
+
+    IEnumerator SpawnEffect(GameObject obj)
+    {
+        yield return new WaitForSeconds(0.05f);
+        obj.GetComponentInChildren<SpriteRenderer>().enabled = true;
+        if (spawnEffect != null)
+        {
+            Instantiate(spawnEffect, obj.transform.position, Quaternion.identity);
+        }
     }
 }

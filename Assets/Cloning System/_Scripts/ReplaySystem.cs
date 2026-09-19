@@ -166,6 +166,7 @@ namespace Clone
             {
                 var pose = _currentReplay.EvaluatePoint(_replaySmoothedTimes[i]);
 
+                
                 if (usePhysics && _ghostRbs.Count > i && _ghostRbs[i] != null)
                 {
                     _ghostRbs[i].position = pose.position;

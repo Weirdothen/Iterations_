@@ -142,7 +142,7 @@ namespace Iterations.Core
             bool isTutorial = currentSceneName == tutorialSceneName;
 
             Time.timeScale = 0f;
-            AudioListener.pause = true;
+            //AudioListener.pause = true;
 
             if (isTutorial)
             {
@@ -162,7 +162,7 @@ namespace Iterations.Core
                 if (OnlineLeaderboardManager.Instance != null)
                 {
                     await OnlineLeaderboardManager.Instance.SubmitCurrentLevelScore();
-                    OnlineLeaderboardManager.Instance.SubmitOverallScore();
+                    OnlineLeaderboardManager.Instance.SubmitOverallScoreVersionTwo();
                 }
 
                 levelWinLeaderboard?.ShowLeaderboard();
