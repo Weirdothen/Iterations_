@@ -1349,6 +1349,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!224 &1360589540 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 311429386175722315, guid: 25c2d2c455fadff4ab16c81e76e47141, type: 3}
+  m_PrefabInstance: {fileID: 7848468949452003029}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1478630473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,6 +2025,7 @@ MonoBehaviour:
   creditsButton: {fileID: 935404430}
   settingsButton: {fileID: 124833116}
   controlsButton: {fileID: 1787946383}
+  LeaderboardButton: {fileID: 1360589540}
   quitButton: {fileID: 1591735706}
 --- !u!114 &1951617210 stripped
 MonoBehaviour:
