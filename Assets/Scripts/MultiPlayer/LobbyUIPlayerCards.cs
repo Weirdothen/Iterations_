@@ -118,4 +118,19 @@ public class LobbyUIPlayerCards : MonoBehaviour
             if (readyText != null) readyText.Text = state.Value.IsReady ? ReadyText : NotReadyText;
         }
     }
+
+    // ─── UI Callbacks ─────────────────────────────────────────────────────────
+
+    public void OnLeaveLobbyPressed()
+    {
+        // Tell the handler we did this on purpose so it doesn't show an error popup
+        ConnectionFailedData.IntentionalDisconnect = true;
+
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
+    }
 }
