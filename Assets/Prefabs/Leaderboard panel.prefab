@@ -276,9 +276,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3355384912155415192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8352735704398611678
@@ -370,9 +370,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3355384912155415192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 322.8, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4607721781941264152
@@ -628,9 +628,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3355384912155415192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5737490434223657558
@@ -699,6 +699,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7021423854630118516}
+  - component: {fileID: 5421805046349335004}
   m_Layer: 5
   m_Name: Leaderboard panel
   m_TagString: Untagged
@@ -740,6 +741,44 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5421805046349335004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3352166209077395230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 1877222003868383242}
+  - {fileID: 3351061970371514350}
+  - {fileID: 24897331209136331}
+  - {fileID: 3790858563723356650}
+  - {fileID: 1866252786042576590}
+  - {fileID: 9122754016488017549}
+  - {fileID: 4604975961591632827}
+  - {fileID: 8677902840331866842}
+  - {fileID: 4526389297583935357}
+  - {fileID: 788425586200627731}
+  - {fileID: 4839596071485292991}
+  - {fileID: 824644328028666792}
+  - {fileID: 3355384912155415192}
+  - {fileID: 6978993568235715168}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &3621120372696423696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,9 +1323,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3355384912155415192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 545.6, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6930908187682184693

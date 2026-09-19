@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 4186255307563316215}
   - component: {fileID: 2265065563431460464}
   - component: {fileID: 8332633914088917997}
+  - component: {fileID: 7546587398265990887}
   m_Layer: 5
   m_Name: Title Text image
   m_TagString: Untagged
@@ -244,6 +245,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7546587398265990887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462595077619305712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd3f20153173c14f88caa4823da858f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingEffect
+  amplitude: {x: 6.61, y: 7.4}
+  durationX: 2.4
+  durationY: 3.1
+  moveEase: 17
+  tiltAngle: -0.37
+  tiltDuration: 1.44
+  breathAmount: 0.08
+  breathDuration: 2.02
+  randomizeStart: 1
+  useUnscaledTime: 1
+  reactToHover: 0
+  hoverScale: 1.08
+  hoverDuration: 0.25
 --- !u!1 &496864017152617582
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +450,52 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1002447452139505084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6602205023948095754}
+  - component: {fileID: 311634274309859371}
+  m_Layer: 0
+  m_Name: MultiplayerRelayManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6602205023948095754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002447452139505084}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 470.13934, y: 157.95413, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2491413148160084488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &311634274309859371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002447452139505084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e98ba8097e692478bf15ca95f198d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiplayerRelayManager
+  lobbySceneName: BeforeStartMultiplayerScene
+  maxConnections: 2
 --- !u!1 &1235039940747711454
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +507,7 @@ GameObject:
   - component: {fileID: 1708051570606008598}
   - component: {fileID: 1754666764567954902}
   - component: {fileID: 575667743299349363}
+  - component: {fileID: 5258477656307391864}
   m_Layer: 5
   m_Name: Win text image
   m_TagString: Untagged
@@ -458,7 +531,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -34, y: -285.66998}
+  m_AnchoredPosition: {x: -34, y: -238}
   m_SizeDelta: {x: 1331.466, y: 653.06006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1754666764567954902
@@ -499,6 +572,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5258477656307391864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235039940747711454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd3f20153173c14f88caa4823da858f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingEffect
+  amplitude: {x: 6.61, y: 7.4}
+  durationX: 2.4
+  durationY: 3.1
+  moveEase: 17
+  tiltAngle: -0.37
+  tiltDuration: 1.44
+  breathAmount: 0.08
+  breathDuration: 2.02
+  randomizeStart: 1
+  useUnscaledTime: 1
+  reactToHover: 0
+  hoverScale: 1.08
+  hoverDuration: 0.25
 --- !u!1 &1243884455307798691
 GameObject:
   m_ObjectHideFlags: 0
@@ -823,6 +921,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1081930366756246309}
+  - component: {fileID: 3453909130147402793}
   m_Layer: 5
   m_Name: WinPanelALLlevels
   m_TagString: Untagged
@@ -859,6 +958,39 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3453909130147402793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455840199248857322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 5191912827674430150}
+  - {fileID: 9194560135716553077}
+  - {fileID: 7552290952985427454}
+  - {fileID: 4186255307563316215}
+  - {fileID: 7442818617889423803}
+  - {fileID: 2234448936046354446}
+  - {fileID: 2355860648833880872}
+  - {fileID: 2510128186552958528}
+  - {fileID: 1396802756877646962}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &1657758781121142660
 GameObject:
   m_ObjectHideFlags: 0
@@ -2254,6 +2386,7 @@ GameObject:
   - component: {fileID: 2734892179409704260}
   - component: {fileID: 4890566202087271126}
   - component: {fileID: 3372384423454094059}
+  - component: {fileID: 7343492599475628944}
   m_Layer: 5
   m_Name: Win text image
   m_TagString: Untagged
@@ -2318,6 +2451,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7343492599475628944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2549749671605772238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd3f20153173c14f88caa4823da858f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingEffect
+  amplitude: {x: 6.61, y: 7.4}
+  durationX: 2.4
+  durationY: 3.1
+  moveEase: 17
+  tiltAngle: -0.37
+  tiltDuration: 1.44
+  breathAmount: 0.08
+  breathDuration: 2.02
+  randomizeStart: 1
+  useUnscaledTime: 1
+  reactToHover: 0
+  hoverScale: 1.08
+  hoverDuration: 0.25
 --- !u!1 &2578244647546665673
 GameObject:
   m_ObjectHideFlags: 0
@@ -3383,13 +3541,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7625934257366344749}
+  - component: {fileID: 6485289504287564767}
   m_Layer: 5
   m_Name: TutorialWinNamePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7625934257366344749
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3413,6 +3572,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6485289504287564767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4303264633506639313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 2734892179409704260}
+  - {fileID: 2864787529905714925}
+  - {fileID: 3072519730742784510}
+  - {fileID: 4268619821010884121}
+  - {fileID: 273444842152486398}
+  - {fileID: 5001366630739858177}
+  - {fileID: 4811292487064482151}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &4531831346391536740
 GameObject:
   m_ObjectHideFlags: 0
@@ -3665,6 +3855,7 @@ Transform:
   m_Children:
   - {fileID: 4214832643128525945}
   - {fileID: 6345069303761896333}
+  - {fileID: 6602205023948095754}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6964482684919131351
@@ -6556,6 +6747,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2140457999972869282}
+  - component: {fileID: 8780469296079990691}
   m_Layer: 5
   m_Name: WinPanelEACHlevel
   m_TagString: Untagged
@@ -6602,6 +6794,49 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8780469296079990691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8977742572687838060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 770403190096792122}
+  - {fileID: 7345557624390584463}
+  - {fileID: 1474983285031258034}
+  - {fileID: 5343347444606115563}
+  - {fileID: 7663397199153938763}
+  - {fileID: 3749231980956055019}
+  - {fileID: 5523125283230765525}
+  - {fileID: 4924145279485799921}
+  - {fileID: 8410133688665033023}
+  - {fileID: 8110480648922361321}
+  - {fileID: 8773700000545266401}
+  - {fileID: 5250887805931314357}
+  - {fileID: 1708051570606008598}
+  - {fileID: 3718180794433625352}
+  - {fileID: 2428871917558383158}
+  - {fileID: 5239927824656908515}
+  - {fileID: 1639893802071577921}
+  - {fileID: 6189079199783925704}
+  - {fileID: 27754226028264064}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &9204139339672056711
 GameObject:
   m_ObjectHideFlags: 0

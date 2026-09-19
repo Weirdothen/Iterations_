@@ -988,9 +988,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.125
+    x: 0.124830395
     y: 0
-    width: 0.75000006
+    width: 0.75079155
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -2658,10 +2658,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1639808853411588091, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 70024324}
     - target: {fileID: 2491413148160084488, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 405.19763
@@ -2702,31 +2698,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4303264633506639313, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4906704218946750119, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_Name
       value: UIManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5351788535165689403, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 70024324}
     - target: {fileID: 5950997304651507010, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 70024324}
-    - target: {fileID: 5950997304651507010, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: AdvanceAfterWin
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348088472916980255, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 70024324}
-    - target: {fileID: 8198367037097574194, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 70024324}
