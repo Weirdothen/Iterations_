@@ -109,7 +109,7 @@ namespace Iterations.UI
 
                 totalRetriesText.text = totalRetries.ToString();
             }
-            if (totalSuccessfulTimeText != null && ScoreManager.Instance != null)
+             if (totalSuccessfulTimeText != null && ScoreManager.Instance != null)
             {
                 totalSuccessfulTimeText.text =
                     ScoreManager.Instance.FormatTime(
