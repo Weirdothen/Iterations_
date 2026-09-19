@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7094984969330598929}
+  - component: {fileID: 8658002741311496990}
   m_Layer: 5
   m_Name: GameHUD
   m_TagString: Untagged
@@ -41,6 +42,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8658002741311496990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024899402096273731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 6550325312789075531}
+  - {fileID: 6360026947152125776}
+  - {fileID: 5345925698047699614}
+  - {fileID: 1838199785556438787}
+  - {fileID: 2594509704545731521}
+  - {fileID: 7334842462617206252}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &1401168377968768114
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,7 +288,7 @@ RectTransform:
   m_GameObject: {fileID: 1940066107490112773}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.84, y: 0.84, z: 0.84}
+  m_LocalScale: {x: 0.73, y: 0.73, z: 0.73}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1116937956754257361}
@@ -265,7 +296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 96}
+  m_AnchoredPosition: {x: 0, y: 80}
   m_SizeDelta: {x: 422.43, y: 137.8192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2273493130300698173
@@ -467,6 +498,7 @@ GameObject:
   - component: {fileID: 4541697281293793853}
   - component: {fileID: 5512815067143329583}
   - component: {fileID: 7543987515125592533}
+  - component: {fileID: 7751075725681129009}
   m_Layer: 5
   m_Name: LocalPuasePanel
   m_TagString: Untagged
@@ -493,8 +525,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 6.2030945, y: 0}
+  m_SizeDelta: {x: 12.4062, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5512815067143329583
 CanvasRenderer:
@@ -534,6 +566,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7751075725681129009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086016700535665986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 7847645903596200015}
+  - {fileID: 424668950630349283}
+  - {fileID: 8223497377128679078}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &2544533235239802957
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +1009,7 @@ GameObject:
   - component: {fileID: 36097421709946040}
   - component: {fileID: 1109022263389331061}
   - component: {fileID: 7539050243168327168}
+  - component: {fileID: 4855102443415169412}
   m_Layer: 5
   m_Name: win image
   m_TagString: Untagged
@@ -973,8 +1033,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -19, y: -178}
-  m_SizeDelta: {x: 688.0381, y: 382.76}
+  m_AnchoredPosition: {x: 0, y: -120.11}
+  m_SizeDelta: {x: 413.2276, y: 225.7255}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1109022263389331061
 CanvasRenderer:
@@ -1014,6 +1074,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4855102443415169412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4583478341358601728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd3f20153173c14f88caa4823da858f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingEffect
+  amplitude: {x: 6, y: 14}
+  durationX: 2.4
+  durationY: 3.1
+  moveEase: 4
+  tiltAngle: 2
+  tiltDuration: 3.6
+  breathAmount: 0.03
+  breathDuration: 2.8
+  randomizeStart: 1
+  useUnscaledTime: 1
+  reactToHover: 0
+  hoverScale: 1.08
+  hoverDuration: 0.25
 --- !u!1 &4802664138519499984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,7 +1221,7 @@ RectTransform:
   m_GameObject: {fileID: 4819549698450490300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.84, y: 0.84, z: 0.84}
+  m_LocalScale: {x: 0.73, y: 0.73, z: 0.73}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7379840143547064492}
@@ -1144,7 +1229,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -153}
+  m_AnchoredPosition: {x: 0, y: -137}
   m_SizeDelta: {x: 422.43, y: 137.8192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3961080270788724357
@@ -1346,6 +1431,7 @@ GameObject:
   - component: {fileID: 8078873693669554878}
   - component: {fileID: 2112448876016619679}
   - component: {fileID: 7115925548479115385}
+  - component: {fileID: 3636346340354437121}
   m_Layer: 5
   m_Name: lose image
   m_TagString: Untagged
@@ -1369,8 +1455,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -178}
-  m_SizeDelta: {x: 619.2251, y: 382.7588}
+  m_AnchoredPosition: {x: -16.155, y: -115.91}
+  m_SizeDelta: {x: 445.5382, y: 234.13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2112448876016619679
 CanvasRenderer:
@@ -1410,6 +1496,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3636346340354437121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902700231820356112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd3f20153173c14f88caa4823da858f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingEffect
+  amplitude: {x: 6, y: 14}
+  durationX: 2.4
+  durationY: 3.1
+  moveEase: 4
+  tiltAngle: 2
+  tiltDuration: 3.6
+  breathAmount: 0.03
+  breathDuration: 2.8
+  randomizeStart: 1
+  useUnscaledTime: 1
+  reactToHover: 0
+  hoverScale: 1.08
+  hoverDuration: 0.25
 --- !u!1 &6167495674100784272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,6 +1889,7 @@ GameObject:
   - component: {fileID: 3211264618011466679}
   - component: {fileID: 8948091030073702829}
   - component: {fileID: 2917844555910473137}
+  - component: {fileID: 6348618731891575639}
   m_Layer: 5
   m_Name: GameoverPanel
   m_TagString: Untagged
@@ -1847,6 +1959,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6348618731891575639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7114922316259230344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b101de379ba8c4c49a35e929df9e921e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIIntroAnimator
+  targets:
+  - {fileID: 4092445000231261914}
+  - {fileID: 5076457216117842306}
+  - {fileID: 1806074667351455760}
+  direction: 0
+  slideDistance: 100
+  alternateSides: 0
+  duration: 0.55
+  ease: 27
+  fade: 1
+  startScale: 0.85
+  startDelay: 0.2
+  delayBetweenItems: 0.1
+  playOnEnable: 1
+  useUnscaledTime: 1
 --- !u!1 &7383939638787532692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1969,7 +2108,7 @@ RectTransform:
   m_GameObject: {fileID: 8869843335088384811}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.84, y: 0.84, z: 0.84}
+  m_LocalScale: {x: 0.73, y: 0.73, z: 0.73}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3122730080028902079}
