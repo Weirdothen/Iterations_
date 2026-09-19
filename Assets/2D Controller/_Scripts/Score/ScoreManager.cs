@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,15 @@ namespace Iterations.Core
         private const string BestTimeKeyPrefix = "BestTime_";
         private const string BestRetriesKeyPrefix = "BestRetries_";
         private const string OverallScoreUnlockedKey = "OverallScoreUnlocked";
+
+
+
+        [SerializeField] private float lastLevelTime;
+        public float LastLevelTime => lastLevelTime;
+
+        private float totalSuccessfulRunTime;
+        public float TotalSuccessfulRunTime => totalSuccessfulRunTime;
+        [SerializeField] private TMP_Text lastLevelTimeText;
 
         private float currentTime;
         private bool isTiming;
@@ -154,7 +164,17 @@ namespace Iterations.Core
             }
 
             isTiming = false;
+            lastLevelTime = currentTime;
+            // Add only the successful run of this level
+            totalSuccessfulRunTime += lastLevelTime;
+
+            if (lastLevelTimeText != null)
+            {
+                lastLevelTimeText.text = FormatTime(lastLevelTime);
+            }
+
             LastRunWasNewBest = false;
+
 
             string sceneName = SceneManager.GetActiveScene().name;
 
@@ -321,15 +341,13 @@ namespace Iterations.Core
         public string FormatTime(float time)
         {
             if (time < 0f)
-                return "--:--:--"; // was "LOCKED", which no longer applies
+                return "--:--:---";
 
-            int totalSeconds = Mathf.FloorToInt(time);
+            int minutes = Mathf.FloorToInt(time / 60f);
+            int seconds = Mathf.FloorToInt(time % 60f);
+            int milliseconds = Mathf.FloorToInt((time % 1f) * 1000f);
 
-            int hours = totalSeconds / 3600;
-            int minutes = (totalSeconds % 3600) / 60;
-            int seconds = totalSeconds % 60;
-
-            return $"{hours:00}:{minutes:00}:{seconds:00}";
+            return $"{minutes:00}:{seconds:00}:{milliseconds:000}";
         }
 
         private void DebugLog(string message)
@@ -338,6 +356,24 @@ namespace Iterations.Core
                 return;
 
             Debug.Log($"[ScoreManager] {message}");
+        }
+        public int GetTotalRetries()
+        {
+            int totalRetries = 0;
+
+            for (int i = 1; i <= totalLevels; i++)
+            {
+                string sceneName = "Level_" + i;
+
+                int retries = GetBestRetries(sceneName);
+
+                if (retries >= 0)
+                {
+                    totalRetries += retries;
+                }
+            }
+
+            return totalRetries;
         }
     }
 }
