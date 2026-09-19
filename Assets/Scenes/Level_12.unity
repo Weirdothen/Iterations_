@@ -1248,10 +1248,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12447553
+    x: 0.125
     y: 0
-    width: 0.7505828
-    height: 1.0006214
+    width: 0.75000006
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -6198,6 +6198,10 @@ PrefabInstance:
     - target: {fileID: 173963685795642512, guid: 4ab6a1ef719f5bf45a59a532c25fb4da, type: 3}
       propertyPath: m_Name
       value: MachineGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 521236091008144172, guid: 4ab6a1ef719f5bf45a59a532c25fb4da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.649
       objectReference: {fileID: 0}
     - target: {fileID: 1698187875841297598, guid: 4ab6a1ef719f5bf45a59a532c25fb4da, type: 3}
       propertyPath: fireRate
