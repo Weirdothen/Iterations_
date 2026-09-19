@@ -142,7 +142,7 @@ namespace Iterations.Core
             bool isTutorial = currentSceneName == tutorialSceneName;
 
             Time.timeScale = 0f;
-            AudioListener.pause = true;
+            //AudioListener.pause = true;
 
             if (isTutorial)
             {
