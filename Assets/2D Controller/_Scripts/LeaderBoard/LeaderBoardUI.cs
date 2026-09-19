@@ -130,7 +130,10 @@ namespace Iterations.Core
         {
             foreach (Transform child in entriesContainer)
             {
-                Destroy(child.gameObject);
+                if (child != null)
+                {
+                    Destroy(child.gameObject);
+                }
             }
         }
 
