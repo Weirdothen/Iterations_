@@ -21,6 +21,9 @@ namespace Iterations.UI
         [SerializeField] private TMP_Text retriesText;
         [SerializeField] private string retriesLabelFormat = "{0}";
 
+        [Header("Tutorial")]
+        [SerializeField] private string tutorialSceneName = "TutorialScene";
+
         [Header("Events - Listened to by this manager")]
         [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
         [SerializeField] private VoidEventChannelSO onAllLevelsComplete;
@@ -62,6 +65,10 @@ namespace Iterations.UI
         private void Update()
         {
             if (!Input.GetKeyDown(KeyCode.Escape)) return;
+
+            // Esc is fully disabled in the tutorial scene - no pause panel,
+            // no state change, nothing.
+            if (SceneManager.GetActiveScene().name == tutorialSceneName) return;
 
             if (GameManager.Instance == null) return;
 

@@ -14,80 +14,16 @@ namespace Iterations.Core
 
         public bool IsSignedIn { get; private set; }
 
-        [Header("Startup Name Setup")]
-        [SerializeField] private GameObject startupNamePanel;
-       
-        [SerializeField] private TMP_InputField startupNameInput;
-        [SerializeField] private TMP_Text startupErrorText;
+        [Header("Tutorial Name Setup")]
+        [Tooltip("This panel must be a child of the same persistent object UGSManager lives on (e.g. UI Manager), so it survives scene loads with UGSManager and this reference stays valid.")]
+        [SerializeField] private GameObject tutorialNamePanel;
+        [SerializeField] private TMP_InputField tutorialNameInput;
+        [SerializeField] private TMP_Text tutorialErrorText;
 
-        [Header("Settings Name Setup")]
-        [SerializeField] private GameObject settingsNamePanel;
-        [SerializeField] private TMP_InputField settingsNameInput;
-        [SerializeField] private TMP_Text settingsErrorText;
+        [SerializeField] private string tutorialSceneName = "TutorialScene";
 
-        private const string PlayerNameKey = "PlayerName";
-        private const int MaxNameLength = 8;
-
-        private void ApplyNameLimit()
-        {
-            if (startupNameInput != null)
-                startupNameInput.characterLimit = MaxNameLength;
-
-            if (settingsNameInput != null)
-                settingsNameInput.characterLimit = MaxNameLength;
-        }
-
-
-
-
-        private void OnEnable()
-        {
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        private void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (scene.name == "MainMenuScene")
-            {
-                FindMainMenuNameUI();
-            }
-        }
-
-        private void FindMainMenuNameUI()
-        {
-            GameObject panel = GameObject.Find("StartingNamePanel (1)");
-
-            if (panel == null)
-                return;
-
-            startupNamePanel = panel;
-
-            startupNameInput =
-                panel.GetComponentInChildren<TMP_InputField>(true);
-
-            startupErrorText =
-                panel.GetComponentInChildren<TMP_Text>(true);
-
-            ApplyNameLimit(); // <-- add this
-            if (PlayerPrefs.HasKey(PlayerNameKey))
-            {
-                string savedName = PlayerPrefs.GetString(PlayerNameKey);
-
-                startupNameInput.text = savedName;
-                startupNamePanel.SetActive(false);
-
-                Debug.Log("Returning to Main Menu - name already exists.");
-            }
-            else
-            {
-                startupNamePanel.SetActive(true);
-            }
-        }
+        public const string PlayerNameKey = "PlayerName";
+        public const int MaxNameLength = 8;
 
         private void Awake()
         {
@@ -101,10 +37,32 @@ namespace Iterations.Core
             DontDestroyOnLoad(gameObject);
         }
 
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // Safety net: force-hide the tutorial panel outside the tutorial
+            // scene, in case it lingers visible from a previous show.
+            if (scene.name != tutorialSceneName && tutorialNamePanel != null)
+            {
+                tutorialNamePanel.SetActive(false);
+            }
+        }
+
         private void Start()
         {
-            ApplyNameLimit();
-            InitializeUGS();
+            if (tutorialNameInput != null)
+                tutorialNameInput.characterLimit = MaxNameLength;
+
+            _ = InitializeUGS();
         }
 
         private async Task InitializeUGS()
@@ -122,8 +80,6 @@ namespace Iterations.Core
 
                 Debug.Log("UGS initialized!");
                 Debug.Log("Player ID: " + AuthenticationService.Instance.PlayerId);
-
-                LoadPlayerName();
             }
             catch (System.Exception e)
             {
@@ -131,106 +87,100 @@ namespace Iterations.Core
             }
         }
 
-        private void LoadPlayerName()
+        public bool HasSavedName() => PlayerPrefs.HasKey(PlayerNameKey);
+
+        public string GetSavedName() => PlayerPrefs.GetString(PlayerNameKey, "");
+
+        // Call this from GameManager right when the tutorial win panel shows.
+        public void ShowTutorialNamePanelIfNeeded()
         {
-            if (PlayerPrefs.HasKey(PlayerNameKey))
-            {
-                string savedName = PlayerPrefs.GetString(PlayerNameKey);
-
-                // Put the saved name into both input fields
-                startupNameInput.text = savedName;
-                settingsNameInput.text = savedName;
-
-                // A name already exists, so don't show the startup panel
-                startupNamePanel.SetActive(false);
-
-                Debug.Log("Loaded player name: " + savedName);
-            }
-            else
-            {
-                // First time playing
-                startupNamePanel.SetActive(true);
-
-                
-            }
-        }
-
-        public async void SubmitStartupName()
-        {
-            string playerName = startupNameInput.text.Trim();
-
-            if (!ValidateName(playerName, startupErrorText))
+            if (HasSavedName())
                 return;
 
-            await UpdatePlayerName(playerName, startupErrorText);
-
-            if (IsSignedIn)
+            if (tutorialNamePanel == null)
             {
-                startupNamePanel.SetActive(false);
+                Debug.LogWarning("ShowTutorialNamePanelIfNeeded: tutorialNamePanel is not assigned.");
+                return;
             }
+
+            tutorialNamePanel.SetActive(true);
         }
 
-        public async void SubmitSettingsName()
+        // Wire the tutorial panel's Confirm button to this directly in the
+        // Inspector - safe, since both live on the same persistent object.
+        public async void SubmitTutorialName()
         {
-            string playerName = settingsNameInput.text.Trim();
-
-            if (!ValidateName(playerName, settingsErrorText))
+            if (tutorialNameInput == null)
+            {
+                Debug.LogWarning("SubmitTutorialName called but tutorialNameInput is null.");
                 return;
+            }
 
-            await UpdatePlayerName(playerName, settingsErrorText);
+            bool success = await TrySetPlayerName(tutorialNameInput.text, tutorialErrorText);
 
-           
+            if (success && tutorialNamePanel != null)
+                tutorialNamePanel.SetActive(false);
+        }
+
+        // Generic entry point any scene-local script can call (e.g. a
+        // Main Menu settings panel script) without needing a direct,
+        // scene-crossing reference to this object's fields.
+        public async Task<bool> TrySetPlayerName(string rawName, TMP_Text errorText)
+        {
+            string playerName = rawName?.Trim() ?? string.Empty;
+
+            if (!ValidateName(playerName, errorText))
+                return false;
+
+            return await UpdatePlayerName(playerName, errorText);
         }
 
         private bool ValidateName(string playerName, TMP_Text errorText)
         {
             if (string.IsNullOrEmpty(playerName))
             {
-                errorText.text = "Please enter a name.";
+                if (errorText != null) errorText.text = "Please enter a name.";
                 return false;
             }
 
             if (playerName.Length > MaxNameLength)
             {
-                errorText.text = $"Name must be {MaxNameLength} characters or less.";
+                if (errorText != null) errorText.text = $"Name must be {MaxNameLength} characters or less.";
                 return false;
             }
 
-
-            errorText.text = "";
+            if (errorText != null) errorText.text = "";
             return true;
         }
 
-        private async Task UpdatePlayerName(string playerName, TMP_Text errorText)
+        private async Task<bool> UpdatePlayerName(string playerName, TMP_Text errorText)
         {
+            if (!IsSignedIn || AuthenticationService.Instance == null)
+            {
+                Debug.LogWarning("UpdatePlayerName called before UGS/auth was ready.");
+                if (errorText != null) errorText.text = "Not signed in yet. Try again in a moment.";
+                return false;
+            }
+
             try
             {
                 await AuthenticationService.Instance.UpdatePlayerNameAsync(playerName);
 
-                // Save name locally
                 PlayerPrefs.SetString(PlayerNameKey, playerName);
                 PlayerPrefs.Save();
 
-                // Keep both input fields synchronized
-                startupNameInput.text = playerName;
-                settingsNameInput.text = playerName;
+                if (tutorialNameInput != null)
+                    tutorialNameInput.text = playerName;
 
                 Debug.Log("Player name set to: " + playerName);
+                return true;
             }
             catch (System.Exception e)
             {
                 Debug.LogError("Failed to set player name: " + e);
-
-                errorText.text = "Failed to set name. Check the Console.";
+                if (errorText != null) errorText.text = "Failed to set name. Check the Console.";
+                return false;
             }
-        }
-
-        public void OpenSettingsNamePanel()
-        {
-            settingsNameInput.text = PlayerPrefs.GetString(PlayerNameKey, "");
-            settingsErrorText.text = "";
-
-            settingsNamePanel.SetActive(true);
         }
 
         public void RemoveSavedName()
@@ -240,6 +190,5 @@ namespace Iterations.Core
 
             Debug.Log("Saved player name removed.");
         }
-
     }
 }
