@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UIButtonSound
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 0145b14bffbf9d04fae3ee3e9ce851f5, type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: Assembly-CSharp::UIButtonSound
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: hoverInClips.Array.size
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: 'hoverInClips.Array.data[0]'
+    value: 
+    objectReference: {fileID: 8300000, guid: e28292653d24b4f20a211a70f9ffb772, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'hoverInClips.Array.data[1]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 1b2aba5a979d14662a8e5c59246853c7, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'hoverInClips.Array.data[2]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 59eaec4a8378c4c91b1b2c823ab1ea1a, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'hoverInClips.Array.data[3]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 5d4e71df2b6734beb9024a1bf5c9ab42, type: 3}
+  - target: {fileID: 0}
+    propertyPath: hoverOutClips.Array.size
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: 'hoverOutClips.Array.data[0]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 4d32b109277704531b5c9d17047fa79b, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'hoverOutClips.Array.data[1]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 22c332b5adc1b4dec94e12169832152e, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'hoverOutClips.Array.data[2]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 470a97b7c78b3489d9a97651e40a9c0a, type: 3}
+  - target: {fileID: 0}
+    propertyPath: clickClips.Array.size
+    value: 6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: 'clickClips.Array.data[0]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 0e0969cc6893e400ca298c34c98c302f, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'clickClips.Array.data[1]'
+    value: 
+    objectReference: {fileID: 8300000, guid: ecf3c0a0b5db94e319d8800f597367e4, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'clickClips.Array.data[2]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 686effd7fe2f74bddb9d1840aefbd207, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'clickClips.Array.data[3]'
+    value: 
+    objectReference: {fileID: 8300000, guid: b547f7892c3bd40b1a26d8c44e4f4d2c, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'clickClips.Array.data[4]'
+    value: 
+    objectReference: {fileID: 8300000, guid: 2474a45430694497885e3c67eb8825c6, type: 3}
+  - target: {fileID: 0}
+    propertyPath: 'clickClips.Array.data[5]'
+    value: 
+    objectReference: {fileID: 8300000, guid: e7d9a6c7202f44101b17237ef5b48837, type: 3}
+  - target: {fileID: 0}
+    propertyPath: minPitch
+    value: 0.9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: maxPitch
+    value: 1.1
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []
+  m_CoupledType:
+    m_NativeTypeID: 0
+    m_ManagedTypePPtr: {fileID: 0}
+    m_ManagedTypeFallback: 
+  m_CoupledProperties: []

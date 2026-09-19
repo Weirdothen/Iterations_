@@ -184,6 +184,10 @@ PrefabInstance:
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: 0fc17236f67ee6b4b93e09eee791ee4e, type: 3}
+    - target: {fileID: 3351344811718004919, guid: a28565c38f1e44b478ece4d15bcfb7ae, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -7663692391427977125, guid: f52b544a707b70b429453c053dce8729, type: 2}
     - target: {fileID: 3940427223953622241, guid: a28565c38f1e44b478ece4d15bcfb7ae, type: 3}
       propertyPath: m_Name
       value: Lite_VFX_Vapor_01_Color_Loop_Static
