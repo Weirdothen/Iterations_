@@ -1,18 +1,27 @@
-using TMPro;
+using LightSide;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+// If UniText lives in a namespace, add its "using" line here.
 
 /// <summary>
-/// Manages the arena-selection buttons and the local ready button label.
-/// Now subscribes to the NetworkList.OnListChanged event on CharacterSelectReady
-/// instead of the old OnAnyReadyStateChanged event (which has been removed).
+/// Manages the arena-selection buttons and the local ready button (label + color).
+/// Subscribes to the NetworkList.OnListChanged event on CharacterSelectReady.
 /// </summary>
 public class ArenaSelectoinUi : MonoBehaviour
 {
     private Outline[] buttonoutlines;
 
-    [SerializeField] private TextMeshProUGUI readyButtonText;
+    [Header("Ready Button")]
+    [SerializeField] private UniText readyButtonText;
+    [Tooltip("The Image component on the ready button (its color changes red/green)")]
+    [SerializeField] private Image readyButtonImage;
+
+    [SerializeField] private Color notReadyColor = Color.red;
+    [SerializeField] private Color readyColor = Color.green;
+
+    private const string ReadyText = "مستعد";
+    private const string NotReadyText = "لم استعد";
 
     void Start()
     {
@@ -46,6 +55,8 @@ public class ArenaSelectoinUi : MonoBehaviour
         CharacterSelectReady.Instance.OnArenaIndexChanged += OnArenaIndexChanged;
 
         readyButtonText.SetText("Not Ready");
+        // Start in the "not ready" look
+        UpdateReadyButtonVisuals(false);
     }
 
     private void OnDestroy()
@@ -59,15 +70,29 @@ public class ArenaSelectoinUi : MonoBehaviour
 
     private void OnLobbyPlayersChanged(NetworkListEvent<LobbyPlayerState> changeEvent)
     {
-        // Update the local ready button label
+        // Update the local ready button text + color
         bool localReady = CharacterSelectReady.Instance.IsPlayerReady(NetworkManager.Singleton.LocalClientId);
         readyButtonText.SetText(localReady ? "Ready" : "Not Ready");
     }
+        UpdateReadyButtonVisuals(localReady);
 
     private void OnArenaIndexChanged(int newIndex)
     {
         // Refresh the arena outline to match the new server-side arena choice
         DisableOtherOutlines(newIndex);
+    }
+
+    private void UpdateReadyButtonVisuals(bool isReady)
+    {
+        if (readyButtonText != null)
+        {
+            readyButtonText.Text = isReady ? ReadyText : NotReadyText;
+        }
+
+        if (readyButtonImage != null)
+        {
+            readyButtonImage.color = isReady ? readyColor : notReadyColor;
+        }
     }
 
     private void DisableOtherOutlines(int activeOutline)
