@@ -1109,18 +1109,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1734988360}
-    - target: {fileID: 4164782157506021948, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SubmitTutorialName
-      objectReference: {fileID: 0}
     - target: {fileID: 4270015560884962612, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1734988360}
-    - target: {fileID: 4303264633506639313, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4469799921650468394, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1133,10 +1125,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1734988360}
-    - target: {fileID: 6964482684919131351, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
-      propertyPath: tutorialSceneName
-      value: Tutorial
-      objectReference: {fileID: 0}
     - target: {fileID: 7330774984587254853, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
