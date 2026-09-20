@@ -26,8 +26,10 @@ namespace Iterations.UI
 
         [SerializeField] private TMP_Text totalSuccessfulTimeText;
 
-        [Header("Tutorial")]
+        [Header("Scene Names")]
         [SerializeField] private string tutorialSceneName = "TutorialScene";
+        [SerializeField] private string cutsceneSceneName = "CutsceneScene";
+        [SerializeField] private string finalLevelSceneName = "Level_Final";
 
         [Header("Events - Listened to by this manager")]
         [SerializeField] private IntEventChannelSO onLevelWonWithRetries;
@@ -71,9 +73,7 @@ namespace Iterations.UI
         {
             if (!Input.GetKeyDown(KeyCode.Escape)) return;
 
-            // Esc is fully disabled in the tutorial scene - no pause panel,
-            // no state change, nothing.
-            if (SceneManager.GetActiveScene().name == tutorialSceneName) return;
+            if (IsPauseBlockedScene()) return;
 
             if (GameManager.Instance == null) return;
 
@@ -91,9 +91,25 @@ namespace Iterations.UI
             onResumeRequested?.RaiseEvent();
         }
 
+        private bool IsPauseBlockedScene()
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            return sceneName == tutorialSceneName || sceneName == cutsceneSceneName;
+        }
+
+        private bool IsFinalLevel()
+        {
+            return SceneManager.GetActiveScene().name == finalLevelSceneName;
+        }
 
         private void HandleLevelWonWithRetries(int retries)
         {
+            if (IsFinalLevel())
+            {
+                ShowAllLevelsWinPanel();
+                return;
+            }
+
             if (retriesText != null)
                 retriesText.text = string.Format(retriesLabelFormat, retries);
 
@@ -103,13 +119,15 @@ namespace Iterations.UI
 
         private void HandleAllLevelsComplete()
         {
-            if (totalRetriesText != null && ScoreManager.Instance != null)
-            {
-                int totalRetries = ScoreManager.Instance.GetTotalRetries();
+            ShowAllLevelsWinPanel();
+        }
 
-                totalRetriesText.text = totalRetries.ToString();
-            }
-             if (totalSuccessfulTimeText != null && ScoreManager.Instance != null)
+        private void ShowAllLevelsWinPanel()
+        {
+            if (totalRetriesText != null && ScoreManager.Instance != null)
+                totalRetriesText.text = ScoreManager.Instance.GetTotalRetries().ToString();
+
+            if (totalSuccessfulTimeText != null && ScoreManager.Instance != null)
             {
                 totalSuccessfulTimeText.text =
                     ScoreManager.Instance.FormatTime(
@@ -117,13 +135,17 @@ namespace Iterations.UI
                     );
             }
 
+            if (winPanel != null)
+                winPanel.SetActive(false);
+
             if (allLevelsWinPanel != null)
                 allLevelsWinPanel.SetActive(true);
         }
-       
 
         private void HandlePauseRequested()
         {
+            if (IsPauseBlockedScene()) return;
+
             if (pausePanel != null)
                 pausePanel.SetActive(true);
         }

@@ -1292,6 +1292,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1734988360}
+    - target: {fileID: 6964482684919131351, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: cutsceneSceneName
+      value: CutScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 6964482684919131351, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
+      propertyPath: finalLevelSceneName
+      value: Level_12
+      objectReference: {fileID: 0}
     - target: {fileID: 7330774984587254853, guid: c234f15d4cfeb98458c5cca6791cb07a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

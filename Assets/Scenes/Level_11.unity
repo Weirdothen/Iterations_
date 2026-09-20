@@ -949,9 +949,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12470863
+    x: 0.1245235
     y: 0
-    width: 0.75058275
+    width: 0.7505294
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -7045,7 +7045,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2250966653778647256, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -36
+      value: -29.7
       objectReference: {fileID: 0}
     - target: {fileID: 2990406939457476992, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_fontSize
@@ -7062,6 +7062,10 @@ PrefabInstance:
     - target: {fileID: 3247995157092495534, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6246315210210894659, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: text
+      value: "\u0645\u0633\u062A\u0648\u0649: 11"
       objectReference: {fileID: 0}
     - target: {fileID: 6373905031625520540, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_AnchoredPosition.y
