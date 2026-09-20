@@ -923,9 +923,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12412831
+    x: 0.12470863
     y: 0
-    width: 0.7512785
+    width: 0.75058275
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -1742,6 +1742,15 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 632134009407544947, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: text
+      value: "\u062C\u0645\u0639 \u0643\u0644 \u0627\u0644\u0639\u0646\u0627\u0635\u0631
+        \u062B\u0645 \u0627\u0630\u0647\u0628 \u0644\u0644\u0628\u0648\u0627\u0628\u0629"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1109440249951299806, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -44.299927
+      objectReference: {fileID: 0}
     - target: {fileID: 1290316655999690222, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1841,6 +1850,14 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 45.4
       objectReference: {fileID: 0}
+    - target: {fileID: 2250966653778647256, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -33
+      objectReference: {fileID: 0}
+    - target: {fileID: 2250966653778647256, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -39
+      objectReference: {fileID: 0}
     - target: {fileID: 2990406939457476992, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_fontSize
       value: 45.4
@@ -1852,6 +1869,14 @@ PrefabInstance:
     - target: {fileID: 2990406939457476992, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_fontSizeBase
       value: 45.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3050361540647156535, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -39
+      objectReference: {fileID: 0}
+    - target: {fileID: 6373905031625520540, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -39
       objectReference: {fileID: 0}
     - target: {fileID: 7984952681527778804, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_fontSize

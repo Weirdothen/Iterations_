@@ -804,9 +804,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.125
+    x: 0.12470863
     y: 0
-    width: 0.75000006
+    width: 0.75058275
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -981,6 +981,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1109440249951299806, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -37.299927
+      objectReference: {fileID: 0}
     - target: {fileID: 1290316655999690222, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1068,9 +1072,21 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 2250966653778647256, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -36
+      objectReference: {fileID: 0}
+    - target: {fileID: 2250966653778647256, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -32
+      objectReference: {fileID: 0}
     - target: {fileID: 3247995157092495534, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6373905031625520540, guid: 54b2385406de97a40b269895e53e864f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -32
       objectReference: {fileID: 0}
     - target: {fileID: 8864773906561783728, guid: 54b2385406de97a40b269895e53e864f, type: 3}
       propertyPath: m_Name
