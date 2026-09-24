@@ -57,6 +57,18 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 4904725392401425062, guid: 5ba5694b2fdde7d4ea222edc0a9d1cb6, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904725392401425062, guid: 5ba5694b2fdde7d4ea222edc0a9d1cb6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.0464046
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904725392401425062, guid: 5ba5694b2fdde7d4ea222edc0a9d1cb6, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5606765071978519015, guid: 5ba5694b2fdde7d4ea222edc0a9d1cb6, type: 3}
       propertyPath: m_LocalScale.x
       value: 6
