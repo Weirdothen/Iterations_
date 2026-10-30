@@ -407,7 +407,7 @@ Camera:
     serializedVersion: 2
     x: 0.125
     y: 0
-    width: 0.7509579
+    width: 0.75000006
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -980,6 +980,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 951718689252939045, guid: cb6acb74433653949b2e5c06c655625e, type: 3}
+      propertyPath: text
+      value: 00
+      objectReference: {fileID: 0}
     - target: {fileID: 3028402154272426855, guid: cb6acb74433653949b2e5c06c655625e, type: 3}
       propertyPath: m_Name
       value: MultiplayerUICanvas
@@ -1067,6 +1071,10 @@ PrefabInstance:
     - target: {fileID: 7115516995394079673, guid: cb6acb74433653949b2e5c06c655625e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8231177504814302978, guid: cb6acb74433653949b2e5c06c655625e, type: 3}
+      propertyPath: text
+      value: 00
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
