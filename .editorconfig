@@ -1,0 +1,178 @@
+# Unity C# Style Guide - EditorConfig
+# Place this file in the repository root (next to Assets/, Packages/, ProjectSettings/).
+# It covers the mechanical rules of STYLE_GUIDE.md. Rules that need human judgment
+# (member ordering, event naming, boolean naming, XML docs) are enforced in code review.
+
+root = true
+
+# -----------------------------------------------------------------------------
+# All files
+# -----------------------------------------------------------------------------
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+# -----------------------------------------------------------------------------
+# C# files
+# -----------------------------------------------------------------------------
+[*.cs]
+
+# Section 4: indentation (4 spaces, no tabs) and line length
+indent_style = space
+indent_size = 4
+tab_width = 4
+max_line_length = 120
+
+# -----------------------------------------------------------------------------
+# Section 4: Allman braces
+# -----------------------------------------------------------------------------
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+
+# Section 4: braces are always required, no one-line if/loops
+csharp_prefer_braces = true:warning
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = false
+csharp_style_allow_embedded_statements_on_same_line_experimental = false:warning
+
+# Section 1: block-scoped namespaces
+csharp_style_namespace_declarations = block_scoped:warning
+
+# Section 4: blank lines (never two or more in a row)
+csharp_style_allow_multiple_blank_lines_experimental = false:warning
+
+# Indentation of switch contents
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+# -----------------------------------------------------------------------------
+# Section 4: spacing
+# -----------------------------------------------------------------------------
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_after_comma = true
+csharp_space_before_comma = false
+csharp_space_after_dot = false
+csharp_space_before_dot = false
+csharp_space_after_cast = false
+csharp_space_between_parentheses =
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_square_brackets = false
+
+# -----------------------------------------------------------------------------
+# Section 5: properties
+# -----------------------------------------------------------------------------
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+csharp_style_expression_bodied_accessors = when_on_single_line:suggestion
+
+# -----------------------------------------------------------------------------
+# Section 10: Unity null checks
+# UnityEngine.Object overrides ==, so ?. / ?? / "is null" bypass the destroyed-object check.
+# Turn off the IDE suggestions that would push developers toward them.
+# -----------------------------------------------------------------------------
+dotnet_style_null_propagation = false
+dotnet_style_coalesce_expression = false
+dotnet_style_prefer_is_null_check_over_reference_equality_method = false
+dotnet_diagnostic.IDE0016.severity = none
+dotnet_diagnostic.IDE0029.severity = none
+dotnet_diagnostic.IDE0030.severity = none
+dotnet_diagnostic.IDE0031.severity = none
+dotnet_diagnostic.IDE0041.severity = none
+dotnet_diagnostic.IDE0270.severity = none
+
+# -----------------------------------------------------------------------------
+# Section 2: naming
+# Specific rules come first so they win over the general ones.
+# -----------------------------------------------------------------------------
+
+# Naming styles
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+dotnet_naming_style.underscore_camel_case_style.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case_style.required_prefix = _
+
+dotnet_naming_style.screaming_snake_case_style.capitalization = all_upper
+dotnet_naming_style.screaming_snake_case_style.word_separator = _
+
+dotnet_naming_style.interface_style.capitalization = pascal_case
+dotnet_naming_style.interface_style.required_prefix = I
+
+# Constants and static readonly fields: SCREAMING_SNAKE_CASE
+dotnet_naming_symbols.constants.applicable_kinds = field
+dotnet_naming_symbols.constants.applicable_accessibilities = *
+dotnet_naming_symbols.constants.required_modifiers = const
+
+dotnet_naming_rule.constants_screaming_snake.symbols = constants
+dotnet_naming_rule.constants_screaming_snake.style = screaming_snake_case_style
+dotnet_naming_rule.constants_screaming_snake.severity = warning
+
+dotnet_naming_symbols.static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.static_readonly_fields.applicable_accessibilities = *
+dotnet_naming_symbols.static_readonly_fields.required_modifiers = static, readonly
+
+dotnet_naming_rule.static_readonly_screaming_snake.symbols = static_readonly_fields
+dotnet_naming_rule.static_readonly_screaming_snake.style = screaming_snake_case_style
+dotnet_naming_rule.static_readonly_screaming_snake.severity = warning
+
+# Private and protected fields (including serialized fields): _camelCase
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private, protected, private_protected
+
+dotnet_naming_rule.private_fields_underscore_camel.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore_camel.style = underscore_camel_case_style
+dotnet_naming_rule.private_fields_underscore_camel.severity = warning
+
+# Interfaces: I + PascalCase
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = *
+
+dotnet_naming_rule.interfaces_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_start_with_i.style = interface_style
+dotnet_naming_rule.interfaces_start_with_i.severity = warning
+
+# Classes, structs, enums, delegates: PascalCase
+dotnet_naming_symbols.types.applicable_kinds = class, struct, enum, delegate
+dotnet_naming_symbols.types.applicable_accessibilities = *
+
+dotnet_naming_rule.types_pascal_case.symbols = types
+dotnet_naming_rule.types_pascal_case.style = pascal_case_style
+dotnet_naming_rule.types_pascal_case.severity = warning
+
+# Methods, properties, events: PascalCase
+dotnet_naming_symbols.members.applicable_kinds = method, property, event, local_function
+dotnet_naming_symbols.members.applicable_accessibilities = *
+
+dotnet_naming_rule.members_pascal_case.symbols = members
+dotnet_naming_rule.members_pascal_case.style = pascal_case_style
+dotnet_naming_rule.members_pascal_case.severity = warning
+
+# Parameters and local variables: camelCase
+dotnet_naming_symbols.parameters_and_locals.applicable_kinds = parameter, local
+dotnet_naming_symbols.parameters_and_locals.applicable_accessibilities = *
+
+dotnet_naming_rule.parameters_and_locals_camel_case.symbols = parameters_and_locals
+dotnet_naming_rule.parameters_and_locals_camel_case.style = camel_case_style
+dotnet_naming_rule.parameters_and_locals_camel_case.severity = warning
+
+# -----------------------------------------------------------------------------
+# Third-party code (Section 1): do not touch, do not warn
+# -----------------------------------------------------------------------------
+[Assets/ThirdParty/**.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none
+dotnet_diagnostic.IDE1006.severity = none

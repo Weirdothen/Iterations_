@@ -173,3 +173,6 @@ LightingData.asset     binary
 # merge tool
 *.unity merge=unityyamlmerge
 *.prefab merge=unityyamlmerge
+
+#line ending
+*.cs text eol=lf
