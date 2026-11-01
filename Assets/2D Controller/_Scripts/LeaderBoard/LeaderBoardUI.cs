@@ -8,7 +8,10 @@ namespace Iterations.Core
 {
     public class LeaderboardUI : MonoBehaviour
     {
-     
+        //TODO(Menna: Follow C# Guide)
+
+        [Header("Error Message")]
+        [SerializeField] private GameObject errorPanel;
 
         [Header("Main UI")]
         [SerializeField] private GameObject leaderboardPanel;
@@ -20,11 +23,29 @@ namespace Iterations.Core
         private int requestId = 0;
         [SerializeField] private bool isOverallLeaderboard;
 
-       
+
+        private void Awake()
+        {
+            if (errorPanel != null)
+                errorPanel.SetActive(false);
+        }
+
 
         private void OnEnable()
         {
+            if (OnlineLeaderboardManager.Instance != null)
+            {
+                OnlineLeaderboardManager.Instance.OnInternetRestored += ShowLeaderboard;
+            }
+
             ShowLeaderboard();
+        }
+        private void OnDisable()
+        {
+            if (OnlineLeaderboardManager.Instance != null)
+            {
+                OnlineLeaderboardManager.Instance.OnInternetRestored -= ShowLeaderboard;
+            }
         }
 
         public async void ShowLeaderboard()
@@ -45,6 +66,14 @@ namespace Iterations.Core
             leaderboardPanel.SetActive(true);
 
             ClearEntries();
+
+            HideError();
+
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                ShowError("No internet connection. Please check your connection and try again.");
+                return;
+            }
 
             if (OnlineLeaderboardManager.Instance == null)
             {
@@ -79,9 +108,7 @@ namespace Iterations.Core
 
             if (leaderboard == null)
             {
-                Debug.LogWarning(
-                    "[LeaderboardUI] Could not load leaderboard."
-                );
+                ShowError("Couldn't load leaderboard. Please check your internet connection and try again.");
                 return;
             }
 
@@ -105,6 +132,19 @@ namespace Iterations.Core
         {
             if (leaderboardPanel != null)
                 leaderboardPanel.SetActive(false);
+        }
+
+        private void ShowError(string message)
+        {
+            if (errorPanel != null)
+                errorPanel.SetActive(true);
+
+        }
+
+        private void HideError()
+        {
+            if (errorPanel != null)
+                errorPanel.SetActive(false);
         }
 
         private void CreateEntry(LeaderboardEntry entry)
