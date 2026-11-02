@@ -6,6 +6,7 @@ namespace Iterations.Core
 {
     public class ScoreManager : MonoBehaviour
     {
+        //TODO(Menna: Follow C# Guide)
         public static ScoreManager Instance { get; private set; }
 
         [Header("Level Setup")]
@@ -75,6 +76,8 @@ namespace Iterations.Core
             DontDestroyOnLoad(gameObject);
 
             DebugLog("ScoreManager initialized.");
+          
+    
         }
 
         private void OnEnable()
@@ -384,5 +387,29 @@ namespace Iterations.Core
             }
             return true;
         }
+        public void ResetAllScores()
+        {
+            for (int i = 1; i <= totalLevels; i++)
+            {
+                string sceneName = "Level_" + i;
+
+                string timeKey = BestTimeKeyPrefix + sceneName;
+                string retriesKey = BestRetriesKeyPrefix + sceneName;
+
+                PlayerPrefs.DeleteKey(timeKey);
+                PlayerPrefs.DeleteKey(retriesKey);
+
+                Debug.Log(
+                    $"{timeKey} exists: {PlayerPrefs.HasKey(timeKey)} | " +
+                    $"{retriesKey} exists: {PlayerPrefs.HasKey(retriesKey)}"
+                );
+            }
+
+            PlayerPrefs.Save();
+
+            Debug.Log("All local scores reset!");
+        }
     }
+
+
 }

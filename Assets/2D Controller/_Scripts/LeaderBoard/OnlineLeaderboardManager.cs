@@ -1,18 +1,44 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 using Unity.Services.Leaderboards;
 using Unity.Services.Leaderboards.Models;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 namespace Iterations.Core
 {
+    //TODO(Menna: Follow C# Guide)
     public class OnlineLeaderboardManager : MonoBehaviour
     {
+        public event Action OnInternetRestored;
+
         public static OnlineLeaderboardManager Instance { get; private set; }
 
+
         private const string OverallLeaderboardId = "overall";
+
+
+        private const string PendingScoresKey = "PendingLeaderboardScores";
+
+        [System.Serializable]
+        private class PendingScore
+        {
+            public string leaderboardId;
+            public int score;
+            public int retries;
+        }
+
+        [System.Serializable]
+        private class PendingScoreList
+        {
+            public List<PendingScore> scores = new List<PendingScore>();
+        }
+
+        private bool isFlushingScores;
+        private bool wasInternetAvailable;
+
 
         private void Awake()
         {
@@ -24,6 +50,12 @@ namespace Iterations.Core
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void Start()
+        {
+            wasInternetAvailable =
+                Application.internetReachability != NetworkReachability.NotReachable;
         }
 
         // =========================
@@ -62,6 +94,30 @@ namespace Iterations.Core
                 score,
                 retries
             );
+        }
+
+        private List<PendingScore> LoadPendingScores()
+        {
+            string json = PlayerPrefs.GetString(PendingScoresKey, "");
+
+            if (string.IsNullOrEmpty(json))
+                return new List<PendingScore>();
+
+            PendingScoreList data =
+                JsonUtility.FromJson<PendingScoreList>(json);
+
+            return data?.scores ?? new List<PendingScore>();
+        }
+
+        private void SavePendingScores(List<PendingScore> scores)
+        {
+            PendingScoreList data = new PendingScoreList();
+            data.scores = scores;
+
+            string json = JsonUtility.ToJson(data);
+
+            PlayerPrefs.SetString(PendingScoresKey, json);
+            PlayerPrefs.Save();
         }
 
         // =========================
@@ -178,29 +234,197 @@ namespace Iterations.Core
         // SUBMIT SCORE
         // =========================
 
-        private async Task SubmitScore(
-            string leaderboardId,
-            int score,
-            int retries)
+        //private async Task SubmitScore(
+        //    string leaderboardId,
+        //    int score,
+        //    int retries)
+        //{
+        //    try
+        //    {
+        //        Debug.Log(
+        //            $"[LeaderboardManager] Submitting score | " +
+        //            $"Leaderboard: {leaderboardId} | " +
+        //            $"Score: {score}ms | " +
+        //            $"Time: {score / 1000f:F3}s | " +
+        //            $"Retries: {retries}"
+        //        );
+
+        //        var metadata = new ScoreMetadata
+        //        {
+        //            retries = retries
+        //        };
+
+        //        await LeaderboardsService.Instance.AddPlayerScoreAsync(
+        //            leaderboardId,
+        //            score,
+        //            new AddPlayerScoreOptions
+        //            {
+        //                Metadata = metadata
+        //            }
+        //        );
+
+        //        Debug.Log(
+        //            $"[LeaderboardManager] Score submitted successfully | " +
+        //            $"Leaderboard: {leaderboardId} | " +
+        //            $"Score: {score}ms"
+        //        );
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.LogError(
+        //            $"[LeaderboardManager] Failed to submit score to " +
+        //            $"{leaderboardId}\n{e}"
+        //        );
+        //    }
+        //}
+
+        private void Update()
+        {
+            bool internetAvailable =
+                Application.internetReachability != NetworkReachability.NotReachable;
+
+            if (internetAvailable && !wasInternetAvailable)
+            {
+                Debug.Log("[LeaderboardManager] Internet restored!");
+
+                HandleInternetRestored();
+            }
+
+            wasInternetAvailable = internetAvailable;
+        }
+
+        private async void HandleInternetRestored()
+        {
+            Debug.Log("[LeaderboardManager] Internet restored!");
+
+            if (UGSManager.Instance == null)
+            {
+                Debug.LogError("[LeaderboardManager] UGSManager not found.");
+                return;
+            }
+
+            // Restore authentication first.
+            bool signedIn = await UGSManager.Instance.EnsureSignedInAsync();
+
+            if (!signedIn)
+            {
+                Debug.LogWarning("[LeaderboardManager] Could not restore authentication.");
+                return;
+            }
+
+            // Upload pending scores.
+            RetryPendingScores();
+
+            while (isFlushingScores)
+            {
+                await Task.Yield();
+            }
+
+            // Refresh active leaderboard screens.
+            Debug.Log("[LeaderboardManager] Refreshing leaderboard UI!");
+
+            OnInternetRestored?.Invoke();
+        }
+
+
+        private Task SubmitScore(
+     string leaderboardId,
+     int score,
+     int retries)
+        {
+            var pendingScores = LoadPendingScores();
+
+            pendingScores.Add(new PendingScore
+            {
+                leaderboardId = leaderboardId,
+                score = score,
+                retries = retries
+            });
+
+            SavePendingScores(pendingScores);
+
+            RetryPendingScores();
+
+            return Task.CompletedTask;
+        }
+
+        public void RetryPendingScores()
+        {
+            if (isFlushingScores)
+                return;
+
+            if (Application.internetReachability ==
+                NetworkReachability.NotReachable)
+                return;
+
+            if (UGSManager.Instance == null ||
+                !UGSManager.Instance.IsSignedIn)
+                return;
+
+            _ = FlushPendingScores();
+        }
+
+        private async Task FlushPendingScores()
+        {
+            if (isFlushingScores)
+                return;
+
+            isFlushingScores = true;
+
+            try
+            {
+                List<PendingScore> pendingScores = LoadPendingScores();
+
+                while (pendingScores.Count > 0)
+                {
+                    if (Application.internetReachability ==
+                        NetworkReachability.NotReachable)
+                        break;
+
+                    PendingScore pending = pendingScores[0];
+
+                    bool success = await SendScoreToUGS(pending);
+
+                    if (!success)
+                    {
+                        Debug.LogWarning(
+                            "[LeaderboardManager] Upload failed. Keeping score for later."
+                        );
+
+                        break;
+                    }
+
+                    // Remove only after successful upload.
+                    pendingScores.RemoveAt(0);
+
+                    SavePendingScores(pendingScores);
+                }
+
+                if (pendingScores.Count == 0)
+                {
+                    Debug.Log("[LeaderboardManager] All pending scores uploaded!");
+                }
+            }
+            finally
+            {
+                isFlushingScores = false;
+            }
+        }
+
+
+
+        private async Task<bool> SendScoreToUGS(PendingScore pending)
         {
             try
             {
-                Debug.Log(
-                    $"[LeaderboardManager] Submitting score | " +
-                    $"Leaderboard: {leaderboardId} | " +
-                    $"Score: {score}ms | " +
-                    $"Time: {score / 1000f:F3}s | " +
-                    $"Retries: {retries}"
-                );
-
                 var metadata = new ScoreMetadata
                 {
-                    retries = retries
+                    retries = pending.retries
                 };
 
                 await LeaderboardsService.Instance.AddPlayerScoreAsync(
-                    leaderboardId,
-                    score,
+                    pending.leaderboardId,
+                    pending.score,
                     new AddPlayerScoreOptions
                     {
                         Metadata = metadata
@@ -208,17 +432,19 @@ namespace Iterations.Core
                 );
 
                 Debug.Log(
-                    $"[LeaderboardManager] Score submitted successfully | " +
-                    $"Leaderboard: {leaderboardId} | " +
-                    $"Score: {score}ms"
+                    $"[LeaderboardManager] Uploaded pending score: " +
+                    $"{pending.leaderboardId} | {pending.score}"
                 );
+
+                return true;
             }
             catch (Exception e)
             {
                 Debug.LogError(
-                    $"[LeaderboardManager] Failed to submit score to " +
-                    $"{leaderboardId}\n{e}"
+                    $"[LeaderboardManager] Pending score upload failed: {e}"
                 );
+
+                return false;
             }
         }
 

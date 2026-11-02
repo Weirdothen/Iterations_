@@ -10,6 +10,7 @@ namespace Iterations.Core
 {
     public class UGSManager : MonoBehaviour
     {
+        //TODO(Menna: Follow C# Guide)
         public static UGSManager Instance { get; private set; }
 
         public bool IsSignedIn { get; private set; }
@@ -24,6 +25,7 @@ namespace Iterations.Core
 
         public const string PlayerNameKey = "PlayerName";
         public const int MaxNameLength = 8;
+        private Task<bool> signInTask;
 
         private void Awake()
         {
@@ -62,31 +64,55 @@ namespace Iterations.Core
             if (tutorialNameInput != null)
                 tutorialNameInput.characterLimit = MaxNameLength;
 
-            _ = InitializeUGS();
+            _ = EnsureSignedInAsync();
         }
 
-        private async Task InitializeUGS()
+        public Task<bool> EnsureSignedInAsync()
+        {
+            // Prevent multiple simultaneous sign-in attempts.
+            if (signInTask == null || signInTask.IsCompleted)
+                signInTask = InitializeUGS();
+
+            return signInTask;
+        }
+
+        private async Task<bool> InitializeUGS()
         {
             try
             {
-                await UnityServices.InitializeAsync();
+                if (UnityServices.State != ServicesInitializationState.Initialized)
+                {
+                    await UnityServices.InitializeAsync();
+                }
 
                 if (!AuthenticationService.Instance.IsSignedIn)
                 {
+                    Debug.Log("[UGSManager] Attempting anonymous sign-in...");
+
                     await AuthenticationService.Instance.SignInAnonymouslyAsync();
                 }
 
-                IsSignedIn = true;
+                IsSignedIn = AuthenticationService.Instance.IsSignedIn;
 
-                Debug.Log("UGS initialized!");
-                Debug.Log("Player ID: " + AuthenticationService.Instance.PlayerId);
+                if (IsSignedIn)
+                {
+                    Debug.Log("[UGSManager] Authentication successful!");
+                    Debug.Log("Player ID: " + AuthenticationService.Instance.PlayerId);
+
+                    OnlineLeaderboardManager.Instance?.RetryPendingScores();
+                }
+
+                return IsSignedIn;
             }
             catch (System.Exception e)
             {
-                Debug.LogError("UGS initialization failed: " + e);
+                IsSignedIn = false;
+
+                Debug.LogError("[UGSManager] Authentication failed: " + e);
+
+                return false;
             }
         }
-
         public bool HasSavedName() => PlayerPrefs.HasKey(PlayerNameKey);
 
         public string GetSavedName() => PlayerPrefs.GetString(PlayerNameKey, "");
