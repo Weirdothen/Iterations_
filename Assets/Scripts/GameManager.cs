@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using Iterations.Events;
+using KajoGames.CopyPaste.Analytics.Helpers;
 
 namespace Iterations.Core
 {
@@ -107,6 +108,11 @@ namespace Iterations.Core
             _isSameLevelReload = false;
 
             BestRetriesForCurrentLevel = GetSavedBestRetries(scene.name);
+
+            if (scene.name != mainMenuSceneName)
+            {
+                ProgressionAnalytics.TrackLevelStarted(scene.name, CurrentLevelRetries + 1);
+            }
         }
 
         private void HandlePauseRequested()
@@ -178,6 +184,8 @@ namespace Iterations.Core
 
             _levelAdvancePending = true;
             onLevelWonWithRetries?.RaiseEvent(CurrentLevelRetries);
+
+            ProgressionAnalytics.TrackLevelCompleted(currentSceneName, ScoreManager.Instance != null ? ScoreManager.Instance.LastLevelTime : 0f, CurrentLevelRetries);
         }
 
         public void AdvanceAfterWin()
@@ -187,6 +195,7 @@ namespace Iterations.Core
 
             if (string.IsNullOrEmpty(nextLevelSceneName))
             {
+                ProgressionAnalytics.TrackAllLevelsCompleted(CurrentLevelRetries, ScoreManager.Instance != null ? ScoreManager.Instance.TotalSuccessfulRunTime : 0f);
                 onAllLevelsComplete?.RaiseEvent();
                 return;
             }
@@ -208,6 +217,9 @@ namespace Iterations.Core
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.Lost;
+
+            string activeScene = SceneManager.GetActiveScene().name;
+            ProgressionAnalytics.TrackLevelFailed(activeScene, "level_lost", ScoreManager.Instance != null ? ScoreManager.Instance.CurrentTime : 0f, CurrentLevelRetries);
 
             if (_restartRoutine != null) return;
 
@@ -247,6 +259,7 @@ namespace Iterations.Core
         {
             CurrentLevelRetries++;
             _isSameLevelReload = true;
+            GameplayAnalytics.TrackLevelRestart(SceneManager.GetActiveScene().name, CurrentLevelRetries);
             SceneTransitioner.LoadScene(SceneManager.GetActiveScene().name);
         }
 

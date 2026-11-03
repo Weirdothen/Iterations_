@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Iterations.Events;
 using Iterations.Core;
+using KajoGames.CopyPaste.Analytics.Helpers;
 
 namespace Iterations.Player
 {
@@ -37,6 +39,8 @@ namespace Iterations.Player
         {
             if (other.CompareTag(cloneTag))
             {
+                int retries = GameManager.Instance != null ? GameManager.Instance.CurrentLevelRetries : 0;
+                GameplayAnalytics.TrackPlayerDeath("clone_collision", SceneManager.GetActiveScene().name, retries);
                 onLoseTriggered?.RaiseEvent();
                 return;
             }
@@ -44,12 +48,14 @@ namespace Iterations.Player
             if (other.CompareTag(pickupTag))
             {
                 _pickupsCollected++;
+                int required = LevelConfig.Instance != null ? LevelConfig.Instance.TotalPickups : 0;
+                GameplayAnalytics.TrackPickupCollected("pickup", _pickupsCollected, required);
                 onPickupCollected?.RaiseEvent(_pickupsCollected);
                 Destroy(other.gameObject);
 
-                int required = LevelConfig.Instance != null ? LevelConfig.Instance.TotalPickups : 0;
                 if (_pickupsCollected == required)
                 {
+                    GameplayAnalytics.TrackAllPickupsCollected(SceneManager.GetActiveScene().name, _pickupsCollected);
                     onAllPickupsCollected?.RaiseEvent();
                 }
                 return;

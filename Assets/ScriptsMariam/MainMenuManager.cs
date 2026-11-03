@@ -1,7 +1,9 @@
-﻿using Unity.Netcode;
+using Unity.Netcode;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using KajoGames.CopyPaste.Analytics.Helpers;
+
 namespace Iterations.UI
 {
     /// <summary>
@@ -48,6 +50,7 @@ namespace Iterations.UI
         public void OnBackPressed() => ShowPanel(mainPanel);
         public void OnQuitPressed()
         {
+            UIAnalytics.TrackButtonClicked("quit", "main_menu");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -61,6 +64,7 @@ namespace Iterations.UI
                 Debug.LogWarning("No scene name set on this button.");
                 return;
             }
+            UIAnalytics.TrackButtonClicked($"load_scene_{sceneName}", "main_menu");
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
 
@@ -68,6 +72,7 @@ namespace Iterations.UI
         /// <summary>Called by the "Host" button.</summary>
         public async void StartAsHost()
         {
+            UIAnalytics.TrackMultiplayerFlow("host_started");
             if (MultiplayerRelayManager.Instance == null)
             {
                 Debug.LogError("[MainMenu] MultiplayerRelayManager not found in scene!");
@@ -84,6 +89,7 @@ namespace Iterations.UI
         /// <summary>Called by the "Join" button.</summary>
         public async void StartAsClient()
         {
+            UIAnalytics.TrackMultiplayerFlow("join_started");
             if (MultiplayerRelayManager.Instance == null)
             {
                 Debug.LogError("[MainMenu] MultiplayerRelayManager not found in scene!");
@@ -116,6 +122,11 @@ namespace Iterations.UI
             {
                 if (panel == null) continue;
                 panel.SetActive(panel == panelToShow);
+            }
+
+            if (panelToShow != null)
+            {
+                UIAnalytics.TrackPanelOpened(panelToShow.name);
             }
         }
     }

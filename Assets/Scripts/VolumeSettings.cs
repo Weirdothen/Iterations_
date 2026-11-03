@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using KajoGames.CopyPaste.Analytics.Helpers;
 
 public class VolumeSettings : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class VolumeSettings : MonoBehaviour
         float volume = musicSlider.value;
         myMixer.SetFloat(musicParameter, Mathf.Log10(volume) * 20);
         PlayerPrefs.SetFloat(musicParameter, volume);
+        UIAnalytics.TrackVolumeChanged("Music", volume);
     }
 
     public void SetSFXVolume()
@@ -41,5 +43,6 @@ public class VolumeSettings : MonoBehaviour
         float volume = sfxSlider.value;
         myMixer.SetFloat(sfxParameter, Mathf.Log10(volume) * 20);
         PlayerPrefs.SetFloat(sfxParameter, volume);
+        UIAnalytics.TrackVolumeChanged("SFX", volume);
     }
 }

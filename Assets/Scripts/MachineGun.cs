@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Pool;
 using DG.Tweening;
+using KajoGames.CopyPaste.Analytics.Helpers;
 
 public class MachineGun : MonoBehaviour
 {
@@ -62,6 +63,7 @@ public class MachineGun : MonoBehaviour
         }
 
         ApplyGameFeelEffects();
+        GameplayAnalytics.TrackWeaponFired("machine_gun");
     }
 
     private void ApplyGameFeelEffects()
