@@ -141,11 +141,6 @@ namespace KajoGames.CopyPaste.Analytics
         }
 
         /// <summary>
-        /// Alias for <see cref="Trigger"/> for semantic clarity in Inspector events.
-        /// </summary>
-        public void TriggerEvent() => Trigger();
-
-        /// <summary>
         /// Trigger the event with an overriding dynamic numeric value (e.g. from a UI Slider or health metric).
         /// </summary>
         public void TriggerWithValue(float dynamicValue)
